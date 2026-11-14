@@ -1,0 +1,1543 @@
+[
+  {
+    "id": "apollo-11-eagle",
+    "name": "Eagle Lunar Module descent stage",
+    "missionName": "Apollo 11",
+    "agency": "NASA",
+    "world": "moon",
+    "hardwareType": "descent-stage",
+    "status": "inactive",
+    "statusNote": "The descent stage has stood at Tranquility Base since 1969. The laser retroreflector the crew set up nearby is still used by scientists today.",
+    "launchDate": "1969-07-16",
+    "arrivalDate": "1969-07-20",
+    "endDate": "1969-07-21",
+    "location": {
+      "description": "Tranquility Base, Sea of Tranquility (Mare Tranquillitatis)",
+      "lat": 0.674,
+      "lon": 23.473
+    },
+    "tagline": "The landing legs that carried the first people to walk on the Moon.",
+    "story": [
+      "Meet Eagle's descent stage: the bottom half of the lunar module that landed Neil Armstrong and Buzz Aldrin on the Moon on 20 July 1969.",
+      "The descent stage had a rocket engine that slowed Eagle down as it dropped towards the Moon. Armstrong steered past a field of boulders and touched down with only a little fuel left.",
+      "When it was time to go home, the top half (the ascent stage) blasted off and used the descent stage as its launch pad. The descent stage stayed behind, and it is still there today with a plaque on one of its legs."
+    ],
+    "objectives": [
+      "Land two astronauts safely on the Moon and return them to Earth",
+      "Collect samples of Moon rock and soil",
+      "Set up the first science experiments on the lunar surface"
+    ],
+    "instruments": [
+      {
+        "name": "Laser Ranging Retroreflector",
+        "purpose": "A panel of special mirrors that bounces laser light from Earth straight back, so scientists can measure the distance to the Moon very precisely."
+      },
+      {
+        "name": "Passive Seismic Experiment",
+        "purpose": "A seismometer that listened for moonquakes and meteorite impacts for a few weeks."
+      },
+      {
+        "name": "Solar Wind Composition experiment",
+        "purpose": "A sheet of aluminium foil that caught tiny particles streaming from the Sun. The astronauts brought it back to Earth for study."
+      }
+    ],
+    "discoveries": [
+      "Humans walked on another world for the first time.",
+      "The crew brought back about 21.5 kg of Moon rocks and soil, including volcanic rocks formed from ancient lava.",
+      "Laser measurements using the retroreflector show the Moon is slowly moving away from Earth, by about 3.8 cm each year."
+    ],
+    "timeline": [
+      {
+        "date": "1969-07-16",
+        "label": "Apollo 11 launches on a Saturn V rocket",
+        "kind": "launch"
+      },
+      {
+        "date": "1969-07-19",
+        "label": "Spacecraft enters orbit around the Moon",
+        "kind": "journey"
+      },
+      {
+        "date": "1969-07-20",
+        "label": "Eagle lands in the Sea of Tranquility",
+        "kind": "arrival"
+      },
+      {
+        "date": "1969-07-21",
+        "label": "Armstrong and Aldrin explore the surface and set up experiments",
+        "kind": "operations"
+      },
+      {
+        "date": "1969-07-21",
+        "label": "Ascent stage lifts off; the descent stage stays behind",
+        "kind": "end"
+      },
+      {
+        "date": "1969-07-24",
+        "label": "The crew splashes down safely on Earth",
+        "kind": "status"
+      }
+    ],
+    "funFact": "A plaque on Eagle's leg says the astronauts 'came in peace for all mankind'.",
+    "imageQuery": "Apollo 11 lunar module Eagle Moon surface",
+    "sources": [
+      {
+        "title": "NASA NSSDCA: Apollo 11 Lunar Module / EASEP",
+        "url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1969-059C"
+      },
+      {
+        "title": "NASA History: Apollo 11 mission summary (SP-4029)",
+        "url": "https://www.nasa.gov/wp-content/uploads/static/history/SP-4029/Apollo_11a_Summary.htm"
+      }
+    ]
+  },
+  {
+    "id": "apollo-15-lrv",
+    "name": "Lunar Roving Vehicle 1",
+    "missionName": "Apollo 15",
+    "agency": "NASA",
+    "world": "moon",
+    "hardwareType": "rover",
+    "status": "inactive",
+    "statusNote": "Parked near the lunar module's landing site since 1971. It no longer works, but it is still there.",
+    "launchDate": "1971-07-26",
+    "arrivalDate": "1971-07-30",
+    "endDate": "1971-08-02",
+    "location": {
+      "description": "Hadley–Apennine region, near Hadley Rille",
+      "lat": 26.132,
+      "lon": 3.634
+    },
+    "tagline": "The first car ever driven on the Moon.",
+    "story": [
+      "Meet the first Moon buggy! Apollo 15 brought a folded-up, battery-powered car to the Moon. Astronauts David Scott and James Irwin unfolded it and drove off to explore.",
+      "With the rover, the astronauts could travel much farther than on foot. They drove to the edge of a giant valley called Hadley Rille and up the slopes of the Apennine Mountains.",
+      "At the end, they parked the rover where its TV camera could film their lift-off. Then it stayed behind for good."
+    ],
+    "objectives": [
+      "Carry astronauts and tools much farther across the Moon than they could walk",
+      "Explore Hadley Rille and the Apennine Mountains",
+      "Collect rocks from many different places"
+    ],
+    "instruments": [
+      {
+        "name": "Colour TV camera",
+        "purpose": "Controlled from Earth, it sent live pictures of the astronauts at work and filmed the lift-off."
+      },
+      {
+        "name": "Navigation system",
+        "purpose": "Tracked direction and distance so the astronauts could always find their way back to the lunar module."
+      }
+    ],
+    "discoveries": [
+      "The astronauts drove about 28 km across the Moon over three trips.",
+      "They found the 'Genesis Rock', a piece of the Moon's very ancient crust.",
+      "The mission showed that a rover could greatly expand how much of the Moon astronauts could explore."
+    ],
+    "timeline": [
+      {
+        "date": "1971-07-26",
+        "label": "Apollo 15 launches",
+        "kind": "launch"
+      },
+      {
+        "date": "1971-07-30",
+        "label": "Lunar module Falcon lands at Hadley–Apennine",
+        "kind": "arrival"
+      },
+      {
+        "date": "1971-07-31",
+        "label": "First drive of a car on the Moon",
+        "kind": "operations"
+      },
+      {
+        "date": "1971-08-01",
+        "label": "Genesis Rock collected during the second drive",
+        "kind": "discovery"
+      },
+      {
+        "date": "1971-08-02",
+        "label": "Rover's camera films the lift-off; the rover stays behind",
+        "kind": "end"
+      }
+    ],
+    "funFact": "The rover folded up like a deck chair so it could fit in a compartment on the side of the lunar module.",
+    "imageQuery": "Apollo 15 lunar roving vehicle",
+    "sources": [
+      {
+        "title": "NASA NSSDCA: Apollo 15 Lunar Module / ALSEP",
+        "url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1971-063C"
+      }
+    ]
+  },
+  {
+    "id": "surveyor-3",
+    "name": "Surveyor 3",
+    "missionName": "Surveyor 3",
+    "agency": "NASA",
+    "world": "moon",
+    "hardwareType": "lander",
+    "status": "inactive",
+    "statusNote": "Silent since May 1967. Astronauts visited it in 1969 and brought some of its parts back to Earth.",
+    "launchDate": "1967-04-17",
+    "arrivalDate": "1967-04-20",
+    "endDate": "1967-05-04",
+    "location": {
+      "description": "Ocean of Storms (Oceanus Procellarum)",
+      "lat": -3.015,
+      "lon": -23.418
+    },
+    "tagline": "The robot that got a visit from astronauts.",
+    "story": [
+      "Before people could land on the Moon, NASA had to answer a big question: is the ground solid enough to stand on? Surveyor 3 was sent to find out.",
+      "It had a little scoop on a mechanical arm. Engineers on Earth used it to dig trenches and poke the soil, and its camera sent back thousands of pictures.",
+      "Two and a half years later, Apollo 12 landed close by. Astronauts Pete Conrad and Alan Bean walked over to Surveyor 3 and cut off its camera and other parts to bring home, so scientists could see how materials change on the Moon."
+    ],
+    "objectives": [
+      "Prove a spacecraft could land softly on the Moon",
+      "Test whether lunar soil could hold up a crewed spacecraft",
+      "Take pictures of the landing area"
+    ],
+    "instruments": [
+      {
+        "name": "TV camera",
+        "purpose": "Took thousands of pictures of the surface around the lander."
+      },
+      {
+        "name": "Surface sampler",
+        "purpose": "A scoop on an arm that dug trenches to test how firm the soil was."
+      }
+    ],
+    "discoveries": [
+      "The Moon's soil was firm enough to support landing spacecraft and astronauts.",
+      "It was the first spacecraft to dig into the surface of another world.",
+      "Parts returned by Apollo 12 helped scientists study how materials age on the Moon."
+    ],
+    "timeline": [
+      {
+        "date": "1967-04-17",
+        "label": "Surveyor 3 launches",
+        "kind": "launch"
+      },
+      {
+        "date": "1967-04-20",
+        "label": "Lands in the Ocean of Storms, bouncing before it settles",
+        "kind": "arrival"
+      },
+      {
+        "date": "1967-04",
+        "label": "Digs trenches and takes thousands of pictures",
+        "kind": "operations"
+      },
+      {
+        "date": "1967-05-04",
+        "label": "Last contact with Earth",
+        "kind": "end"
+      },
+      {
+        "date": "1969-11-20",
+        "label": "Apollo 12 astronauts visit and remove parts to bring home",
+        "kind": "status"
+      }
+    ],
+    "funFact": "Its engines did not shut off right away when it landed, so Surveyor 3 bounced across the Moon before settling down.",
+    "imageQuery": "Surveyor 3 Apollo 12 Conrad",
+    "sources": [
+      {
+        "title": "NASA NSSDCA: Surveyor 3",
+        "url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1967-035A"
+      }
+    ]
+  },
+  {
+    "id": "lunokhod-1",
+    "name": "Lunokhod 1",
+    "missionName": "Luna 17",
+    "agency": "Soviet Union (not NASA)",
+    "world": "moon",
+    "hardwareType": "rover",
+    "status": "inactive",
+    "statusNote": "Stopped working in 1971. Its laser reflector was found again in NASA spacecraft images in 2010 and has been used for laser ranging since.",
+    "launchDate": "1970-11-10",
+    "arrivalDate": "1970-11-17",
+    "endDate": "1971-09-14",
+    "location": {
+      "description": "Sea of Rains (Mare Imbrium)",
+      "lat": 38.32,
+      "lon": -35.0
+    },
+    "tagline": "The first robot rover to drive on another world.",
+    "story": [
+      "This one is not from NASA, but it is too important to leave out. Lunokhod 1 was built by the Soviet Union, and it was the first remote-controlled robot to drive on another world.",
+      "It looked like a bathtub on eight wheels. A team on Earth steered it using pictures from its cameras, even though every picture took time to arrive.",
+      "Lunokhod 1 explored for about ten months. Years later, NASA's Lunar Reconnaissance Orbiter photographed it from above, and scientists started bouncing lasers off its mirror again."
+    ],
+    "objectives": [
+      "Drive a robot on the Moon, controlled from Earth",
+      "Photograph the surface and study the soil",
+      "Carry a laser reflector for measuring the Earth–Moon distance"
+    ],
+    "instruments": [
+      {
+        "name": "TV cameras",
+        "purpose": "Helped the drivers on Earth see where to steer, and photographed the landscape."
+      },
+      {
+        "name": "X-ray fluorescence spectrometer",
+        "purpose": "Measured which chemical elements are in the lunar soil."
+      },
+      {
+        "name": "Penetrometer",
+        "purpose": "Pushed into the ground to test how firm it was."
+      },
+      {
+        "name": "Laser retroreflector",
+        "purpose": "French-built mirrors for measuring the distance to the Moon."
+      }
+    ],
+    "discoveries": [
+      "Showed that a robot could be driven on another world from Earth.",
+      "Travelled about 10.5 km and studied the soil at many stops."
+    ],
+    "timeline": [
+      {
+        "date": "1970-11-10",
+        "label": "Luna 17 launches from the Soviet Union",
+        "kind": "launch"
+      },
+      {
+        "date": "1970-11-17",
+        "label": "Lands in the Sea of Rains; Lunokhod 1 rolls off",
+        "kind": "arrival"
+      },
+      {
+        "date": "1971-09-14",
+        "label": "Last contact with Earth",
+        "kind": "end"
+      },
+      {
+        "date": "2010-03",
+        "label": "Located in images from NASA's Lunar Reconnaissance Orbiter",
+        "kind": "status"
+      }
+    ],
+    "funFact": "Lunokhod 1 had a lid covered in solar cells that opened during the lunar day and closed at night to keep it warm.",
+    "imageQuery": "Lunokhod Lunar Reconnaissance Orbiter",
+    "sources": [
+      {
+        "title": "NASA NSSDCA: Luna 17 / Lunokhod 1",
+        "url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1970-095A"
+      }
+    ]
+  },
+  {
+    "id": "lcross",
+    "name": "LCROSS",
+    "missionName": "Lunar Crater Observation and Sensing Satellite",
+    "agency": "NASA",
+    "world": "moon",
+    "hardwareType": "impactor",
+    "status": "decommissioned",
+    "statusNote": "Crashed into the Moon on purpose in 2009, as planned, after studying the cloud made by its rocket stage.",
+    "launchDate": "2009-06-18",
+    "arrivalDate": "2009-10-09",
+    "endDate": "2009-10-09",
+    "location": {
+      "description": "Cabeus crater, near the Moon's south pole",
+      "lat": -84.68,
+      "lon": -48.7
+    },
+    "tagline": "The spacecraft that crashed on purpose to find water.",
+    "story": [
+      "Some craters near the Moon's poles are so deep that sunlight never reaches their floors. Scientists wondered: could ice be hiding there?",
+      "LCROSS had a clever plan. First, its empty rocket stage smashed into Cabeus crater, throwing up a giant cloud. Then LCROSS flew straight through the cloud, measuring what was inside, before crashing in too.",
+      "Its instruments found water in that cloud. Water on the Moon could one day help astronauts make drinking water, air and even rocket fuel."
+    ],
+    "objectives": [
+      "Find out if water ice is hidden in permanently shadowed craters",
+      "Study the cloud thrown up by a deliberate impact"
+    ],
+    "instruments": [
+      {
+        "name": "Cameras (visible and infrared)",
+        "purpose": "Watched the impact and the cloud of material it threw up."
+      },
+      {
+        "name": "Spectrometers",
+        "purpose": "Split light into colours to find out what the cloud was made of, including water."
+      }
+    ],
+    "discoveries": [
+      "Found water in the material thrown up from Cabeus crater.",
+      "Showed that shadowed polar craters can trap water and other substances for a very long time."
+    ],
+    "timeline": [
+      {
+        "date": "2009-06-18",
+        "label": "Launches together with the Lunar Reconnaissance Orbiter",
+        "kind": "launch"
+      },
+      {
+        "date": "2009-10-09",
+        "label": "Rocket stage hits Cabeus crater; LCROSS flies through the cloud",
+        "kind": "discovery"
+      },
+      {
+        "date": "2009-10-09",
+        "label": "LCROSS itself impacts minutes later, as planned",
+        "kind": "end"
+      }
+    ],
+    "funFact": "LCROSS had about four minutes to study the cloud before it crashed into the Moon itself.",
+    "imageQuery": "LCROSS impact Cabeus",
+    "sources": [
+      {
+        "title": "NASA NSSDCA: LCROSS",
+        "url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2009-031B"
+      }
+    ]
+  },
+  {
+    "id": "viking-1-lander",
+    "name": "Viking 1 lander",
+    "missionName": "Viking 1",
+    "agency": "NASA",
+    "world": "mars",
+    "hardwareType": "lander",
+    "status": "lost-contact",
+    "statusNote": "Contact was lost in November 1982 after a faulty command was sent from Earth.",
+    "launchDate": "1975-08-20",
+    "arrivalDate": "1976-07-20",
+    "endDate": "1982-11",
+    "location": {
+      "description": "Chryse Planitia (Plains of Gold)",
+      "lat": 22.27,
+      "lon": -47.95
+    },
+    "tagline": "The first U.S. spacecraft to land safely on Mars.",
+    "story": [
+      "In 1976, Viking 1 became the first American spacecraft to land safely on Mars. Within minutes it sent home the first picture ever taken from the Martian surface.",
+      "Viking 1 had a mini laboratory on board. It scooped up soil and ran experiments to look for signs of tiny living things.",
+      "The results were puzzling and did not give clear proof of life. But Viking 1 kept working and reporting Martian weather for more than six years."
+    ],
+    "objectives": [
+      "Land safely and photograph the surface of Mars",
+      "Search the soil for signs of life",
+      "Study Martian weather and the ground"
+    ],
+    "instruments": [
+      {
+        "name": "Cameras",
+        "purpose": "Took the first pictures from the surface of Mars."
+      },
+      {
+        "name": "Biology experiments",
+        "purpose": "Mixed soil with nutrients and gases to look for signs of living things."
+      },
+      {
+        "name": "Gas chromatograph–mass spectrometer",
+        "purpose": "Searched the soil for carbon-based chemicals."
+      },
+      {
+        "name": "Weather station",
+        "purpose": "Measured temperature, pressure and wind every day."
+      }
+    ],
+    "discoveries": [
+      "Sent the first images from the surface of Mars.",
+      "Its soil tests did not find clear evidence of life, which shaped how later missions searched.",
+      "Recorded years of Martian weather."
+    ],
+    "timeline": [
+      {
+        "date": "1975-08-20",
+        "label": "Viking 1 launches",
+        "kind": "launch"
+      },
+      {
+        "date": "1976-06-19",
+        "label": "Enters orbit around Mars",
+        "kind": "journey"
+      },
+      {
+        "date": "1976-07-20",
+        "label": "Lander touches down in Chryse Planitia",
+        "kind": "arrival"
+      },
+      {
+        "date": "1976-07-28",
+        "label": "Begins soil experiments searching for life",
+        "kind": "operations"
+      },
+      {
+        "date": "1982-11",
+        "label": "Contact lost",
+        "kind": "end"
+      }
+    ],
+    "funFact": "The Viking 1 lander was powered by small nuclear generators instead of solar panels.",
+    "imageQuery": "Viking 1 lander Mars surface first image",
+    "sources": [
+      {
+        "title": "NASA NSSDCA: Viking 1 Lander",
+        "url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1975-075C"
+      }
+    ]
+  },
+  {
+    "id": "mars-pathfinder",
+    "name": "Mars Pathfinder lander",
+    "missionName": "Mars Pathfinder",
+    "agency": "NASA",
+    "world": "mars",
+    "hardwareType": "lander",
+    "status": "lost-contact",
+    "statusNote": "Last heard from on 27 September 1997, after working three times longer than planned.",
+    "launchDate": "1996-12-04",
+    "arrivalDate": "1997-07-04",
+    "endDate": "1997-09-27",
+    "location": {
+      "description": "Ares Vallis",
+      "lat": 19.13,
+      "lon": -33.22
+    },
+    "tagline": "The lander that bounced onto Mars inside giant airbags.",
+    "story": [
+      "On 4 July 1997, Mars Pathfinder did something nobody had tried before: it landed on Mars wrapped in giant airbags, bouncing across the ground like a beach ball before rolling to a stop.",
+      "Then its petals opened like a flower and a tiny rover named Sojourner drove down a ramp. The lander became the rover's base station, sending its messages to Earth.",
+      "Pathfinder photographed its landing site, which showed signs that a huge flood once rushed through the area long ago."
+    ],
+    "objectives": [
+      "Test a new low-cost way of landing on Mars using airbags",
+      "Deliver and support the Sojourner rover",
+      "Study Mars's rocks, soil and weather"
+    ],
+    "instruments": [
+      {
+        "name": "Imager for Mars Pathfinder",
+        "purpose": "A stereo camera on a mast that photographed the landing site in 3D."
+      },
+      {
+        "name": "Atmospheric and weather package",
+        "purpose": "Measured temperature, pressure and wind."
+      }
+    ],
+    "discoveries": [
+      "Proved the airbag landing system, later used by the Spirit and Opportunity rovers.",
+      "Rounded pebbles and the shapes of the land suggested that water once flowed there in a giant flood."
+    ],
+    "timeline": [
+      {
+        "date": "1996-12-04",
+        "label": "Mars Pathfinder launches",
+        "kind": "launch"
+      },
+      {
+        "date": "1997-07-04",
+        "label": "Bounces to a landing in Ares Vallis",
+        "kind": "arrival"
+      },
+      {
+        "date": "1997-07-06",
+        "label": "Sojourner rolls onto the Martian surface",
+        "kind": "operations"
+      },
+      {
+        "date": "1997-09-27",
+        "label": "Last contact with Earth",
+        "kind": "end"
+      }
+    ],
+    "funFact": "After landing, the lander was renamed the Carl Sagan Memorial Station after the famous astronomer.",
+    "imageQuery": "Mars Pathfinder lander Ares Vallis",
+    "sources": [
+      {
+        "title": "NASA NSSDCA: Mars Pathfinder",
+        "url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1996-068A"
+      }
+    ]
+  },
+  {
+    "id": "sojourner",
+    "name": "Sojourner rover",
+    "missionName": "Mars Pathfinder",
+    "agency": "NASA",
+    "world": "mars",
+    "hardwareType": "rover",
+    "status": "lost-contact",
+    "statusNote": "Sojourner talked to Earth through the Pathfinder lander. When the lander went silent in 1997, contact with Sojourner was lost too.",
+    "launchDate": "1996-12-04",
+    "arrivalDate": "1997-07-04",
+    "endDate": "1997-09-27",
+    "location": {
+      "description": "Near the Pathfinder lander in Ares Vallis",
+      "lat": 19.13,
+      "lon": -33.22
+    },
+    "tagline": "The first rover on Mars, about the size of a microwave oven.",
+    "story": [
+      "Meet Sojourner, one of humanity's first robotic explorers on Mars. It was small, light, and had six wheels.",
+      "NASA sent Sojourner to prove that a rover could drive on Mars and study rocks up close. Drivers on Earth chose where it should go, and Sojourner used its own sensors to avoid bumping into rocks on the way.",
+      "Sojourner pressed its science instrument against rocks the team nicknamed 'Barnacle Bill' and 'Yogi' to find out what they were made of. Every rover on Mars since has followed in its tracks."
+    ],
+    "objectives": [
+      "Prove that a small rover could move around and work on Mars",
+      "Measure what Martian rocks and soil are made of",
+      "Test how wheels behave on Martian ground"
+    ],
+    "instruments": [
+      {
+        "name": "Alpha Proton X-ray Spectrometer (APXS)",
+        "purpose": "Measured the chemical elements in rocks and soil."
+      },
+      {
+        "name": "Cameras",
+        "purpose": "Helped with driving and photographed rocks up close."
+      }
+    ],
+    "discoveries": [
+      "Became the first wheeled vehicle to explore another planet.",
+      "Found that some rocks were richer in silica than scientists expected, hinting that Mars's history was more complicated than thought.",
+      "Showed that a rover could partly drive itself, which helped every later Mars rover."
+    ],
+    "timeline": [
+      {
+        "date": "1996-12-04",
+        "label": "Launches aboard Mars Pathfinder",
+        "kind": "launch"
+      },
+      {
+        "date": "1997-07-04",
+        "label": "Arrives on Mars, folded up on the lander",
+        "kind": "arrival"
+      },
+      {
+        "date": "1997-07-06",
+        "label": "Drives down the ramp onto Mars",
+        "kind": "operations"
+      },
+      {
+        "date": "1997-07",
+        "label": "Studies the rocks 'Barnacle Bill' and 'Yogi'",
+        "kind": "discovery"
+      },
+      {
+        "date": "1997-09-27",
+        "label": "Contact lost when the lander goes silent",
+        "kind": "end"
+      }
+    ],
+    "funFact": "Sojourner was named after Sojourner Truth, an American who fought for freedom and equal rights.",
+    "imageQuery": "Sojourner rover Mars Yogi rock",
+    "sources": [
+      {
+        "title": "NASA NSSDCA: Mars Pathfinder",
+        "url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1996-068A"
+      }
+    ]
+  },
+  {
+    "id": "spirit",
+    "name": "Spirit rover",
+    "missionName": "Mars Exploration Rover A",
+    "agency": "NASA",
+    "world": "mars",
+    "hardwareType": "rover",
+    "status": "lost-contact",
+    "statusNote": "Got stuck in soft sand in 2009 and last contacted Earth on 22 March 2010. NASA ended the mission in May 2011.",
+    "launchDate": "2003-06-10",
+    "arrivalDate": "2004-01-04",
+    "endDate": "2010-03-22",
+    "location": {
+      "description": "Landed in Gusev crater. Final resting place: a site called Troy, near the Columbia Hills.",
+      "lat": -14.57,
+      "lon": 175.47
+    },
+    "tagline": "The rover that dug up clues of ancient hot springs.",
+    "story": [
+      "Spirit was planned to work for just 90 Martian days. It kept going for more than six years!",
+      "Spirit explored a giant crater called Gusev. When one of its six wheels stopped turning, the team drove it backwards, dragging the broken wheel.",
+      "That dragging wheel scraped up bright white soil that turned out to be almost pure silica. On Earth, that kind of soil forms near hot springs or steam vents, places where tiny life can thrive."
+    ],
+    "objectives": [
+      "Search rocks and soil for evidence of past water",
+      "Explore Gusev crater and the Columbia Hills",
+      "Test how long a solar-powered rover could survive on Mars"
+    ],
+    "instruments": [
+      {
+        "name": "Panoramic camera (Pancam)",
+        "purpose": "Took colour panoramas of the landscape."
+      },
+      {
+        "name": "Rock Abrasion Tool",
+        "purpose": "Ground away the dusty outside of rocks to see the fresh rock inside."
+      },
+      {
+        "name": "Alpha Particle X-ray Spectrometer",
+        "purpose": "Measured the chemical elements in rocks and soil."
+      },
+      {
+        "name": "Mössbauer spectrometer",
+        "purpose": "Identified iron-bearing minerals."
+      },
+      {
+        "name": "Microscopic Imager",
+        "purpose": "Took close-up pictures of rock grains, like a geologist's hand lens."
+      }
+    ],
+    "discoveries": [
+      "Found nearly pure silica deposits, a sign of ancient hot springs or steam vents.",
+      "Found rocks changed by water in the Columbia Hills.",
+      "Drove about 7.7 km in total."
+    ],
+    "timeline": [
+      {
+        "date": "2003-06-10",
+        "label": "Spirit launches",
+        "kind": "launch"
+      },
+      {
+        "date": "2004-01-04",
+        "label": "Bounces to a landing in Gusev crater",
+        "kind": "arrival"
+      },
+      {
+        "date": "2006-03",
+        "label": "A front wheel stops working; Spirit starts driving backwards",
+        "kind": "operations"
+      },
+      {
+        "date": "2007-05",
+        "label": "Broken wheel uncovers nearly pure silica soil",
+        "kind": "discovery"
+      },
+      {
+        "date": "2009-05",
+        "label": "Gets stuck in soft sand at Troy",
+        "kind": "operations"
+      },
+      {
+        "date": "2010-03-22",
+        "label": "Last contact with Earth",
+        "kind": "end"
+      },
+      {
+        "date": "2011-05-25",
+        "label": "NASA ends the mission",
+        "kind": "status"
+      }
+    ],
+    "funFact": "Gusts of Martian wind sometimes blew dust off Spirit's solar panels, giving it a surprise power boost.",
+    "imageQuery": "Spirit rover Mars Gusev",
+    "sources": [
+      {
+        "title": "NASA NSSDCA: Mars Exploration Rover A (Spirit)",
+        "url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2003-027A"
+      }
+    ]
+  },
+  {
+    "id": "opportunity",
+    "name": "Opportunity rover",
+    "missionName": "Mars Exploration Rover B",
+    "agency": "NASA",
+    "world": "mars",
+    "hardwareType": "rover",
+    "status": "lost-contact",
+    "statusNote": "A planet-wide dust storm blocked sunlight from its solar panels. Its last contact was on 10 June 2018, and NASA ended the mission in February 2019.",
+    "launchDate": "2003-07-07",
+    "arrivalDate": "2004-01-25",
+    "endDate": "2018-06-10",
+    "location": {
+      "description": "Landed in Eagle crater, Meridiani Planum. Final resting place: Perseverance Valley on the rim of Endeavour crater.",
+      "lat": -1.95,
+      "lon": -5.53
+    },
+    "tagline": "Built to last 90 Martian days, it kept exploring for more than 14 years.",
+    "story": [
+      "Opportunity was the twin of Spirit. It landed on the other side of Mars and rolled into a small crater, right next to a layer of bedrock. Scientists called it a 'hole in one'!",
+      "Close up, the rocks were full of tiny grey balls nicknamed 'blueberries'. They are made of a mineral called hematite, which usually forms in water.",
+      "Opportunity kept driving for more than 14 years and covered over 45 km. In 2018, a huge dust storm darkened the sky, and its solar-powered batteries could not recharge."
+    ],
+    "objectives": [
+      "Search for evidence that water once existed on Mars",
+      "Study rocks and soil in Meridiani Planum",
+      "Explore as long and as far as possible"
+    ],
+    "instruments": [
+      {
+        "name": "Panoramic camera (Pancam)",
+        "purpose": "Took colour panoramas of the landscape."
+      },
+      {
+        "name": "Rock Abrasion Tool",
+        "purpose": "Ground away the outside of rocks to see the fresh rock inside."
+      },
+      {
+        "name": "Alpha Particle X-ray Spectrometer",
+        "purpose": "Measured the chemical elements in rocks."
+      },
+      {
+        "name": "Mössbauer spectrometer",
+        "purpose": "Identified iron minerals, including hematite."
+      },
+      {
+        "name": "Microscopic Imager",
+        "purpose": "Took close-up pictures of rock grains."
+      }
+    ],
+    "discoveries": [
+      "Hematite 'blueberries' and layered rocks showed that liquid water once soaked the ground.",
+      "Found veins of gypsum, a mineral left behind by water flowing through cracks.",
+      "Drove about 45 km, farther than any rover before it."
+    ],
+    "timeline": [
+      {
+        "date": "2003-07-07",
+        "label": "Opportunity launches",
+        "kind": "launch"
+      },
+      {
+        "date": "2004-01-25",
+        "label": "Lands in Eagle crater, Meridiani Planum",
+        "kind": "arrival"
+      },
+      {
+        "date": "2004-03-02",
+        "label": "NASA announces evidence that water once soaked the rocks",
+        "kind": "discovery"
+      },
+      {
+        "date": "2011-08",
+        "label": "Reaches the rim of the giant Endeavour crater",
+        "kind": "journey"
+      },
+      {
+        "date": "2018-06-10",
+        "label": "Last contact during a planet-wide dust storm",
+        "kind": "end"
+      },
+      {
+        "date": "2019-02-13",
+        "label": "NASA ends the mission",
+        "kind": "status"
+      }
+    ],
+    "funFact": "Opportunity's mission was planned for 90 Martian days. It worked for more than 5,000.",
+    "imageQuery": "Opportunity rover Mars Endeavour crater",
+    "sources": [
+      {
+        "title": "NASA NSSDCA: Mars Exploration Rover B (Opportunity)",
+        "url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2003-032A"
+      }
+    ]
+  },
+  {
+    "id": "phoenix",
+    "name": "Phoenix lander",
+    "missionName": "Phoenix Mars Mission",
+    "agency": "NASA",
+    "world": "mars",
+    "hardwareType": "lander",
+    "status": "lost-contact",
+    "statusNote": "Stopped talking to Earth in November 2008 as the arctic winter set in. Later pictures showed ice had damaged its solar panels.",
+    "launchDate": "2007-08-04",
+    "arrivalDate": "2008-05-25",
+    "endDate": "2008-11-02",
+    "location": {
+      "description": "Vastitas Borealis, Mars's northern arctic plains",
+      "lat": 68.22,
+      "lon": -125.75
+    },
+    "tagline": "The lander that touched ice on Mars.",
+    "story": [
+      "Phoenix landed farther north than any Mars spacecraft before, in a flat arctic plain covered with polygon-shaped cracks.",
+      "With its robotic arm, Phoenix dug into the ground and uncovered bright white patches. Days later some of the patches had disappeared. They were water ice, turning straight into vapour in the sunlight!",
+      "Phoenix also watched snow falling from Martian clouds. As winter came, the Sun stopped rising, and Phoenix went quiet."
+    ],
+    "objectives": [
+      "Dig up and study ice under the surface",
+      "Find out whether the soil could ever have supported tiny life",
+      "Study the weather in Mars's arctic"
+    ],
+    "instruments": [
+      {
+        "name": "Robotic arm",
+        "purpose": "Dug trenches and delivered samples to the instruments on deck."
+      },
+      {
+        "name": "Thermal and Evolved Gas Analyzer (TEGA)",
+        "purpose": "Baked soil samples in tiny ovens to see what gases came out."
+      },
+      {
+        "name": "Wet chemistry lab (MECA)",
+        "purpose": "Mixed soil with water to measure its chemistry."
+      },
+      {
+        "name": "Weather station with lidar",
+        "purpose": "Used a laser to study clouds and dust in the sky."
+      }
+    ],
+    "discoveries": [
+      "Confirmed water ice just below the surface of Mars's arctic.",
+      "Found perchlorate, a salt that affects how scientists search for life.",
+      "Saw snow falling from clouds, although it vanished before reaching the ground."
+    ],
+    "timeline": [
+      {
+        "date": "2007-08-04",
+        "label": "Phoenix launches",
+        "kind": "launch"
+      },
+      {
+        "date": "2008-05-25",
+        "label": "Lands using rocket engines in the northern plains",
+        "kind": "arrival"
+      },
+      {
+        "date": "2008-06-20",
+        "label": "Ice seen vanishing from a trench confirms water ice",
+        "kind": "discovery"
+      },
+      {
+        "date": "2008-11-02",
+        "label": "Last signal as winter begins",
+        "kind": "end"
+      },
+      {
+        "date": "2010-05-24",
+        "label": "NASA ends the mission after failed attempts to make contact",
+        "kind": "status"
+      }
+    ],
+    "funFact": "Phoenix carried a mini DVD with stories and messages about Mars, as a gift for future explorers.",
+    "imageQuery": "Phoenix Mars lander ice trench",
+    "sources": [
+      {
+        "title": "NASA NSSDCA: Phoenix",
+        "url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2007-034A"
+      }
+    ]
+  },
+  {
+    "id": "insight",
+    "name": "InSight lander",
+    "missionName": "Interior Exploration using Seismic Investigations, Geodesy and Heat Transport",
+    "agency": "NASA",
+    "world": "mars",
+    "hardwareType": "lander",
+    "status": "lost-contact",
+    "statusNote": "Dust slowly covered its solar panels. After it missed two contact attempts, NASA ended the mission on 21 December 2022.",
+    "launchDate": "2018-05-05",
+    "arrivalDate": "2018-11-26",
+    "endDate": "2022-12-15",
+    "location": {
+      "description": "Elysium Planitia",
+      "lat": 4.5,
+      "lon": 135.62
+    },
+    "tagline": "The lander that listened to marsquakes.",
+    "story": [
+      "Every other Mars mission looked at the surface. InSight wanted to know what Mars is like deep inside.",
+      "It placed a super-sensitive seismometer on the ground and covered it with a dome to block the wind. Then it listened. When Mars shook, waves travelled through the planet, and their echoes revealed what lies underneath.",
+      "InSight heard more than 1,300 marsquakes. Using them, scientists measured the size of Mars's core for the first time."
+    ],
+    "objectives": [
+      "Study the deep interior of Mars: crust, mantle and core",
+      "Measure marsquakes and meteorite impacts",
+      "Measure how heat flows out of the planet"
+    ],
+    "instruments": [
+      {
+        "name": "SEIS seismometer",
+        "purpose": "Listened for marsquakes and impacts. It was sensitive enough to feel vibrations smaller than an atom."
+      },
+      {
+        "name": "HP3 heat probe ('the mole')",
+        "purpose": "Tried to hammer itself deep underground to measure heat. The soil turned out to be too clumpy for it to dig deep."
+      },
+      {
+        "name": "RISE radio experiment",
+        "purpose": "Tracked tiny wobbles in Mars's spin to learn about its core."
+      },
+      {
+        "name": "Weather sensors",
+        "purpose": "Measured wind, temperature and air pressure."
+      }
+    ],
+    "discoveries": [
+      "Detected more than 1,300 marsquakes.",
+      "Found that Mars has a liquid metal core and measured how big it is.",
+      "Mapped the layers of Mars's crust."
+    ],
+    "timeline": [
+      {
+        "date": "2018-05-05",
+        "label": "InSight launches",
+        "kind": "launch"
+      },
+      {
+        "date": "2018-11-26",
+        "label": "Lands in Elysium Planitia",
+        "kind": "arrival"
+      },
+      {
+        "date": "2019-04-06",
+        "label": "Records its first likely marsquake",
+        "kind": "discovery"
+      },
+      {
+        "date": "2022-05-04",
+        "label": "Records the largest marsquake ever detected",
+        "kind": "discovery"
+      },
+      {
+        "date": "2022-12-15",
+        "label": "Last contact with Earth",
+        "kind": "end"
+      },
+      {
+        "date": "2022-12-21",
+        "label": "NASA ends the mission",
+        "kind": "status"
+      }
+    ],
+    "funFact": "InSight's seismometer was so sensitive that it could also feel the wind and passing dust devils.",
+    "imageQuery": "InSight lander seismometer Mars",
+    "sources": [
+      {
+        "title": "NASA NSSDCA: InSight",
+        "url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2018-042A"
+      }
+    ]
+  },
+  {
+    "id": "voyager-1",
+    "name": "Voyager 1",
+    "missionName": "Voyager",
+    "agency": "NASA",
+    "world": "deep-space",
+    "hardwareType": "probe",
+    "status": "operational",
+    "statusNote": "Still sending data from interstellar space. To save power, engineers have switched off most instruments; in April 2026 they turned off another, leaving two science instruments running.",
+    "launchDate": "1977-09-05",
+    "arrivalDate": "2012-08-25",
+    "location": {
+      "description": "Interstellar space, beyond the heliopause"
+    },
+    "trajectory": "Travelling out of the solar system. In late 2026 its radio signals take about a whole day to reach Earth.",
+    "tagline": "The farthest human-made object, still talking to Earth.",
+    "story": [
+      "Voyager 1 launched in 1977, before most of your parents were born! It flew past Jupiter and Saturn and sent home amazing close-up pictures.",
+      "Then it kept going. In 2012 it became the first spacecraft to reach interstellar space, the region between the stars, beyond the bubble the Sun blows around our solar system.",
+      "Voyager 1 carries a golden record with sounds and pictures of Earth, in case anyone ever finds it. Its power drops a little every year, so engineers switch off instruments one by one to keep it talking as long as possible."
+    ],
+    "objectives": [
+      "Fly past and study Jupiter and Saturn and their moons",
+      "Study the outer edge of the Sun's influence",
+      "Explore interstellar space"
+    ],
+    "instruments": [
+      {
+        "name": "Imaging cameras",
+        "purpose": "Photographed Jupiter, Saturn and their moons. Switched off in 1990 after taking the 'Pale Blue Dot' picture."
+      },
+      {
+        "name": "Magnetometer",
+        "purpose": "Measures magnetic fields. Still working."
+      },
+      {
+        "name": "Plasma wave subsystem",
+        "purpose": "Listens to waves in the thin gas between the stars. Still working."
+      },
+      {
+        "name": "Radioisotope power generators",
+        "purpose": "Turn heat from radioactive material into electricity, because sunlight is far too weak out there."
+      }
+    ],
+    "discoveries": [
+      "Found active volcanoes on Jupiter's moon Io, the first seen anywhere beyond Earth.",
+      "Took the 'Pale Blue Dot' picture showing Earth as a tiny speck, in 1990.",
+      "Became the first spacecraft to enter interstellar space, in 2012."
+    ],
+    "timeline": [
+      {
+        "date": "1977-09-05",
+        "label": "Voyager 1 launches",
+        "kind": "launch"
+      },
+      {
+        "date": "1979-03-05",
+        "label": "Closest approach to Jupiter; volcanoes found on Io",
+        "kind": "discovery"
+      },
+      {
+        "date": "1980-11-12",
+        "label": "Flies past Saturn and its moon Titan",
+        "kind": "journey"
+      },
+      {
+        "date": "1990-02-14",
+        "label": "Takes the 'Pale Blue Dot' picture of Earth",
+        "kind": "discovery"
+      },
+      {
+        "date": "2012-08-25",
+        "label": "Enters interstellar space",
+        "kind": "arrival"
+      },
+      {
+        "date": "2026-04-17",
+        "label": "Another instrument switched off to save power",
+        "kind": "status"
+      }
+    ],
+    "funFact": "Voyager 1's computers have far less memory than a modern phone, yet engineers still send it software updates.",
+    "imageQuery": "Voyager spacecraft",
+    "sources": [
+      {
+        "title": "NASA NSSDCA: Voyager 1",
+        "url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1977-084A"
+      },
+      {
+        "title": "NASA Science: Voyager mission",
+        "url": "https://science.nasa.gov/mission/voyager/"
+      },
+      {
+        "title": "NASA: Instrument shut off on Voyager 1 (April 2026)",
+        "url": "https://science.nasa.gov/blogs/voyager/2026/04/17/nasa-shuts-off-instrument-on-voyager-1-to-keep-spacecraft-operating/"
+      }
+    ]
+  },
+  {
+    "id": "voyager-2",
+    "name": "Voyager 2",
+    "missionName": "Voyager",
+    "agency": "NASA",
+    "world": "deep-space",
+    "hardwareType": "probe",
+    "status": "operational",
+    "statusNote": "Still sending data from interstellar space. Several instruments have been switched off to save power.",
+    "launchDate": "1977-08-20",
+    "arrivalDate": "2018-11-05",
+    "location": {
+      "description": "Interstellar space, beyond the heliopause"
+    },
+    "trajectory": "Travelling out of the solar system, below the plane in which the planets orbit.",
+    "tagline": "The only spacecraft ever to visit Uranus and Neptune.",
+    "story": [
+      "Voyager 2 actually launched 16 days before its twin, Voyager 1. It took a longer path that let it visit all four giant planets.",
+      "Using the gravity of each planet like a slingshot, it flew past Jupiter, Saturn, Uranus and Neptune. No other spacecraft has ever been to Uranus or Neptune.",
+      "In 2018 it followed Voyager 1 into interstellar space. It also carries a golden record full of greetings, music and sounds from Earth."
+    ],
+    "objectives": [
+      "Visit Jupiter and Saturn, then Uranus and Neptune",
+      "Study the giant planets' moons, rings and magnetic fields",
+      "Explore the edge of the Sun's influence and beyond"
+    ],
+    "instruments": [
+      {
+        "name": "Imaging cameras",
+        "purpose": "Took the only close-up pictures we have of Uranus and Neptune."
+      },
+      {
+        "name": "Magnetometer",
+        "purpose": "Measures magnetic fields in space."
+      },
+      {
+        "name": "Plasma wave subsystem",
+        "purpose": "Listens to waves in the charged gas of space."
+      },
+      {
+        "name": "Radioisotope power generators",
+        "purpose": "Make electricity from the heat of radioactive material."
+      }
+    ],
+    "discoveries": [
+      "Discovered new moons and rings around Uranus and Neptune.",
+      "Saw Neptune's 'Great Dark Spot', a giant storm.",
+      "Found geysers on Neptune's moon Triton."
+    ],
+    "timeline": [
+      {
+        "date": "1977-08-20",
+        "label": "Voyager 2 launches",
+        "kind": "launch"
+      },
+      {
+        "date": "1979-07-09",
+        "label": "Closest approach to Jupiter",
+        "kind": "journey"
+      },
+      {
+        "date": "1981-08-25",
+        "label": "Flies past Saturn",
+        "kind": "journey"
+      },
+      {
+        "date": "1986-01-24",
+        "label": "First and only visit to Uranus",
+        "kind": "discovery"
+      },
+      {
+        "date": "1989-08-25",
+        "label": "First and only visit to Neptune",
+        "kind": "discovery"
+      },
+      {
+        "date": "2018-11-05",
+        "label": "Enters interstellar space",
+        "kind": "arrival"
+      }
+    ],
+    "funFact": "Voyager 2 used each giant planet's gravity as a slingshot. That lucky line-up of planets happens only about once every 175 years.",
+    "imageQuery": "Voyager 2 Neptune",
+    "sources": [
+      {
+        "title": "NASA NSSDCA: Voyager 2",
+        "url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1977-076A"
+      },
+      {
+        "title": "NASA Science: Voyager mission",
+        "url": "https://science.nasa.gov/mission/voyager/"
+      }
+    ]
+  },
+  {
+    "id": "pioneer-10",
+    "name": "Pioneer 10",
+    "missionName": "Pioneer 10",
+    "agency": "NASA",
+    "world": "deep-space",
+    "hardwareType": "probe",
+    "status": "lost-contact",
+    "statusNote": "Its last, very weak signal was received on 23 January 2003. Its power source had grown too weak to answer again.",
+    "launchDate": "1972-03-03",
+    "arrivalDate": "1973-12-03",
+    "endDate": "2003-01-23",
+    "location": {
+      "description": "Far beyond the planets, heading out of the solar system"
+    },
+    "trajectory": "Coasting in the direction of the red star Aldebaran, in the constellation Taurus.",
+    "tagline": "The first spacecraft to cross the asteroid belt and visit Jupiter.",
+    "story": [
+      "In 1972, nobody knew if a spacecraft could survive a trip through the asteroid belt. Pioneer 10 went first, and made it through safely.",
+      "In 1973 it became the first spacecraft to fly past Jupiter, taking close-up pictures and measuring the planet's powerful radiation.",
+      "Pioneer 10 carries a metal plaque with a drawing of a man and a woman and a map showing where Earth is, like a message in a bottle."
+    ],
+    "objectives": [
+      "Find out if spacecraft could safely cross the asteroid belt",
+      "Make the first close-up study of Jupiter",
+      "Study the solar wind far from the Sun"
+    ],
+    "instruments": [
+      {
+        "name": "Imaging photopolarimeter",
+        "purpose": "Built up pictures of Jupiter one strip at a time as the spacecraft spun."
+      },
+      {
+        "name": "Magnetometer",
+        "purpose": "Measured Jupiter's huge magnetic field."
+      },
+      {
+        "name": "Charged particle detectors",
+        "purpose": "Measured the dangerous radiation around Jupiter."
+      }
+    ],
+    "discoveries": [
+      "Showed that spacecraft could cross the asteroid belt safely.",
+      "Took the first close-up images of Jupiter.",
+      "Measured Jupiter's intense radiation belts, which helped engineers design later missions."
+    ],
+    "timeline": [
+      {
+        "date": "1972-03-03",
+        "label": "Pioneer 10 launches",
+        "kind": "launch"
+      },
+      {
+        "date": "1972-07",
+        "label": "Enters the asteroid belt",
+        "kind": "journey"
+      },
+      {
+        "date": "1973-12-03",
+        "label": "First spacecraft to fly past Jupiter",
+        "kind": "arrival"
+      },
+      {
+        "date": "1983-06-13",
+        "label": "Passes the orbit of Neptune",
+        "kind": "journey"
+      },
+      {
+        "date": "2003-01-23",
+        "label": "Last signal received",
+        "kind": "end"
+      }
+    ],
+    "funFact": "Pioneer 10's plaque shows our solar system's planets, with an arrow pointing out the third one: Earth.",
+    "imageQuery": "Pioneer 10 spacecraft",
+    "sources": [
+      {
+        "title": "NASA NSSDCA: Pioneer 10",
+        "url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1972-012A"
+      }
+    ]
+  },
+  {
+    "id": "pioneer-11",
+    "name": "Pioneer 11",
+    "missionName": "Pioneer 11",
+    "agency": "NASA",
+    "world": "deep-space",
+    "hardwareType": "probe",
+    "status": "lost-contact",
+    "statusNote": "Contact ended on 30 September 1995, when its power was too low to keep working.",
+    "launchDate": "1973-04-06",
+    "arrivalDate": "1979-09-01",
+    "endDate": "1995-09-30",
+    "location": {
+      "description": "Far beyond the planets, heading out of the solar system"
+    },
+    "trajectory": "Coasting in the direction of the constellation Aquila (the Eagle).",
+    "tagline": "The first spacecraft to visit Saturn.",
+    "story": [
+      "Pioneer 11 followed its twin, Pioneer 10, past Jupiter. It flew even closer, then used Jupiter's gravity to swing all the way across the solar system to Saturn.",
+      "In 1979 it became the first spacecraft to visit Saturn. It discovered a new ring and showed the way for the Voyager probes coming after it.",
+      "Like Pioneer 10, it carries a plaque with a message from Earth."
+    ],
+    "objectives": [
+      "Study Jupiter up close",
+      "Become the first spacecraft to visit Saturn",
+      "Scout a safe route for the Voyager spacecraft"
+    ],
+    "instruments": [
+      {
+        "name": "Imaging photopolarimeter",
+        "purpose": "Built up pictures of Jupiter and Saturn as the spacecraft spun."
+      },
+      {
+        "name": "Magnetometer",
+        "purpose": "Measured the magnetic fields of Jupiter and Saturn."
+      },
+      {
+        "name": "Charged particle detectors",
+        "purpose": "Measured radiation around the giant planets."
+      }
+    ],
+    "discoveries": [
+      "First spacecraft to fly past Saturn.",
+      "Discovered Saturn's thin F ring.",
+      "Measured Saturn's magnetic field for the first time."
+    ],
+    "timeline": [
+      {
+        "date": "1973-04-06",
+        "label": "Pioneer 11 launches",
+        "kind": "launch"
+      },
+      {
+        "date": "1974-12",
+        "label": "Flies close past Jupiter",
+        "kind": "journey"
+      },
+      {
+        "date": "1979-09-01",
+        "label": "First spacecraft to visit Saturn",
+        "kind": "arrival"
+      },
+      {
+        "date": "1995-09-30",
+        "label": "Last contact with Earth",
+        "kind": "end"
+      }
+    ],
+    "funFact": "At Saturn, Pioneer 11 passed only about 21,000 km above the planet's cloud tops.",
+    "imageQuery": "Pioneer 11 Saturn",
+    "sources": [
+      {
+        "title": "NASA NSSDCA: Pioneer 11",
+        "url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1973-019A"
+      }
+    ]
+  },
+  {
+    "id": "cassini",
+    "name": "Cassini",
+    "missionName": "Cassini–Huygens",
+    "agency": "NASA, ESA and the Italian Space Agency",
+    "world": "deep-space",
+    "hardwareType": "orbiter",
+    "status": "decommissioned",
+    "statusNote": "Ended on purpose on 15 September 2017 by diving into Saturn, so it could never crash into and contaminate moons that might be habitable.",
+    "launchDate": "1997-10-15",
+    "arrivalDate": "2004-07-01",
+    "endDate": "2017-09-15",
+    "location": {
+      "description": "Burned up in Saturn's atmosphere"
+    },
+    "tagline": "The orbiter that found an ocean hiding inside a moon.",
+    "story": [
+      "Cassini travelled almost seven years to reach Saturn. It carried a passenger: the European Huygens probe, which parachuted down onto Saturn's giant moon Titan.",
+      "For 13 years Cassini looped around Saturn. It flew through jets of icy spray shooting out of a small moon called Enceladus, and found they come from a salty ocean beneath the ice.",
+      "When its fuel was nearly gone, the team steered Cassini into Saturn on purpose. That way it could never crash into Enceladus or Titan, places that might be able to support life."
+    ],
+    "objectives": [
+      "Study Saturn, its rings and its moons up close",
+      "Deliver the Huygens probe to Titan",
+      "Investigate whether Saturn's moons could support life"
+    ],
+    "instruments": [
+      {
+        "name": "Imaging cameras",
+        "purpose": "Took hundreds of thousands of pictures of Saturn, its rings and moons."
+      },
+      {
+        "name": "Radar",
+        "purpose": "Saw through Titan's thick haze to map its surface."
+      },
+      {
+        "name": "Ion and Neutral Mass Spectrometer",
+        "purpose": "Tasted gases in Enceladus's icy jets."
+      },
+      {
+        "name": "Cosmic Dust Analyzer",
+        "purpose": "Studied tiny grains in the rings and in the jets."
+      }
+    ],
+    "discoveries": [
+      "Found jets of water spraying from Enceladus, fed by an ocean under its ice.",
+      "Found seas and lakes of liquid methane and ethane on Titan.",
+      "Discovered new moons and learned how Saturn's rings change."
+    ],
+    "timeline": [
+      {
+        "date": "1997-10-15",
+        "label": "Cassini launches with the Huygens probe",
+        "kind": "launch"
+      },
+      {
+        "date": "2004-07-01",
+        "label": "Enters orbit around Saturn",
+        "kind": "arrival"
+      },
+      {
+        "date": "2005-01-14",
+        "label": "Huygens lands on Titan",
+        "kind": "discovery"
+      },
+      {
+        "date": "2005",
+        "label": "Icy jets discovered at Enceladus",
+        "kind": "discovery"
+      },
+      {
+        "date": "2017-04",
+        "label": "Begins its 'Grand Finale' dives between Saturn and its rings",
+        "kind": "operations"
+      },
+      {
+        "date": "2017-09-15",
+        "label": "Dives into Saturn and ends its mission",
+        "kind": "end"
+      }
+    ],
+    "funFact": "Cassini kept sending science data until the very last moment of its plunge into Saturn.",
+    "imageQuery": "Cassini spacecraft Saturn",
+    "sources": [
+      {
+        "title": "NASA NSSDCA: Cassini",
+        "url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1997-061A"
+      },
+      {
+        "title": "NASA Science: Cassini mission",
+        "url": "https://science.nasa.gov/mission/cassini/"
+      }
+    ]
+  },
+  {
+    "id": "new-horizons",
+    "name": "New Horizons",
+    "missionName": "New Horizons",
+    "agency": "NASA",
+    "world": "deep-space",
+    "hardwareType": "probe",
+    "status": "operational",
+    "statusNote": "Still working and exploring the Kuiper Belt, the icy region beyond Neptune.",
+    "launchDate": "2006-01-19",
+    "arrivalDate": "2015-07-14",
+    "location": {
+      "description": "The Kuiper Belt, beyond Neptune"
+    },
+    "trajectory": "Travelling outward through the Kuiper Belt.",
+    "tagline": "The first spacecraft to visit Pluto.",
+    "story": [
+      "When New Horizons launched in 2006, Pluto was just a blurry dot in even the best telescopes. Nobody knew what it really looked like.",
+      "After a journey of nine and a half years, New Horizons zoomed past Pluto in July 2015. Pluto had a giant heart-shaped plain of frozen nitrogen and mountains made of water ice!",
+      "Then it kept going, and in 2019 it flew past Arrokoth, the most distant object any spacecraft has ever visited up close."
+    ],
+    "objectives": [
+      "Make the first close-up study of Pluto and its moons",
+      "Explore objects in the Kuiper Belt"
+    ],
+    "instruments": [
+      {
+        "name": "LORRI telescope camera",
+        "purpose": "Took detailed black-and-white pictures from far away."
+      },
+      {
+        "name": "Ralph",
+        "purpose": "Took colour pictures and mapped what surfaces are made of."
+      },
+      {
+        "name": "Alice",
+        "purpose": "Studied the thin air around Pluto using ultraviolet light."
+      },
+      {
+        "name": "Venetia Burney Student Dust Counter",
+        "purpose": "Counts dust grains in space. It was built by university students."
+      }
+    ],
+    "discoveries": [
+      "Revealed Pluto's heart-shaped plain of nitrogen ice, Sputnik Planitia.",
+      "Found mountains of water ice and a hazy blue sky on Pluto.",
+      "Visited Arrokoth, a 'snowman-shaped' object left over from when the planets formed."
+    ],
+    "timeline": [
+      {
+        "date": "2006-01-19",
+        "label": "New Horizons launches",
+        "kind": "launch"
+      },
+      {
+        "date": "2007-02-28",
+        "label": "Gets a speed boost from Jupiter's gravity",
+        "kind": "journey"
+      },
+      {
+        "date": "2015-07-14",
+        "label": "First-ever flyby of Pluto",
+        "kind": "arrival"
+      },
+      {
+        "date": "2019-01-01",
+        "label": "Flies past Arrokoth in the Kuiper Belt",
+        "kind": "discovery"
+      }
+    ],
+    "funFact": "New Horizons carries some of the ashes of Clyde Tombaugh, the astronomer who discovered Pluto in 1930.",
+    "imageQuery": "New Horizons Pluto",
+    "sources": [
+      {
+        "title": "NASA NSSDCA: New Horizons",
+        "url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2006-001A"
+      },
+      {
+        "title": "NASA Science: New Horizons mission",
+        "url": "https://science.nasa.gov/mission/new-horizons/"
+      }
+    ]
+  }
+]

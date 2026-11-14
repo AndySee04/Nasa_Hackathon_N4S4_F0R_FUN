@@ -147,3 +147,17 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+
+# ---- N4S4 F0R FUN additions ----
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+# Secrets: never commit real environment files
+.env
+.env.*
+!.env.example
+# Build output
+frontend/dist/
