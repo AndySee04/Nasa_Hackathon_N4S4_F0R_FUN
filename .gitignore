@@ -164,3 +164,6 @@ frontend/dist/
 # Playwright
 frontend/test-results/
 frontend/playwright-report/
+
+# Local scratch space (not tracked)
+/scratch/
