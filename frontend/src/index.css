@@ -1,0 +1,125 @@
+@import "tailwindcss";
+
+/* ---------- Design tokens ---------- */
+@theme {
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Nunito", ui-sans-serif, system-ui, sans-serif;
+
+  --color-space-950: #050816;
+  --color-space-900: #070b1f;
+  --color-space-800: #0d1433;
+  --color-space-700: #151e4a;
+  --color-space-600: #24306b;
+  --color-ink: #e8ecff;
+  --color-muted: #a9b2d6;
+  --color-cyan: #22d3ee;
+  --color-violet: #a78bfa;
+  --color-amber: #fbbf24;
+
+  --color-status-operational: #34d399;
+  --color-status-inactive: #94a3b8;
+  --color-status-decommissioned: #a78bfa;
+  --color-status-lost: #fb923c;
+  --color-status-unknown: #64748b;
+}
+
+/* ---------- Base ---------- */
+html {
+  /* Slightly larger base size: the audience is children. */
+  font-size: 17px;
+  scroll-behavior: smooth;
+}
+@media (min-width: 768px) {
+  html { font-size: 18px; }
+}
+
+body {
+  @apply bg-space-900 text-ink font-sans antialiased;
+  min-height: 100vh;
+  background-image:
+    radial-gradient(1200px 600px at 85% -10%, rgba(124, 58, 237, 0.22), transparent 60%),
+    radial-gradient(900px 500px at -10% 20%, rgba(34, 211, 238, 0.12), transparent 60%),
+    radial-gradient(800px 600px at 50% 120%, rgba(59, 130, 246, 0.14), transparent 60%);
+  background-attachment: fixed;
+}
+
+h1, h2, h3, h4 { @apply font-display tracking-tight; }
+
+:focus-visible {
+  outline: 3px solid var(--color-cyan);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+::selection { background: rgba(167, 139, 250, 0.45); }
+
+/* ---------- Reusable components ---------- */
+@layer components {
+  .glass {
+    @apply rounded-3xl border border-white/10 bg-white/[0.06] backdrop-blur-md;
+    box-shadow: 0 10px 40px -12px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+  .glass-strong {
+    @apply rounded-3xl border border-white/15 bg-space-800/80 backdrop-blur-xl;
+    box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.7);
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 font-display text-base font-semibold transition
+      min-h-12 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply text-space-950;
+    background: linear-gradient(135deg, #22d3ee, #a78bfa);
+    box-shadow: 0 8px 30px -8px rgba(34, 211, 238, 0.6);
+  }
+  .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+  .btn-ghost {
+    @apply border border-white/20 bg-white/5 text-ink hover:bg-white/10;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-sm font-semibold;
+  }
+  .eyebrow {
+    @apply font-display text-sm font-semibold uppercase tracking-[0.18em] text-cyan;
+  }
+  .text-gradient {
+    background: linear-gradient(120deg, #e8ecff 10%, #22d3ee 45%, #a78bfa 85%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+/* ---------- Starfield (pure CSS, cheap to render) ---------- */
+.starfield {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.8), transparent 60%),
+    radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,0.6), transparent 60%),
+    radial-gradient(1.5px 1.5px at 55% 35%, rgba(255,255,255,0.9), transparent 60%),
+    radial-gradient(1px 1px at 75% 15%, rgba(255,255,255,0.7), transparent 60%),
+    radial-gradient(1px 1px at 85% 60%, rgba(255,255,255,0.6), transparent 60%),
+    radial-gradient(1.5px 1.5px at 20% 85%, rgba(167,139,250,0.9), transparent 60%),
+    radial-gradient(1px 1px at 65% 90%, rgba(34,211,238,0.8), transparent 60%),
+    radial-gradient(1px 1px at 92% 85%, rgba(255,255,255,0.7), transparent 60%),
+    radial-gradient(1px 1px at 45% 55%, rgba(255,255,255,0.5), transparent 60%),
+    radial-gradient(1px 1px at 5% 50%, rgba(255,255,255,0.6), transparent 60%);
+  background-size: 420px 420px;
+  animation: twinkle 8s ease-in-out infinite alternate;
+}
+@keyframes twinkle {
+  from { opacity: 0.55; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
