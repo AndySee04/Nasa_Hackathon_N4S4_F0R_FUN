@@ -1,18 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { useEffect, useState } from 'react'
-import { Link, NavLink, useLocation } from 'react-router-dom'
-
-export const NAV_ITEMS = [
-  { to: '/', label: 'Home', short: 'Home' },
-  { to: '/explore', label: 'Explore Universe', short: 'Explore' },
-  { to: '/moon', label: 'Moon Archive', short: 'Moon' },
-  { to: '/mars', label: 'Mars Archive', short: 'Mars' },
-  { to: '/deep-space', label: 'Deep Space', short: 'Deep Space' },
-  { to: '/timeline', label: 'Mission Timeline', short: 'Timeline' },
-  { to: '/science-lab', label: 'Science Lab', short: 'Science Lab' },
-  { to: '/ask-astro', label: 'Ask Astro AI', short: 'Ask Astro' },
-  { to: '/about', label: 'About Project', short: 'About' },
-]
+import { useState } from 'react'
+import { Link, NavLink } from 'react-router-dom'
+import { NAV_ITEMS } from '../data/navigation'
 
 export function Logo() {
   return (
@@ -37,10 +26,6 @@ export function Logo() {
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
-  const location = useLocation()
-
-  useEffect(() => setOpen(false), [location.pathname])
-
   return (
     <header className="sticky top-0 z-40 border-b border-white/10 bg-space-900/75 backdrop-blur-xl">
       <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6" aria-label="Main">
@@ -99,6 +84,7 @@ export default function Navbar() {
                   <NavLink
                     to={item.to}
                     end={item.to === '/'}
+                    onClick={() => setOpen(false)}
                     className={({ isActive }) =>
                       `block rounded-2xl px-4 py-3 text-lg font-semibold ${isActive ? 'bg-white/10 text-ink' : 'text-muted hover:bg-white/5 hover:text-ink'}`
                     }

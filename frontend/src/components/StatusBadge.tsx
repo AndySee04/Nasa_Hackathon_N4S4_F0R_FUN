@@ -18,11 +18,3 @@ export default function StatusBadge({ status, className = '' }: { status: Artifa
     </span>
   )
 }
-
-export const STATUS_HELP: Record<ArtifactStatus, string> = {
-  operational: 'Still working and sending data to Earth.',
-  inactive: 'Left in place after its mission. No longer working.',
-  decommissioned: 'Its mission was ended on purpose by the team.',
-  'lost-contact': 'Stopped answering Earth, and the mission was ended.',
-  unknown: 'We do not have reliable information about its current state.',
-}

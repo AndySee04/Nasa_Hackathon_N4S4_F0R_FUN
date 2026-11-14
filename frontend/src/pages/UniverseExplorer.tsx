@@ -3,7 +3,7 @@ import { Suspense } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { SceneFallback, SpaceScene } from '../components/LazySpaceScene'
 import PageHeader from '../components/PageHeader'
-import { useAstro } from '../context/AstroContext'
+import { useAstro } from '../hooks/useAstro'
 import { BODIES, bodyById, MOON_BODY } from '../data/planets'
 import { usePageContext } from '../hooks/usePageContext'
 

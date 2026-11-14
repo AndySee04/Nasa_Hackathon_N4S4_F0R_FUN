@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
-import { useAstro } from '../context/AstroContext'
+import { useAstro } from '../hooks/useAstro'
 import { artifactById } from '../data'
 import { getSuggestedQuestions } from '../services/api'
 import AstroAvatar from './AstroAvatar'

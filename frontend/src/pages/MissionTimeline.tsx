@@ -1,15 +1,14 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
-import Timeline, { KIND_META } from '../components/Timeline'
-import { artifacts, ERAS, eraOf } from '../data'
+import Timeline from '../components/Timeline'
+import { KIND_META } from '../data/labels'
+import { artifacts, dateSortKey, ERAS, eraOf } from '../data'
 import { usePageContext } from '../hooks/usePageContext'
 import { HARDWARE_LABELS, WORLD_LABELS, type HardwareType, type TimelineKind, type World } from '../types/artifact'
 
 type Opt<T extends string> = T | 'all'
 
-/** Month-only (YYYY-MM) or year-only dates sort after the exact dates in that period. */
-const sortKey = (d: string) => (d.length === 4 ? `${d}-12-31~` : d.length === 7 ? `${d}-31~` : d)
 
 function FilterGroup<T extends string>({
   label,
@@ -69,7 +68,7 @@ export default function MissionTimeline() {
             ),
           })),
       )
-      .sort((x, y) => sortKey(x.date).localeCompare(sortKey(y.date)))
+      .sort((x, y) => dateSortKey(x.date).localeCompare(dateSortKey(y.date)))
   }, [world, era, hardware, kind])
 
   return (

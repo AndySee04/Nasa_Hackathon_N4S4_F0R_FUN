@@ -24,4 +24,7 @@ export function formatDate(date: string | undefined): string {
   return `${d} ${months[m - 1]} ${y}`
 }
 
+/** Month-only (YYYY-MM) or year-only dates sort after the exact dates in that period. */
+export const dateSortKey = (d: string): string => (d.length === 4 ? `${d}-12-31~` : d.length === 7 ? `${d}-31~` : d)
+
 export const FEATURED_IDS = ['apollo-11-eagle', 'opportunity', 'voyager-1']

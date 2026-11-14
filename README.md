@@ -33,7 +33,7 @@ Nasa_Hackathon_N4S4_F0R_FUN/
 │   │   │                     MissionTimeline, ScienceLab, AstroAI, About
 │   │   ├── data/             artifacts.json, glossary.json (source of truth), planets.ts, science.ts
 │   │   ├── types/            artifact.ts (TypeScript data model)
-│   │   ├── context/          AstroContext (chat state shared by every page)
+│   │   ├── context/          AstroProvider (chat state shared by every page)
 │   │   ├── hooks/ services/  API client, NASA Image Library client, backend status
 │   │   └── index.css         Design tokens and shared styles (Tailwind v4)
 │   └── vercel.json           SPA routing + security headers for Vercel
@@ -43,14 +43,16 @@ Nasa_Hackathon_N4S4_F0R_FUN/
 │   │   ├── routes/           ai.py (chat, explain, suggested-questions), artifacts.py
 │   │   ├── services/         ai_service.py, knowledge_service.py, safety.py
 │   │   └── data/             Copy of frontend/src/data JSON (kept in sync, checked by tests)
-│   ├── tests/                pytest suite (24 tests)
+│   ├── tests/                pytest suite
+│   ├── pyproject.toml        ruff + pytest settings
 │   └── .env.example
-└── docs/                     architecture.md, data_sources.md
+├── docs/                     architecture.md, data_sources.md
+└── .github/                  CI workflow, Dependabot, PR and issue templates
 ```
 
 ## Run it locally
 
-You need **Node.js 20+** and **Python 3.11+**.
+You need **Node.js 22** (see `.nvmrc`) and **Python 3.12** (see `.python-version`). Python 3.11+ also works.
 
 ### 1. Backend (Astro AI)
 
@@ -58,7 +60,7 @@ You need **Node.js 20+** and **Python 3.11+**.
 cd backend
 python -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
+pip install -r requirements-dev.txt   # runtime + test/lint tools
 cp .env.example .env               # optional: add ANTHROPIC_API_KEY
 uvicorn app.main:app --reload --port 8000
 ```
@@ -81,10 +83,16 @@ Open http://localhost:5173. The Astro panel shows whether the server is online a
 ### Tests and checks
 
 ```bash
-cd backend && pytest               # API, retrieval, safety rules, data sync
-cd frontend && npm run build       # type-check + production build
-cd frontend && npm run lint
+cd frontend && npm run check       # oxlint + Vitest + type-check + build
+cd backend && pip install -r requirements-dev.txt
+ruff check . && ruff format --check . && pytest
 ```
+
+The same checks run automatically on every pull request (`.github/workflows/ci.yml`).
+
+## Contributing
+
+`main` is protected: changes go through a pull request, and CI must pass before merging. See [CONTRIBUTING.md](CONTRIBUTING.md) for the branch workflow.
 
 ## Editing the artifact data
 

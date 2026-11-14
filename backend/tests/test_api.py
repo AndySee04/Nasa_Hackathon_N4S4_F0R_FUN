@@ -73,7 +73,9 @@ def test_context_aware_follow_up():
 
 
 def test_unrelated_question_on_artifact_page_is_not_forced_onto_artifact():
-    r = client.post("/api/ai/chat", json={"message": "What colour is the sky on planet Zorbix?", "context": {"artifactId": "cassini"}})
+    r = client.post(
+        "/api/ai/chat", json={"message": "What colour is the sky on planet Zorbix?", "context": {"artifactId": "cassini"}}
+    )
     assert "not sure" in r.json()["reply"].lower()
 
 
@@ -141,8 +143,12 @@ def test_parse_model_json():
 
 
 def test_clean_history_alternates_and_starts_with_user():
-    turns = [ChatTurn(role="assistant", content="hello"), ChatTurn(role="user", content="q1"), ChatTurn(role="user", content="q2"),
-             ChatTurn(role="assistant", content="a")]
+    turns = [
+        ChatTurn(role="assistant", content="hello"),
+        ChatTurn(role="user", content="q1"),
+        ChatTurn(role="user", content="q2"),
+        ChatTurn(role="assistant", content="a"),
+    ]
     cleaned = _clean_history(turns)
     assert cleaned[0]["role"] == "user" and cleaned[-1]["role"] == "assistant"
 

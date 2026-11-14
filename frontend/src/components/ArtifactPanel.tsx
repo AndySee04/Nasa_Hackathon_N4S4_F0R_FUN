@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { useAstro } from '../context/AstroContext'
+import { useAstro } from '../hooks/useAstro'
 import { formatDate } from '../data'
 import { HARDWARE_LABELS, type Artifact } from '../types/artifact'
 import ArtifactImage from './ArtifactImage'

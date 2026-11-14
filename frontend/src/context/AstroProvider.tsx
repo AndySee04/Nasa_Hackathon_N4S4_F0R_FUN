@@ -1,32 +1,7 @@
-import { createContext, useCallback, useContext, useMemo, useRef, useState, type ReactNode } from 'react'
-import { useBackendStatus, type BackendStatus } from '../hooks/useBackendStatus'
-import { ApiError, sendChat, type AstroContextInfo, type AstroSource, type ChatTurn } from '../services/api'
-
-export interface ChatMessage {
-  id: number
-  role: 'user' | 'assistant'
-  content: string
-  sources?: AstroSource[]
-  suggestions?: string[]
-  safetyNote?: string | null
-  error?: boolean
-}
-
-interface AstroState {
-  isOpen: boolean
-  open: (question?: string) => void
-  close: () => void
-  pageContext: AstroContextInfo
-  setPageContext: (ctx: AstroContextInfo) => void
-  messages: ChatMessage[]
-  loading: boolean
-  send: (text: string) => Promise<void>
-  reset: () => void
-  backend: BackendStatus
-  recheckBackend: () => void
-}
-
-const Ctx = createContext<AstroState | null>(null)
+import { useCallback, useMemo, useRef, useState, type ReactNode } from 'react'
+import { useBackendStatus } from '../hooks/useBackendStatus'
+import { ApiError, sendChat, type AstroContextInfo, type ChatTurn } from '../services/api'
+import { AstroCtx, type AstroState, type ChatMessage } from './astroState'
 
 const WELCOME: ChatMessage = {
   id: 0,
@@ -113,12 +88,6 @@ export function AstroProvider({ children }: { children: ReactNode }) {
     [isOpen, open, pageContext, messages, loading, send, backend, recheck],
   )
 
-  return <Ctx.Provider value={value}>{children}</Ctx.Provider>
+  return <AstroCtx.Provider value={value}>{children}</AstroCtx.Provider>
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
-export function useAstro(): AstroState {
-  const ctx = useContext(Ctx)
-  if (!ctx) throw new Error('useAstro must be used inside <AstroProvider>')
-  return ctx
-}

@@ -1,0 +1,21 @@
+[project]
+name = "n4s4-f0r-fun-backend"
+version = "0.1.0"
+description = "Astro AI backend for N4S4 F0R FUN"
+requires-python = ">=3.11"
+
+[tool.ruff]
+line-length = 130
+target-version = "py311"
+
+[tool.ruff.lint]
+# Errors, pyflakes, import order, bugbear, pyupgrade, simplify
+select = ["E", "F", "W", "I", "B", "UP", "SIM"]
+ignore = [
+    "B008",  # FastAPI uses function calls (Depends, Query) as default arguments by design
+    "E501",  # line length is handled by `ruff format`; long child-facing strings stay readable on one line
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

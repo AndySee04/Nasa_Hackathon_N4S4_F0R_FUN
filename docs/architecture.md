@@ -5,7 +5,7 @@
  ┌─────────────────────────────────┐                ┌──────────────────────────────────────┐
  │ Pages + components              │  REST / JSON   │ /api/health                          │
  │ 3D scene (three.js, lazy chunk) │ ─────────────▶ │ /api/ai/chat  /api/ai/explain        │
- │ AstroContext (chat state,       │ ◀───────────── │ /api/ai/suggested-questions          │
+ │ AstroProvider (chat state,      │ ◀───────────── │ /api/ai/suggested-questions          │
  │   page + artifact context)      │                │ /api/artifacts[/{id}]                │
  │ data/artifacts.json (bundled)   │                │                                      │
  └──────────────┬──────────────────┘                │ safety.py ─▶ knowledge_service.py    │

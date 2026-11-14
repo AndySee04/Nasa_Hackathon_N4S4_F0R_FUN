@@ -1,0 +1,7 @@
+# Development and CI tools (not needed on the server)
+-r requirements.txt
+pytest>=8.0,<9
+anyio>=4.0,<5
+# Test client transport preferred by newer Starlette versions
+httpx2
+ruff>=0.6

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
-import { Logo, NAV_ITEMS } from './Navbar'
+import { NAV_ITEMS } from '../data/navigation'
+import { Logo } from './Navbar'
 
 const DATA_SOURCES = [
   { title: 'NASA Space Science Data Coordinated Archive (NSSDCA)', url: 'https://nssdc.gsfc.nasa.gov/' },

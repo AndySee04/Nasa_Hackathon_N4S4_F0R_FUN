@@ -1,17 +1,8 @@
 import { motion } from 'framer-motion'
 import type { ReactNode } from 'react'
 import { formatDate } from '../data'
+import { KIND_META } from '../data/labels'
 import type { TimelineKind } from '../types/artifact'
-
-export const KIND_META: Record<TimelineKind, { icon: string; label: string; color: string }> = {
-  launch: { icon: '🚀', label: 'Launch', color: 'bg-cyan' },
-  journey: { icon: '🛰️', label: 'Journey', color: 'bg-sky-400' },
-  arrival: { icon: '📍', label: 'Arrival', color: 'bg-violet' },
-  operations: { icon: '🔧', label: 'Science operations', color: 'bg-indigo-400' },
-  discovery: { icon: '💡', label: 'Discovery', color: 'bg-amber' },
-  end: { icon: '🌙', label: 'Mission end', color: 'bg-status-lost' },
-  status: { icon: '📡', label: 'Status update', color: 'bg-status-inactive' },
-}
 
 export interface TimelineItem {
   key: string

@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { useAstro } from '../context/AstroContext'
+import { useAstro } from '../hooks/useAstro'
 import AstroAvatar from './AstroAvatar'
 import ChatBot from './ChatBot'
 

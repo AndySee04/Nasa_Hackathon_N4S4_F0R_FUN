@@ -50,15 +50,45 @@ Reply ONLY with JSON in this exact shape:
 {"reply": "<your answer>", "follow_ups": ["<short follow-up question>", "<short follow-up question>"]}"""
 
 PAGE_QUESTIONS: dict[str, list[str]] = {
-    "home": ["What is a descent stage?", "What is interstellar space?", "What did Opportunity discover?", "Why did Cassini dive into Saturn?"],
+    "home": [
+        "What is a descent stage?",
+        "What is interstellar space?",
+        "What did Opportunity discover?",
+        "Why did Cassini dive into Saturn?",
+    ],
     "explore": ["Which planets has Voyager 2 visited?", "What is a flyby?", "What is a mare?", "What is a gravity assist?"],
-    "moon-archive": ["What is a retroreflector?", "Why did astronauts visit Surveyor 3?", "What did LCROSS find?", "What is a lunar rover?"],
-    "mars-archive": ["What is a marsquake?", "How did Mars Pathfinder land?", "Why did Opportunity stop working?", "What did Phoenix find under the ground?"],
-    "deep-space-archive": ["What is interstellar space?", "What is the golden record?", "How does Voyager 1 get power?", "What did New Horizons see on Pluto?"],
+    "moon-archive": [
+        "What is a retroreflector?",
+        "Why did astronauts visit Surveyor 3?",
+        "What did LCROSS find?",
+        "What is a lunar rover?",
+    ],
+    "mars-archive": [
+        "What is a marsquake?",
+        "How did Mars Pathfinder land?",
+        "Why did Opportunity stop working?",
+        "What did Phoenix find under the ground?",
+    ],
+    "deep-space-archive": [
+        "What is interstellar space?",
+        "What is the golden record?",
+        "How does Voyager 1 get power?",
+        "What did New Horizons see on Pluto?",
+    ],
     "timeline": ["What is a descent stage?", "What is a flyby?", "Is Voyager 2 still working?", "What is a sol?"],
-    "science-lab": ["How do rovers drive themselves?", "What is an RTG?", "What does a spectrometer do?", "What is the Deep Space Network?"],
+    "science-lab": [
+        "How do rovers drive themselves?",
+        "What is an RTG?",
+        "What does a spectrometer do?",
+        "What is the Deep Space Network?",
+    ],
 }
-DEFAULT_QUESTIONS = ["What is a descent stage?", "Why did Opportunity stop working?", "How does Voyager 1 still talk to Earth?", "What is a marsquake?"]
+DEFAULT_QUESTIONS = [
+    "What is a descent stage?",
+    "Why did Opportunity stop working?",
+    "How does Voyager 1 still talk to Earth?",
+    "What is a marsquake?",
+]
 
 
 def _sources(docs: list[Doc]) -> list[Source]:
@@ -94,8 +124,12 @@ class AstroService:
     async def chat(self, message: str, history: list[ChatTurn], context: PageContext) -> AstroReply:
         safety = check_message(message)
         if not safety.allowed:
-            return AstroReply(reply=safety.reply or "", mode=self.settings.ai_mode, safety_note=safety.note,
-                              suggestions=self.suggested_questions(context.page, context.artifactId)[:2])
+            return AstroReply(
+                reply=safety.reply or "",
+                mode=self.settings.ai_mode,
+                safety_note=safety.note,
+                suggestions=self.suggested_questions(context.page, context.artifactId)[:2],
+            )
 
         docs = self.kb.search(message, context.artifactId)
         if not docs and context.artifactId and _is_follow_up(message):
@@ -131,7 +165,11 @@ class AstroService:
         # so a vague keyword overlap never produces a confident but unrelated answer.
         q_tokens = set(tokenize(message))
         artifact_doc = next(
-            (d for d in docs if d.kind == "artifact" and (q_tokens & d.name_tokens or (d.id == context.artifactId and _is_follow_up(message)))),
+            (
+                d
+                for d in docs
+                if d.kind == "artifact" and (q_tokens & d.name_tokens or (d.id == context.artifactId and _is_follow_up(message)))
+            ),
             None,
         )
         if artifact_doc:
@@ -140,7 +178,11 @@ class AstroService:
             if any(w in q for w in ("discover", "find", "found", "learn", "see", "saw")):
                 body = "Here's what it discovered:\n• " + "\n• ".join(a["discoveries"])
             elif any(w in q for w in ("where", "now", "still", "status", "working", "end", "stop", "die", "happen")):
-                body = a["statusNote"] + (f"\n\n{a['trajectory']}" if a.get("trajectory") else f"\n\nIt rests at: {a['location']['description'].rstrip('.')}.")
+                body = a["statusNote"] + (
+                    f"\n\n{a['trajectory']}"
+                    if a.get("trajectory")
+                    else f"\n\nIt rests at: {a['location']['description'].rstrip('.')}."
+                )
             elif any(w in q for w in ("why", "sent", "goal", "purpose", "mission")):
                 body = "It was sent to:\n• " + "\n• ".join(a["objectives"])
             elif any(w in q for w in ("instrument", "tool", "camera", "measure", "power", "electricity")):
@@ -165,8 +207,13 @@ class AstroService:
         )
 
     # ---------- LLM mode ----------
-    async def _ask_llm(self, message: str, history: list[ChatTurn], docs: list[Doc], context: PageContext) -> tuple[str, list[str]]:
-        facts = "\n\n".join(f"[{i + 1}] {d.title}\n{d.text}" for i, d in enumerate(docs)) or "(No matching facts found in the museum's records.)"
+    async def _ask_llm(
+        self, message: str, history: list[ChatTurn], docs: list[Doc], context: PageContext
+    ) -> tuple[str, list[str]]:
+        facts = (
+            "\n\n".join(f"[{i + 1}] {d.title}\n{d.text}" for i, d in enumerate(docs))
+            or "(No matching facts found in the museum's records.)"
+        )
         page_note = f"The child is on the '{context.page}' page." if context.page else ""
         artifact = self.kb.artifact(context.artifactId)
         if artifact:

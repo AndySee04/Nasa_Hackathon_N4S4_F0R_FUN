@@ -6,10 +6,12 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "oxlint",
+    "lint": "oxlint src --deny-warnings",
     "preview": "vite preview",
     "sync-data": "node -e \"for (const f of ['artifacts.json','glossary.json']) require('fs').copyFileSync('src/data/'+f,'../backend/app/data/'+f)\"",
-    "typecheck": "tsc -b"
+    "typecheck": "tsc -b",
+    "check": "npm run lint && npm run test && npm run build",
+    "test": "vitest run"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.9",
@@ -30,6 +32,10 @@
     "oxlint": "^1.90.0",
     "tailwindcss": "^4.3.5",
     "typescript": "~7.0.2",
-    "vite": "^8.3.6"
+    "vite": "^8.3.6",
+    "vitest": "^5.1.0"
+  },
+  "engines": {
+    "node": ">=20.19"
   }
 }

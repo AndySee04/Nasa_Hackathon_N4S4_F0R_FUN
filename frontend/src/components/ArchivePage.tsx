@@ -5,7 +5,8 @@ import { STATUS_LABELS, type Artifact, type ArtifactStatus, type World } from '.
 import ArtifactCard from './ArtifactCard'
 import ArtifactPanel from './ArtifactPanel'
 import PageHeader from './PageHeader'
-import StatusBadge, { STATUS_HELP } from './StatusBadge'
+import { STATUS_HELP } from '../data/labels'
+import StatusBadge from './StatusBadge'
 
 interface Props {
   world: World

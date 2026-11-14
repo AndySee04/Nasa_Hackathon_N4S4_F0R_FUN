@@ -14,10 +14,58 @@ from functools import lru_cache
 from pathlib import Path
 
 STOPWORDS = {
-    "the", "and", "for", "what", "why", "how", "did", "does", "was", "were", "are", "is", "its", "it's",
-    "who", "when", "where", "which", "about", "tell", "me", "you", "your", "can", "with", "that", "this",
-    "from", "into", "they", "them", "there", "have", "has", "had", "simple", "words", "please", "explain",
-    "mean", "means", "still", "cool", "fact", "a", "an", "of", "to", "in", "on", "do", "be",
+    "the",
+    "and",
+    "for",
+    "what",
+    "why",
+    "how",
+    "did",
+    "does",
+    "was",
+    "were",
+    "are",
+    "is",
+    "its",
+    "it's",
+    "who",
+    "when",
+    "where",
+    "which",
+    "about",
+    "tell",
+    "me",
+    "you",
+    "your",
+    "can",
+    "with",
+    "that",
+    "this",
+    "from",
+    "into",
+    "they",
+    "them",
+    "there",
+    "have",
+    "has",
+    "had",
+    "simple",
+    "words",
+    "please",
+    "explain",
+    "mean",
+    "means",
+    "still",
+    "cool",
+    "fact",
+    "a",
+    "an",
+    "of",
+    "to",
+    "in",
+    "on",
+    "do",
+    "be",
 }
 
 GENERIC_NAME_WORDS = {"lander", "rover", "lunar", "module", "descent", "stage", "vehicle", "mission", "mars", "moon", "the"}
@@ -51,7 +99,8 @@ class KnowledgeBase:
     def _artifact_doc(a: dict) -> Doc:
         parts = [
             f"{a['name']} ({a['missionName']}), built by {a['agency']}. Type: {a['hardwareType']}. World: {a['world']}.",
-            f"Launched {a['launchDate']}." + (f" Arrived/landed {a['arrivalDate']}." if a.get("arrivalDate") else "")
+            f"Launched {a['launchDate']}."
+            + (f" Arrived/landed {a['arrivalDate']}." if a.get("arrivalDate") else "")
             + (f" Last contact or end: {a['endDate']}." if a.get("endDate") else " Still active."),
             f"Status: {a['status']}. {a['statusNote']}",
             f"Location: {a['location']['description']}." + (f" Trajectory: {a['trajectory']}" if a.get("trajectory") else ""),
@@ -97,9 +146,9 @@ class KnowledgeBase:
         for g in self.glossary:
             for phrase in [g["term"], *g.get("aliases", [])]:
                 p = phrase.lower()
-                if re.search(rf"(?<![a-z]){re.escape(p)}(?![a-z])", q):
-                    if best is None or len(p) > best[0]:
-                        best = (len(p), g)
+                matches = re.search(rf"(?<![a-z]){re.escape(p)}(?![a-z])", q)
+                if matches and (best is None or len(p) > best[0]):
+                    best = (len(p), g)
         return best[1] if best else None
 
     def search(self, query: str, context_artifact_id: str | None = None, k: int = 3) -> list[Doc]:
