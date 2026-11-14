@@ -167,3 +167,6 @@ frontend/playwright-report/
 
 # Local scratch space (not tracked)
 /scratch/
+
+# Local Claude Code folder (skills, settings)
+/.claude/
