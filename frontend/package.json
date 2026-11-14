@@ -11,7 +11,8 @@
     "sync-data": "node -e \"for (const f of ['artifacts.json','glossary.json']) require('fs').copyFileSync('src/data/'+f,'../backend/app/data/'+f)\"",
     "typecheck": "tsc -b",
     "check": "npm run lint && npm run test && npm run build",
-    "test": "vitest run"
+    "test": "vitest run --dir src",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.9",
@@ -23,6 +24,7 @@
     "three": "^0.187.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.65.1",
     "@tailwindcss/vite": "^4.3.5",
     "@types/node": "^24.19.2",
     "@types/react": "^19.3.0",

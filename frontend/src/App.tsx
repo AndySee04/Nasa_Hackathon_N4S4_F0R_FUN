@@ -1,6 +1,7 @@
-import { lazy, Suspense, useEffect } from 'react'
+import { lazy, Suspense, useEffect, type ReactNode } from 'react'
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
 import AstroLauncher from './components/AstroLauncher'
+import ErrorBoundary from './components/ErrorBoundary'
 import Footer from './components/Footer'
 import LoadingScreen from './components/LoadingScreen'
 import Navbar from './components/Navbar'
@@ -20,9 +21,17 @@ import Home from './pages/Home'
 // The explorer page is the heaviest; it loads only when visited.
 const UniverseExplorer = lazy(() => import('./pages/UniverseExplorer'))
 
+/** Resets the error screen when the visitor navigates to another page. */
+function RoutedErrorBoundary({ children }: { children: ReactNode }) {
+  const { pathname } = useLocation()
+  return <ErrorBoundary key={pathname}>{children}</ErrorBoundary>
+}
+
 function ScrollToTop() {
   const { pathname } = useLocation()
-  useEffect(() => window.scrollTo(0, 0), [pathname])
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
   return null
 }
 
@@ -38,8 +47,9 @@ export default function App() {
         <div className="relative z-10 flex min-h-screen flex-col">
           <Navbar />
           <main id="main" className="flex-1">
-            <Suspense fallback={<LoadingScreen />}>
-              <Routes>
+            <RoutedErrorBoundary>
+              <Suspense fallback={<LoadingScreen />}>
+                <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/explore" element={<UniverseExplorer />} />
                 <Route path="/moon" element={<MoonArchive />} />
@@ -51,8 +61,9 @@ export default function App() {
                 <Route path="/ask-astro" element={<AstroAI />} />
                 <Route path="/about" element={<About />} />
                 <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Suspense>
+                </Routes>
+              </Suspense>
+            </RoutedErrorBoundary>
           </main>
           <Footer />
         </div>

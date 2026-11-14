@@ -84,6 +84,7 @@ Open http://localhost:5173. The Astro panel shows whether the server is online a
 
 ```bash
 cd frontend && npm run check       # oxlint + Vitest + type-check + build
+cd frontend && npm run test:e2e    # opens every page in Chrome, fails on any JS error
 cd backend && pip install -r requirements-dev.txt
 ruff check . && ruff format --check . && pytest
 ```

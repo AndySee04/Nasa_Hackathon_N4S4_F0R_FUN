@@ -11,6 +11,7 @@ git checkout main && git pull
 git checkout -b feature/short-description      # or fix/…, content/…, docs/…
 # …make your changes…
 cd frontend && npm run check                   # lint + tests + type-check + build
+npm run test:e2e                               # every page in a real browser
 cd ../backend && ruff check . && ruff format . && pytest
 git add -A && git commit -m "Add Mars landing-site map"
 git push -u origin feature/short-description
@@ -20,7 +21,7 @@ Then open a pull request on GitHub. The **CI** workflow runs two checks:
 
 | Check | What it runs |
 |---|---|
-| `frontend` | `npm ci`, `oxlint` (warnings fail the build), Vitest data tests, TypeScript type-check, production build |
+| `frontend` | `npm ci`, `oxlint` (warnings fail the build), Vitest data tests, TypeScript type-check, production build, Playwright smoke tests in a real browser |
 | `backend` | `ruff check`, `ruff format --check`, `pytest` |
 
 When both are green and all review comments are resolved, use **Squash and merge**. The branch is deleted automatically.
