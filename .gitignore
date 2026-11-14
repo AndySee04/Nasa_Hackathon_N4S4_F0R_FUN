@@ -170,3 +170,4 @@ frontend/playwright-report/
 
 # Local Claude Code folder (skills, settings)
 /.claude/
+/skills-lock.json
