@@ -315,3 +315,13 @@ body::after {
     scroll-behavior: auto !important;
   }
 }
+
+/* ---------- Printing the certificate ---------- */
+/* Only the certificate prints: no navigation, stars background or buttons. */
+@media print {
+  body { background: #fff !important; }
+  .crayon-stars, .site-header, footer, .print-hide, [role='dialog'] { display: none !important; }
+  @page { margin: 1.5cm; }
+  .print-area { break-inside: avoid; max-width: 17cm; margin: 0 auto; padding: 0 !important; }
+  .print-area .paper-glue { filter: none !important; box-shadow: none !important; }
+}
