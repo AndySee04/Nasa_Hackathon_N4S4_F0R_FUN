@@ -105,7 +105,7 @@ export const MOON_CAMPAIGN: Campaign = {
     },
     {
       artifactId: 'apollo-15-falcon',
-      catcherSprite: 'rover',
+      catcherSprite: 'lander-rover',
       repair: {
         kind: 'circuit',
         title: 'Wire up the training Moon car',

@@ -24,7 +24,7 @@ export interface Campaign {
   badge: BadgeDef
 }
 
-export type CatcherSprite = 'lander' | 'rover' | 'robot-lander'
+export type CatcherSprite = 'lander' | 'lander-rover' | 'rover' | 'robot-lander'
 
 export interface CampaignArtifact {
   /** Must match an id in artifacts.json. */

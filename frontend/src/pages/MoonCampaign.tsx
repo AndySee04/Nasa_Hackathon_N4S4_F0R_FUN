@@ -131,10 +131,9 @@ export default function MoonCampaign() {
                       <Stars count={selectedStars} />
                     </div>
                     <div className="mt-5 flex flex-wrap items-center gap-3">
-                      <button type="button" className="cbtn c-yellow" disabled>
-                        🚀 Launch rocket claw
-                      </button>
-                      <span className="muted text-sm">The rocket claw arrives in the next update.</span>
+                      <Link to={`/moon/campaign/${selected.artifactId}`} className="cbtn c-yellow">
+                        🚀 {selectedStars > 0 ? 'Play again' : 'Launch rocket claw'}
+                      </Link>
                     </div>
                   </Paper>
                 </motion.div>
