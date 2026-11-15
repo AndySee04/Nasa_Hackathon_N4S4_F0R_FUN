@@ -616,7 +616,7 @@
   .star-river-console-heading,
   .star-river-section-heading { align-items: flex-start; padding: 1.1rem 1rem; }
   .star-river-console-heading h2,
-  .star-river-section-heading h2 { font-size: 1.45rem; }
+  .star-river-section-heading h2 { font-size: 1.25rem; }
   .star-river-live { font-size: 0.67rem; }
   .star-river-comets { grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr)); gap: 0.8rem; padding: 1rem; }
   .star-comet { min-height: 118px; gap: 0.65rem; padding: 0.8rem; }
