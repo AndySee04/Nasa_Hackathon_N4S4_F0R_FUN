@@ -19,6 +19,7 @@ export function BackendBadge() {
       dot: 'bg-status-operational',
       text: backend.state === 'online' && backend.mode === 'llm' ? 'Astro AI online · AI model connected' : 'Astro AI online · knowledge mode (no AI model key set)',
     },
+    waking: { dot: 'bg-yellow animate-pulse', text: 'Waking Astro up… (up to a minute)' },
     offline: { dot: 'bg-status-lost', text: 'Astro AI server offline' },
   } as const
   const s = map[backend.state]
