@@ -2,15 +2,16 @@ import { useState } from 'react'
 import { useNasaImage } from '../hooks/useNasaImage'
 import type { Artifact, HardwareType, World } from '../types/artifact'
 
+/** Coloured paper behind the drawing while a photo loads, or if none is found. */
 const WORLD_BG: Record<World, string> = {
-  moon: 'from-slate-500/40 via-space-700 to-space-900',
-  mars: 'from-orange-600/40 via-space-700 to-space-900',
-  'deep-space': 'from-violet/40 via-space-700 to-space-950',
+  moon: '#d9d6e4',
+  mars: '#f2b38e',
+  'deep-space': '#cbbfff',
 }
 
 /** Simple original line illustrations, used while a NASA photo loads or if none is found. */
 export function HardwareIllustration({ type, className = 'h-24 w-24' }: { type: HardwareType; className?: string }) {
-  const stroke = { stroke: '#e8ecff', strokeWidth: 2.5, fill: 'none', strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const }
+  const stroke = { stroke: '#22203a', strokeWidth: 3, fill: 'none', strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const }
   return (
     <svg viewBox="0 0 100 100" className={className} aria-hidden="true">
       {type === 'rover' && (
@@ -57,44 +58,53 @@ export function HardwareIllustration({ type, className = 'h-24 w-24' }: { type: 
 
 interface Props {
   artifact: Artifact
+  /** Classes for the photo box (its shape), e.g. an aspect ratio. */
   className?: string
   showCredit?: boolean
+  /** Tilt of the printed photo in degrees. */
+  tilt?: number
 }
 
-export default function ArtifactImage({ artifact, className = 'aspect-[4/3]', showCredit = false }: Props) {
+/** A NASA photo printed and glued on with a white border, with a credit line underneath. */
+export default function ArtifactImage({ artifact, className = 'aspect-[4/3]', showCredit = false, tilt = 1 }: Props) {
   const state = useNasaImage(artifact.imageQuery)
   const [failed, setFailed] = useState(false)
   const showPhoto = state.status === 'ready' && !failed
 
   return (
-    <figure className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${WORLD_BG[artifact.world]} ${className}`}>
-      {!showPhoto && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <HardwareIllustration type={artifact.hardwareType} className={`h-1/2 w-1/2 ${state.status === 'loading' ? 'animate-pulse' : ''}`} />
-        </div>
-      )}
-      {showPhoto && (
-        <img
-          src={state.image.url}
-          alt={`NASA photo: ${state.image.title}`}
-          loading="lazy"
-          onError={() => setFailed(true)}
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-      )}
+    <figure className="m-0">
+      <div
+        className={`polaroid relative overflow-hidden ${className}`}
+        style={{ background: WORLD_BG[artifact.world], '--r': `${tilt}deg` } as React.CSSProperties}
+      >
+        {!showPhoto && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <HardwareIllustration type={artifact.hardwareType} className={`h-1/2 w-1/2 ${state.status === 'loading' ? 'animate-pulse' : ''}`} />
+          </div>
+        )}
+        {showPhoto && (
+          <img
+            src={state.image.url}
+            alt={`NASA photo: ${state.image.title}`}
+            loading="lazy"
+            onError={() => setFailed(true)}
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        )}
+      </div>
       {showCredit && (
-        <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent px-4 pb-3 pt-8 text-sm text-ink/90">
+        <figcaption className="muted mt-3 text-sm">
           {showPhoto ? (
             <>
               {state.image.title} · Credit: NASA{state.image.center ? ` (${state.image.center})` : ''} ·{' '}
-              <a href={state.image.pageUrl} target="_blank" rel="noopener noreferrer" className="underline">
+              <a href={state.image.pageUrl} target="_blank" rel="noopener noreferrer" className="link font-normal">
                 NASA Image Library
               </a>
             </>
           ) : state.status === 'loading' ? (
             'Looking for a photo in the NASA Image and Video Library…'
           ) : (
-            'Illustration. No matching photo found in the NASA Image and Video Library.'
+            'Drawing. No matching photo found in the NASA Image and Video Library.'
           )}
         </figcaption>
       )}
