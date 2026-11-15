@@ -311,6 +311,8 @@ body::after {
   mask-image: linear-gradient(to right, #000 calc(100% - 36px), transparent);
 }
 .chip-row::-webkit-scrollbar { display: none; }
+/* A row that only slides on small screens: from lg up it wraps or stacks, so it needs no fade. */
+@media (min-width: 64rem) { .chip-row.chip-row-until-lg { mask-image: none; } }
 .chip-row > * { scroll-snap-align: start; }
 /* "Where this comes from" opens on tap. A small crayon-style triangle shows whether it is open. */
 .sources > summary { list-style: none; display: inline-flex; align-items: center; gap: 0.4rem; }
