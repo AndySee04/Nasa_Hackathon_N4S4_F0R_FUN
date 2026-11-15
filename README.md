@@ -166,6 +166,23 @@ Never add a fact you can't source. See `docs/data_sources.md`.
 
 Thank you to **Yvonne Lee Yee Mun** for the painted art of the Sun, the Moon and all eight planets. Her art is what you see in the solar system on the home page, in Explore, and on the Moon and Mars mission maps.
 
+<table>
+  <tr>
+    <td align="center"><img src="frontend/public/planets/sun.webp" height="90" alt="Sun, painted by Yvonne Lee Yee Mun"><br>Sun</td>
+    <td align="center"><img src="frontend/public/planets/mercury.webp" height="90" alt="Mercury, painted by Yvonne Lee Yee Mun"><br>Mercury</td>
+    <td align="center"><img src="frontend/public/planets/venus.webp" height="90" alt="Venus, painted by Yvonne Lee Yee Mun"><br>Venus</td>
+    <td align="center"><img src="frontend/public/planets/earth.webp" height="90" alt="Earth, painted by Yvonne Lee Yee Mun"><br>Earth</td>
+    <td align="center"><img src="frontend/public/planets/moon.webp" height="90" alt="The Moon, painted by Yvonne Lee Yee Mun"><br>The Moon</td>
+  </tr>
+  <tr>
+    <td align="center"><img src="frontend/public/planets/mars.webp" height="90" alt="Mars, painted by Yvonne Lee Yee Mun"><br>Mars</td>
+    <td align="center"><img src="frontend/public/planets/jupiter.webp" height="90" alt="Jupiter, painted by Yvonne Lee Yee Mun"><br>Jupiter</td>
+    <td align="center"><img src="frontend/public/planets/saturn.webp" height="90" alt="Saturn, painted by Yvonne Lee Yee Mun"><br>Saturn</td>
+    <td align="center"><img src="frontend/public/planets/uranus.webp" height="90" alt="Uranus, painted by Yvonne Lee Yee Mun"><br>Uranus</td>
+    <td align="center"><img src="frontend/public/planets/neptune.webp" height="90" alt="Neptune, painted by Yvonne Lee Yee Mun"><br>Neptune</td>
+  </tr>
+</table>
+
 ## Licence
 
 MIT. See `LICENSE`. NASA images are used under NASA's media usage guidelines.
