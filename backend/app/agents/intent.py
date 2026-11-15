@@ -30,9 +30,13 @@ DEEP_SPACE_WORDS = {
     "asteroid", "asteroids", "comet", "comets", "meteor", "meteors", "meteorite", "universe", "supernova", "stars",
     "quasar", "pulsar", "cosmos",
 }  # fmt: skip
-DEEP_SPACE_PHRASES = ("black hole", "milky way", "light year", "light-year", "big bang", "dark matter", "neutron star")
+DEEP_SPACE_PHRASES = (
+    "black hole", "milky way", "light year", "light-year", "big bang", "dark matter", "neutron star",
+    # A meteor, not a star: without this, "star" pulls in the Sun's page.
+    "shooting star", "falling star",
+)  # fmt: skip
 MISSION_WORDS = {
-    "mission", "missions", "rover", "rovers", "lander", "landers", "probe", "probes", "spacecraft", "astronaut",
+    "mission", "missions", "rover", "rovers", "roving", "lander", "landers", "probe", "probes", "spacecraft", "astronaut",
     "astronauts", "launch", "launched", "landed", "landing", "nasa", "apollo", "module", "orbiter", "seismometer",
     "retroreflector", "experiment", "experiments", "instrument", "instruments", "crew",
 }  # fmt: skip
@@ -81,6 +85,11 @@ def _artifact_names() -> dict[str, set[str]]:
             phrases |= {w for w in words if w not in GENERIC and not w.isdigit() and len(w) > 2}
             # Keep "apollo 11", "voyager 1", "surveyor 3" together, so the number counts.
             phrases |= {f"{w} {n}" for w, n in zip(words, words[1:], strict=False) if n.isdigit()}
+        # The full name as one phrase, so a name made only of generic words still counts when typed in full:
+        # "Lunar Roving Vehicle 1" -> "lunar roving vehicle".
+        full = [w for w in _words(a["name"]) if not w.isdigit()]
+        if len(full) >= 2:
+            phrases.add(" ".join(full))
         names[a["id"]] = phrases
     return names
 

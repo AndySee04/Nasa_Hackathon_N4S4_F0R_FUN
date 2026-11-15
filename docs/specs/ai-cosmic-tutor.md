@@ -145,7 +145,11 @@ Already on `main` (`app/services/safety.py`): personal information, self-harm, p
 - **Secret-request patterns** ("system prompt", "API key", "env", "backend code", "your instructions") → *"I'm here to help you explore space! I can't share private system instructions, but I can explain how my space-learning features work."*
 - **Output check:** strip URLs not in the source registry; block replies that echo the system prompt (string-overlap check); cap 1,200 chars.
 - **Retrieved-text check:** reject chunks containing instruction-like text ("ignore previous…").
-- Don't over-block: "How do astronauts stay safe from radiation?" or "What is a computer virus?" are allowed educational questions.
+- Don't over-block: "How do astronauts stay safe from radiation?" or "What is a computer virus?" are allowed educational questions. Making malware or phishing pages is blocked; asking what a virus is is not.
+- **About Astro:** "How does your space-learning work?" / "Who are you?" get a fixed, honest description (no LLM call), since the secret-request reply invites that question.
+- **Daily cap:** `LLM_DAILY_CAP` (default 500, 0 = none) counts AI model calls per UTC day, per server process. Past the cap, answers come from knowledge mode and are not cached, so AI answers return the next day.
+
+*Implemented in A6:* `SECRET_REQUEST` + `SECRET_REPLY`, `echoes_prompt` (8-word overlap with the system prompt → knowledge-mode answer instead), registry-only links via `sanitize_reply(is_allowed=…)`, `looks_like_instructions` on every retrieved chunk (the same pattern the KB build uses), `services/budget.py`. Tests: `tests/test_safety_extra.py`.
 
 ## 8. Cost and performance budget
 
@@ -180,14 +184,14 @@ backend/app/
   routes/ai.py          add new response fields (contract §4); keep old ones
 backend/tests/
   test_intent.py, test_manager.py, test_retriever.py, test_cache.py, test_safety_extra.py
-  eval/questions.yaml   evaluation set (§10)
+  eval/questions.json   evaluation set (§10): JSON, so no new dependency
 ```
 
 No new paid services. New Python dependencies: **none required** (SQLite FTS5 ships with Python). PyYAML only if we choose YAML over JSON.
 
 ## 10. Evaluation set (run in CI)
 
-`backend/tests/eval/questions.yaml`, about 40 cases. Each has: question, context, expected topic, must-contain facts or sources, must-not-contain items. Categories:
+`backend/tests/eval/questions.json` (run by `tests/test_eval.py`), 46 cases. Each has: question, context, expected topic, must-contain facts or sources, must-not-contain items. Categories:
 
 - 15 Moon campaign facts ("Did Surveyor 3 meet astronauts?" → must mention Apollo 12, Nov 1969, cite the Surveyor 3 source)
 - 8 Solar System ("Why is Mars red?" → topic `solar_system`; the missions module is NOT called)
@@ -206,11 +210,12 @@ Run in knowledge mode in CI (free and deterministic). Run in LLM mode manually b
 | A3 ✅ | Response + cache | One LLM call max; knowledge-mode answers; cache hits return in < 300 ms |
 | A4 ✅ | Suggestions | Topic graph + de-dup; contract fields `suggestions`, `topic`, `confidence` |
 | A5 ✅ | Visual | `images` field with real NASA photos and credit |
-| A6 | Safety + eval | Extra safety rules; all ~40 eval cases pass in knowledge mode |
+| A6 ✅ | Safety + eval | Extra safety rules; all ~40 eval cases pass in knowledge mode |
 
 ## 12. Known limits
 
-- BM25 misses some paraphrases. Add embeddings if eval shows it's needed.
+- BM25 misses some paraphrases. Add embeddings if eval shows it's needed. Known example: "Which planet is closest to the Sun?" finds the Sun's page, not Mercury's ("planet number 1"), so it is not in the eval set yet.
+- Knowledge mode answers with the record sentences that best match the question (`services/answer_pick.py`: question words plus a few child-word synonyms such as big → across). Sentences are copied word for word, never reworded.
 - Knowledge mode answers are plainer than LLM answers by design.
 - Deep-space content is a small seed until those campaigns exist. Today "What is a black hole?" finds only loose matches, so A3's evidence check must answer "I'm not sure" when no document's name matches the question.
 - Planet numbers come from the NASA NSSDCA Planetary Fact Sheet (`app/kb/planetary_factsheet.json`) and are turned into sentences by code, so no figure is retyped by hand. Re-check the sheet when updating `last_verified`; moon counts change as new moons are confirmed.

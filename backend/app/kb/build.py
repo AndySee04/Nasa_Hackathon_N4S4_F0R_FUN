@@ -25,6 +25,8 @@ from datetime import date
 from pathlib import Path
 from urllib.parse import urlparse
 
+from app.services.safety import INSTRUCTION_TEXT
+
 KB_DIR = Path(__file__).resolve().parent
 DATA_DIR = KB_DIR.parent / "data"
 DEFAULT_DB = DATA_DIR / "knowledge.db"
@@ -39,11 +41,9 @@ REQUIRED_META = ("id", "title", "category", "topic", "source_ids", "last_verifie
 # Big enough to keep a short explainer (and its "because…") in one piece.
 CHUNK_WORDS = 200
 
-# Text in the knowledge base must read as facts, never as orders to the model.
-INSTRUCTION_PATTERNS = re.compile(
-    r"ignore (all |any )?(previous|prior|above)|system prompt|you are now|disregard .{0,20}instructions|<\s*/?\s*(system|facts)\s*>",
-    re.IGNORECASE,
-)
+# Text in the knowledge base must read as facts, never as orders to the model. One pattern, shared with
+# the answer step, which checks every retrieved chunk again.
+INSTRUCTION_PATTERNS = INSTRUCTION_TEXT
 
 SCHEMA = """
 CREATE TABLE sources (id TEXT PRIMARY KEY, title TEXT NOT NULL, url TEXT NOT NULL UNIQUE, publisher TEXT, last_verified TEXT);

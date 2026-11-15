@@ -8,6 +8,7 @@ and why the UI reminds children not to share personal information.
 from __future__ import annotations
 
 import re
+from collections.abc import Callable
 from dataclasses import dataclass
 from urllib.parse import urlparse
 
@@ -23,13 +24,37 @@ SELF_HARM = re.compile(r"\b(kill myself|hurt myself|suicide|self[- ]?harm|want t
 
 UNSAFE_TOPICS = re.compile(
     r"\b(bomb|explosive|weapon|gun|shoot (someone|people)|kill (someone|people|him|her)|drugs?|porn|sex|naked|nude|"
-    r"hack (into|someone)|steal)\b",
+    r"hack (into|someone)|steal|"
+    # Making harmful software. Asking what a computer virus IS stays allowed (it's a fair science question).
+    r"(make|write|create|build|code) (a |an |some |my own )?(virus|malware|ransomware|keylogger|trojan)|"
+    r"phishing (email|site|page|link))\b",
     re.I,
+)
+
+#: Asking for Astro's private setup: instructions, keys, code, servers (spec ai-cosmic-tutor.md §7).
+SECRET_REQUEST = re.compile(
+    r"\b((system|hidden|secret|developer|initial|original|backend) (prompt|instructions?|rules|message)|"
+    r"your (prompt|instructions|programming|configuration|config|source code|code|backend|server|database|settings|rules)|"
+    r"api[ _-]?keys?|access tokens?|auth(entication)? tokens?|env(ironment)? (variables?|vars?|file)|\.env\b|"
+    r"credentials|database password|admin password)",
+    re.I,
+)
+SECRET_REPLY = (
+    "I'm here to help you explore space! I can't share private system instructions, "
+    "but I can explain how my space-learning features work."
 )
 
 INJECTION = re.compile(
     r"(ignore (all |your |the )?(previous|above|earlier) (instructions|rules)|system prompt|pretend (to be|you are)|"
     r"jailbreak|developer mode|run this code|sudo |rm -rf)",
+    re.I,
+)
+
+#: Text that talks to the AI instead of stating facts. Knowledge must never contain it (checked when the
+#: knowledge base is built, and again on every retrieved chunk before it reaches the AI model).
+INSTRUCTION_TEXT = re.compile(
+    r"ignore (all |any )?(previous|prior|above)|system prompt|you are now|disregard .{0,20}instructions|"
+    r"<\s*/?\s*(system|facts)\s*>",
     re.I,
 )
 
@@ -67,6 +92,9 @@ def check_message(text: str) -> SafetyResult:
                 note="Message not processed because it may contain personal information.",
             )
 
+    if SECRET_REQUEST.search(text):
+        return SafetyResult(allowed=False, reply=SECRET_REPLY, note="Astro keeps its private settings private.")
+
     if INJECTION.search(text):
         return SafetyResult(
             allowed=False,
@@ -95,9 +123,35 @@ def _allowed_url(url: str) -> bool:
     return any(host == d or host.endswith("." + d) for d in ALLOWED_LINK_DOMAINS)
 
 
-def sanitize_reply(text: str, max_chars: int = 1200) -> str:
-    """Remove links to sites outside the allow-list and keep replies short."""
-    cleaned = _URL.sub(lambda m: m.group(0) if _allowed_url(m.group(0)) else "[link removed]", text).strip()
+def sanitize_reply(text: str, max_chars: int = 1200, is_allowed: Callable[[str], bool] | None = None) -> str:
+    """Remove links that aren't allowed and keep replies short.
+
+    `is_allowed` is the strict check (only URLs in the source registry). Without it, links must at least be
+    on a NASA / Smithsonian / ESA domain.
+    """
+    allowed = is_allowed or _allowed_url
+    cleaned = _URL.sub(lambda m: m.group(0) if allowed(m.group(0).rstrip(".,;:!?")) else "[link removed]", text).strip()
     if len(cleaned) > max_chars:
         cleaned = cleaned[:max_chars].rsplit(" ", 1)[0] + "…"
     return cleaned
+
+
+def looks_like_instructions(text: str) -> bool:
+    """True if text addresses the AI ("ignore previous…") instead of stating facts."""
+    return bool(INSTRUCTION_TEXT.search(text))
+
+
+#: A reply sharing this many words in a row with the system prompt is repeating it.
+ECHO_WORDS = 8
+
+
+def echoes_prompt(reply: str, prompt: str, n: int = ECHO_WORDS) -> bool:
+    """True if the reply repeats any n-word run of the system prompt, i.e. it is leaking its instructions."""
+    p = _plain_words(prompt)
+    runs = {tuple(p[i : i + n]) for i in range(len(p) - n + 1)}
+    r = _plain_words(reply)
+    return any(tuple(r[i : i + n]) in runs for i in range(len(r) - n + 1))
+
+
+def _plain_words(text: str) -> list[str]:
+    return re.findall(r"[a-z0-9']+", text.lower())
