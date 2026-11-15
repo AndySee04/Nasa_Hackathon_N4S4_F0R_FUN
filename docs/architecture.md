@@ -31,7 +31,7 @@ Astro is a **controlled, retrieval-grounded assistant**, not an autonomous agent
 1. **Safety check** (`services/safety.py`): blocks personal information (emails, phone numbers, addresses, passwords, names/schools), responds supportively to self-harm and points to a trusted adult, refuses prompt-injection attempts, and redirects unsafe topics. Messages are capped at 500 characters.
 2. **Retrieval** (`services/knowledge_service.py`): keyword scoring over the artifact records and the glossary, with a boost for the artifact the child is viewing. Simple and transparent by design.
 3. **Answer** (`services/ai_service.py`):
-   - *AI model mode* (when `ANTHROPIC_API_KEY` is set): the retrieved facts and a child-safe system prompt are sent to the model, which must reply in JSON (`reply` + `follow_ups`). It is told to use only the provided facts for mission details and to admit uncertainty.
+   - *AI model mode* (when `ANTHROPIC_API_KEY` or `OPENROUTER_API_KEY` is set; Anthropic wins if both are): the retrieved facts and a child-safe system prompt are sent to the model, which must reply in JSON (`reply` + `follow_ups`). It is told to use only the provided facts for mission details and to admit uncertainty.
    - *Knowledge mode* (no key, or the model call fails): an answer is assembled directly from the glossary or the named artifact's record. Unknown questions get an honest "I'm not sure".
 4. **Output** is sanitised (links outside NASA/Smithsonian/ESA domains removed, length capped) and returned with the **sources** of the facts used.
 5. **Rate limiting**: 20 requests per minute per IP by default.
