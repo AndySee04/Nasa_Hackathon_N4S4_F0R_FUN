@@ -25,6 +25,7 @@ from app.agents import suggestions as suggest
 from app.agents.manager import MAX_EVIDENCE, CosmicManager
 from app.config import Settings
 from app.models import AstroReply, ChatTurn, Image, PageContext, Source
+from app.services.answer_pick import artifact_sentences, best_sentences, rank_sentences, sentences
 from app.services.cache import AnswerCache, answer_cache
 from app.services.images import search_nasa_images
 from app.services.knowledge_service import KnowledgeBase
@@ -271,11 +272,27 @@ class AstroService:
                 mode="knowledge",
             )
 
-        # Curated explainers and NASA fact-sheet numbers are already written for children.
+        # Curated explainers and NASA fact-sheet numbers are already written for children. Among the retrieved
+        # documents, answer from the one whose best sentence fits the question best: "How many moons does Mars
+        # have?" ranks the "Why is Mars red?" explainer first, but only the Mars fact sheet mentions moons.
+        docs = [e for e in evidence if e.kind not in ("artifact", "glossary")]
+        # Words naming any of these documents ("saturn", "rings", "mars") are ignored for all of them, so the
+        # comparison is fair: only words about what is being asked ("moons") can move the answer elsewhere.
+        names = set().union(*(_title_words(h) for h in docs))
+        best_hit, best_score, picks = top, 0.0, []
+        for h in docs:
+            ranked = rank_sentences(message, sentences(self.manager.retriever.document_text(h.doc_id) or h.text), names)
+            if ranked and ranked[0][0] > best_score:
+                best_hit, best_score = h, ranked[0][0]
+                picks = [s for score, s in ranked[:2] if score >= max(1, best_score - 0.5)]
+        top = best_hit
         title = top.title.split(":")[0] if top.kind == "factsheet" else top.title
         intro = f"Here are NASA's numbers for {title}:" if top.kind == "factsheet" else title
+        # Keep the retrieved chunk when it already holds the answer (it gives more context); otherwise answer
+        # with the matching sentences from elsewhere in the document ("How big is the Moon?").
+        body = "\n\n".join(picks) if picks and picks[0] not in top.text else top.text
         return AstroReply(
-            reply=f"{intro}\n\n{top.text}",
+            reply=f"{intro}\n\n{body}",
             sources=_sources([top]),
             suggestions=self.suggested_questions(context.page, named[0] if named else context.artifactId)[:3],
             mode="knowledge",
@@ -326,8 +343,17 @@ def _artifact_answer(a: dict, message: str) -> str:
     elif any(w in q for w in ("instrument", "tool", "camera", "measure", "power", "electricity")):
         body = "Its instruments:\n• " + "\n• ".join(f"{i['name']}: {i['purpose']}" for i in a["instruments"])
     else:
-        body = f"{a['story'][0]}\n\n{a['tagline']}"
-    return f"{a['name']} ({a['missionName']})\n\n{body}\n\nFun fact: {a['funFact']}"
+        # No keyword matched: answer with the record's sentences that fit the question best, word for word.
+        name_words = set(re.findall(r"[a-z]+", f"{a['name']} {a['missionName']} {a['id']}".lower()))
+        picks = best_sentences(message, artifact_sentences(a), name_words=name_words)
+        body = "\n\n".join(picks) if picks else f"{a['story'][0]}\n\n{a['tagline']}"
+    fun = "" if a["funFact"] in body else f"\n\nFun fact: {a['funFact']}"
+    return f"{a['name']} ({a['missionName']})\n\n{body}{fun}"
+
+
+def _title_words(hit: Hit) -> set[str]:
+    """Words naming the document ('mars', 'moon'): they appear everywhere in it, so they can't pick a sentence."""
+    return set(re.findall(r"[a-z]+", hit.title.lower()))
 
 
 def _is_follow_up(message: str) -> bool:
