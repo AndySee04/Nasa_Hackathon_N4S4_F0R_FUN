@@ -9,6 +9,7 @@ const STACK = [
   ['HTML canvas', 'The crayon solar system: every planet is coloured in by code, so there are no big images to download.'],
   ['Python + FastAPI', 'The Astro AI server: safety checks, fact retrieval and the AI model connection.'],
   ['NASA Image and Video Library API', 'Real NASA photos for each artifact, loaded live.'],
+  ['Supabase', 'Optional grown-up accounts with Google sign-in, ready for saving game progress.'],
 ]
 
 /** Each section is its own piece of paper. */
@@ -55,7 +56,8 @@ export default function About() {
 
         <Card title="Safety and privacy for children" tilt={0.5} tone="yellow">
           <ul className="mt-3 space-y-2 text-lg">
-            <li>• No accounts, sign-ups, advertising or tracking.</li>
+            <li>• No advertising or tracking. Everything works without an account.</li>
+            <li>• Accounts are optional and for grown-ups: sign in with Google to save progress. We keep only the name, email and profile picture Google shares, and never share them.</li>
             <li>• Astro AI does not ask for, and tries to block, personal information such as names, addresses and phone numbers.</li>
             <li>• Astro only talks about space and science, and gently redirects other topics.</li>
             <li>• Chats are not saved by our server. If an AI model is connected, questions are sent to that provider to generate an answer.</li>

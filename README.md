@@ -18,6 +18,7 @@ An interactive, story-driven digital space museum for the **2026 NASA Space Apps
 | E · Science Lab | `/science-lab` | Six "how does it work?" explainers with animations, a signal-delay timer and a quiz |
 | F · Astro AI | `/ask-astro` + floating button on every page | Child-safe AI guide, grounded in the museum's data, with a visible backend status badge |
 | About | `/about` | Project, accuracy, child safety and privacy, tech stack |
+| Account | `/account` + "Sign in" sticker in the header | Optional Google sign-in for grown-ups (Supabase Auth), ready for saving game progress |
 
 Statuses are always shown with colour **and** an icon **and** a word: *Still working*, *Inactive*, *Decommissioned*, *Lost contact*, *Unknown*.
 
@@ -80,6 +81,19 @@ npm run dev
 
 Open http://localhost:5173. The Astro panel shows whether the server is online and which mode it is in.
 
+### 3. Google sign-in (optional)
+
+Accounts are for grown-ups and are optional: with no Supabase settings, the site works and the "Sign in" sticker is hidden.
+
+1. **Supabase:** create a project at [supabase.com](https://supabase.com). From **Project Settings → API**, copy the project URL and the **publishable** key (or legacy `anon` key) into `frontend/.env` as `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY`. Never use the secret / `service_role` key in the frontend.
+2. **Google Cloud Console → APIs & Services:**
+   - Set up the **OAuth consent screen** (app name, support email, scopes `email`, `profile`, `openid`).
+   - Under **Credentials**, create an **OAuth client ID** of type *Web application*. Add `http://localhost:5173` and your Vercel URL under **Authorized JavaScript origins**, and `https://<project-ref>.supabase.co/auth/v1/callback` under **Authorized redirect URIs**.
+3. **Supabase → Authentication → Sign In / Providers → Google:** switch it on and paste the Google client ID and secret.
+4. **Supabase → Authentication → URL Configuration:** set **Site URL** to your Vercel URL, and add these **Redirect URLs**: `http://localhost:5173/account`, `https://<your-vercel-domain>/account`, and `https://*-<your-team>.vercel.app/account` for preview deploys.
+
+Google sends visitors back to `/account`, which finishes signing in.
+
 ### Tests and checks
 
 ```bash
@@ -105,7 +119,7 @@ Never add a fact you can't source. See `docs/data_sources.md`.
 
 ## Deploy
 
-- **Frontend → Vercel:** import the repo, set **Root Directory** to `frontend`, add the env var `VITE_API_URL=https://<your-backend-url>`. `vercel.json` handles page routing.
+- **Frontend → Vercel:** import the repo, set **Root Directory** to `frontend`, add the env var `VITE_API_URL=https://<your-backend-url>` (plus `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` for sign-in). `vercel.json` handles page routing.
 - **Backend → any Python host** (for example Render or Railway): root `backend`, build `pip install -r requirements.txt`, start `uvicorn app.main:app --host 0.0.0.0 --port $PORT`. Set `ALLOWED_ORIGINS` to your Vercel URL and, optionally, `ANTHROPIC_API_KEY`.
 
 ## Libraries and why they're here
@@ -114,6 +128,7 @@ Never add a fact you can't source. See `docs/data_sources.md`.
 |---|---|
 | React, TypeScript, Vite | Component UI, type-checked data, fast dev server and build |
 | react-router-dom | Page routes (`/moon`, `/artifact/:id`, …) |
+| @supabase/supabase-js | Optional Google sign-in (Supabase Auth); loaded only when accounts are configured |
 | Tailwind CSS v4 | Design tokens and utility styling |
 | Framer Motion | Page, panel and timeline animations |
 | FastAPI, Pydantic, Uvicorn | REST API with validated request/response models |
