@@ -41,7 +41,7 @@ Facts below come from NASA NSSDCA records and NASA Science. Each still gets a fi
 | **Surveyor 3** | Surveyor 3 (robotic) | 20 Apr 1967 | Robot lander | Ocean of Storms, ~3.0°S 23.4°W | Bounced twice on landing; TV camera + scoop; dug 4 trenches; 6,326 images. Apollo 12 astronauts visited in Nov 1969 and took parts home. |
 | *Bonus:* **Intrepid descent stage** | Apollo 12 | 19 Nov 1969 | Conrad, Bean | Ocean of Storms, ~180 m from Surveyor 3 | Pinpoint landing; 34.35 kg of samples; its ascent stage was crashed on purpose (the first artificial moonquake). |
 
-Sources: NSSDCA 1969-059C (Apollo 11 LM), 1971-008C (Apollo 14 LM, still to be verified), 1971-063C (Apollo 15 LM), 1969-099C (Apollo 12 LM); NASA Science: Surveyor 3; NASA's Apollo 14 mission feature.
+Sources: NSSDCA 1969-059C (Apollo 11 LM), the NSSDCA Apollo 14 mission page (the 1971-008C record page serves Apollo 11 text, so it is not cited), NSSDCA landing-site, precise-position and LM impact tables, 1971-063C (Apollo 15 LM), 1969-099C (Apollo 12 LM); NASA Science: Surveyor 3; NASA's Apollo 14 mission feature.
 
 ---
 
