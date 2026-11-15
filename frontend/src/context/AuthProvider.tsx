@@ -1,7 +1,7 @@
 import type { User } from '@supabase/supabase-js'
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { authConfigured, getSupabase } from '../lib/supabase'
-import { AUTH_RETURN_PATH, AuthCtx, friendlyName, type AuthState, type AuthStatus } from './authState'
+import { AUTH_RETURN_PATH, AuthCtx, friendlyName, googleProfile, type AuthState, type AuthStatus } from './authState'
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<AuthStatus>(authConfigured ? 'loading' : 'disabled')
@@ -52,7 +52,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const value = useMemo<AuthState>(
-    () => ({ status, user, displayName: friendlyName(user), signInWithGoogle, signOut }),
+    () => ({ status, user, displayName: friendlyName(user), profile: googleProfile(user), signInWithGoogle, signOut }),
     [status, user, signInWithGoogle, signOut],
   )
 

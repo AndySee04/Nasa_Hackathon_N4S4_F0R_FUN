@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import AstroAvatar from '../components/AstroAvatar'
 import LoadingScreen from '../components/LoadingScreen'
 import Paper from '../components/Paper'
+import ProfileAvatar from '../components/ProfileAvatar'
 import { useAuth } from '../hooks/useAuth'
 import { usePageContext } from '../hooks/usePageContext'
 
@@ -34,7 +35,7 @@ function readReturnError(): string | null {
 
 export default function Account() {
   usePageContext('account')
-  const { status, user, displayName, signInWithGoogle, signOut } = useAuth()
+  const { status, user, displayName, profile, signInWithGoogle, signOut } = useAuth()
   const navigate = useNavigate()
   const [error, setError] = useState<string | null>(readReturnError)
   const [busy, setBusy] = useState(false)
@@ -73,7 +74,14 @@ export default function Account() {
   return (
     <div className="mx-auto max-w-xl px-4 py-10">
       <Paper tilt={-1} innerClassName="flex flex-col items-center gap-5 px-6 py-10 text-center sm:px-10">
-        <AstroAvatar className="h-24 w-24 -rotate-6" />
+        {status === 'signed-in' ? (
+          // The Google photo, printed and glued on like the museum's other pictures.
+          <span className="polaroid rounded-full" style={{ '--r': '-4deg' } as React.CSSProperties}>
+            <ProfileAvatar px={112} />
+          </span>
+        ) : (
+          <AstroAvatar className="h-24 w-24 -rotate-6" />
+        )}
 
         {status === 'disabled' && (
           <>
@@ -117,11 +125,23 @@ export default function Account() {
           <>
             <p className="tape c-mint">Signed in</p>
             <h1 className="text-4xl">Welcome aboard, {displayName}!</h1>
-            {user.email && (
-              <p className="text-lg">
-                Signed in as <span className="label c-yellow">{user.email}</span>
-              </p>
-            )}
+            <dl className="inset grid w-full grid-cols-[auto_1fr] gap-x-4 gap-y-2 px-5 py-4 text-left">
+              {profile?.fullName && (
+                <>
+                  <dt className="muted font-display">Name</dt>
+                  <dd className="min-w-0 break-words font-bold">{profile.fullName}</dd>
+                </>
+              )}
+              {user.email && (
+                <>
+                  <dt className="muted font-display">Email</dt>
+                  <dd className="min-w-0 break-all">{user.email}</dd>
+                </>
+              )}
+              <dt className="muted font-display">Signed in with</dt>
+              <dd>Google</dd>
+            </dl>
+            <p className="muted text-sm">Your name and photo come from Google. To change them, update your Google account.</p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link to="/explore" className="cbtn c-yellow">
                 Keep exploring

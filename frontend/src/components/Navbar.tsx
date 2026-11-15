@@ -6,6 +6,7 @@ import { useAstro } from '../hooks/useAstro'
 import { useAuth } from '../hooks/useAuth'
 import AstroAvatar from './AstroAvatar'
 import Paper from './Paper'
+import ProfileAvatar from './ProfileAvatar'
 
 /** Tabs across the top. Ask Astro has its own sticker on the right; About lives in the menu and footer. */
 const TABS = NAV_ITEMS.filter((i) => i.to !== '/ask-astro' && i.to !== '/about')
@@ -76,16 +77,16 @@ function AccountButton() {
       }
       style={{ '--r': '-2deg' } as React.CSSProperties}
     >
-      <span className="grid h-8 w-8 place-items-center rounded-full bg-sky text-ink" aria-hidden="true">
-        {signedIn && displayName ? (
-          <span className="font-display text-base font-extrabold">{displayName[0].toUpperCase()}</span>
-        ) : (
+      {signedIn ? (
+        <ProfileAvatar px={32} />
+      ) : (
+        <span className="grid h-8 w-8 place-items-center rounded-full bg-sky text-ink" aria-hidden="true">
           <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round">
             <circle cx="12" cy="8.5" r="3.8" />
             <path d="M4.5 20c1.2-3.6 4-5.4 7.5-5.4s6.3 1.8 7.5 5.4" />
           </svg>
-        )}
-      </span>
+        </span>
+      )}
       {/* Label hides while the tab row is showing (1180–1440px) so the tabs stay on one line. */}
       <span className="hidden max-w-36 truncate sm:max-[1179px]:inline min-[1440px]:inline">{signedIn ? displayName : 'Sign in'}</span>
     </NavLink>
