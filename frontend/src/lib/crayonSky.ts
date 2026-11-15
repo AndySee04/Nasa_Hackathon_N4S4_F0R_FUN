@@ -11,6 +11,15 @@ import { BODIES, MOON_BODY, type Body } from '../data/planets'
 const ALL: Body[] = [...BODIES, MOON_BODY]
 const MAX_ORBIT = Math.max(...BODIES.map((b) => b.orbit))
 
+/**
+ * Worlds with painted, gently moving art (public/planets: a looping video and a transparent still each).
+ * They are drawn instead of the crayon colouring; the Sun keeps its crayon rays around the painting.
+ */
+const PAINTED = new Set(['sun', 'earth', 'mars', 'moon'])
+const paintedUrl = (id: string, ext: 'mp4' | 'webp') => `${import.meta.env.BASE_URL}planets/${id}.${ext}`
+/** How much of the painted picture's width the round world fills. */
+const DISC = 0.975
+
 export interface SkyPos {
   x: number
   y: number
@@ -258,6 +267,7 @@ function crayonPlanet(body: Body, r: number): Sprite {
 
 /** A small drawing of one body, for legends and cards. Returns a data URL. */
 export function crayonPlanetImage(id: string, radius = 40): string {
+  if (PAINTED.has(id)) return paintedUrl(id, 'webp')
   const body = ALL.find((b) => b.id === id)
   if (!body) return ''
   return crayonPlanet(body, radius).canvas.toDataURL()
@@ -296,6 +306,48 @@ export function mountCrayonSky(canvas: HTMLCanvasElement, opts: SkyOptions = {})
 
   const makeSprite = (body: Body, r: number) => crayonPlanet(body, r)
 
+  /* ---------- Painted worlds ----------
+   * The still shows straight away; the video takes over once it has a frame. With reduced motion only the still is used. */
+  const painted: Record<string, { still: HTMLImageElement; video: HTMLVideoElement | null }> = {}
+  for (const id of PAINTED) {
+    const img = new Image()
+    img.src = paintedUrl(id, 'webp')
+    let video: HTMLVideoElement | null = null
+    if (!still) {
+      video = document.createElement('video')
+      video.muted = true
+      video.loop = true
+      video.playsInline = true
+      video.setAttribute('muted', '')
+      video.setAttribute('playsinline', '')
+      video.preload = 'auto'
+      video.src = paintedUrl(id, 'mp4')
+      video.play().catch(() => undefined) // blocked autoplay just leaves the still showing
+    }
+    painted[id] = { still: img, video }
+  }
+  /** Draws a painted world at (x, y) with radius r. False when nothing has loaded yet, so the crayon drawing stands in. */
+  function drawPainted(id: string, x: number, y: number, r: number) {
+    const p = painted[id]
+    if (!p) return false
+    const half = r / DISC
+    if (p.video && p.video.readyState >= 2) {
+      // The video has a black square around the world, so cut it to a circle.
+      ctx.save()
+      ctx.beginPath()
+      ctx.arc(x, y, r, 0, Math.PI * 2)
+      ctx.clip()
+      ctx.drawImage(p.video, x - half, y - half, half * 2, half * 2)
+      ctx.restore()
+      return true
+    }
+    if (p.still.complete && p.still.naturalWidth) {
+      ctx.drawImage(p.still, x - half, y - half, half * 2, half * 2)
+      return true
+    }
+    return false
+  }
+
   function closeUpSize(body: Body) {
     let r = (o.focus!(body, w, h).r / extentOf(body)) * dpr * 1.05
     // Earth looms large behind the Moon when the Moon is followed.
@@ -303,7 +355,7 @@ export function mountCrayonSky(canvas: HTMLCanvasElement, opts: SkyOptions = {})
     return Math.min(SPRITE_CAP, r)
   }
   function prepareCloseUp(body: Body | undefined) {
-    if (!body || !o.focus) return
+    if (!body || !o.focus || PAINTED.has(body.id)) return
     const r = closeUpSize(body)
     if (closeUps[body.id] && closeUps[body.id].r >= r * 0.95) return
     const sp = makeSprite(body, r)
@@ -544,7 +596,7 @@ export function mountCrayonSky(canvas: HTMLCanvasElement, opts: SkyOptions = {})
       const far = sprites[it.body.id]
       const near = closeUps[it.body.id]
       const sp = near && far && r * dpr > far.r * 1.15 ? near : far
-      if (sp) {
+      if (!drawPainted(it.body.id, X, Y, r) && sp) {
         const k = r / sp.r
         ctx.drawImage(sp.canvas, X - sp.cx * k, Y - sp.cy * k, sp.canvas.width * k, sp.canvas.height * k)
       }
@@ -627,6 +679,12 @@ export function mountCrayonSky(canvas: HTMLCanvasElement, opts: SkyOptions = {})
       alive = false
       cancelAnimationFrame(raf)
       ro.disconnect()
+      for (const { video } of Object.values(painted)) {
+        if (!video) continue
+        video.pause()
+        video.removeAttribute('src')
+        video.load() // lets the browser drop the download
+      }
       canvas.removeEventListener('pointerdown', onDown)
       window.removeEventListener('pointermove', onMove)
       window.removeEventListener('pointerup', onUp)
