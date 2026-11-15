@@ -17,11 +17,11 @@ Shared files (identical on both branches):
 
 ```
 main (protected: PR + CI required)
- ├── game  ← game/<feature> branches merge here
- └── ai    ← ai/<feature> branches merge here
+ ├── game  ← game-<feature> branches merge here
+ └── ai    ← ai-<feature> branches merge here
 ```
 
-1. Start new work from the team branch: `git checkout game && git pull && git checkout -b game/rocket-catcher`.
+1. Start new work from the team branch: `git checkout game && git pull && git checkout -b game-rocket-catcher`.
 2. Open a pull request into the team branch (`game` or `ai`). CI runs on every pull request.
 3. When a milestone is finished and green, open a pull request from `game` (or `ai`) into `main`.
 4. Merge `main` back into each team branch after anything lands there, so the branches don't drift: `git checkout game && git merge origin/main`.

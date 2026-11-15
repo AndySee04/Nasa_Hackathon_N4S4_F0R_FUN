@@ -171,3 +171,6 @@ frontend/playwright-report/
 # Local Claude Code folder (skills, settings)
 /.claude/
 /skills-lock.json
+
+# Built Cosmic AI knowledge base (rebuild with: python -m app.kb.build)
+backend/app/data/knowledge.db
