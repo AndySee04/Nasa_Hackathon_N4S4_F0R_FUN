@@ -7,7 +7,7 @@
  * Sizes and distances are squashed so everything fits (see data/planets.ts).
  */
 import { BODIES, MOON_BODY, type Body } from '../data/planets'
-import { DISC, PAINTED, paintedUrl } from './paintedWorlds'
+import { isPainted, PAINTED, paintedMaskUrl, paintedUrl } from './paintedWorlds'
 
 const ALL: Body[] = [...BODIES, MOON_BODY]
 const MAX_ORBIT = Math.max(...BODIES.map((b) => b.orbit))
@@ -261,7 +261,7 @@ function crayonPlanet(body: Body, r: number): Sprite {
 
 /** A small drawing of one body, for legends and cards. Returns a data URL. */
 export function crayonPlanetImage(id: string, radius = 40): string {
-  if (PAINTED.has(id)) return paintedUrl(id, 'webp')
+  if (isPainted(id)) return paintedUrl(id, 'webp')
   const body = ALL.find((b) => b.id === id)
   if (!body) return ''
   return crayonPlanet(body, radius).canvas.toDataURL()
@@ -301,14 +301,33 @@ export function mountCrayonSky(canvas: HTMLCanvasElement, opts: SkyOptions = {})
   const makeSprite = (body: Body, r: number) => crayonPlanet(body, r)
 
   /* ---------- Painted worlds ----------
-   * The still shows straight away; the video takes over once it has a frame. With reduced motion only the still is used. */
-  const painted: Record<string, { still: HTMLImageElement; video: HTMLVideoElement | null }> = {}
-  for (const id of PAINTED) {
+   * Each shows its still at once. A world plays its video only while it is on screen and drawn big enough for the
+   * movement to show, and the video is only fetched the first time that happens: ten videos playing at once just to
+   * draw small dots would be heavy, especially on phones. With reduced motion only the stills are used. */
+  const MOVING_MIN_PX = 44
+  interface PaintedState {
+    still: HTMLImageElement
+    mask: HTMLImageElement | null
+    video: HTMLVideoElement | null
+    asked: boolean
+  }
+  const painted: Record<string, PaintedState> = {}
+  for (const id of Object.keys(PAINTED)) {
     const img = new Image()
     img.src = paintedUrl(id, 'webp')
-    let video: HTMLVideoElement | null = null
-    if (!still) {
-      video = document.createElement('video')
+    let mask: HTMLImageElement | null = null
+    if (PAINTED[id].mask && !still) {
+      mask = new Image()
+      mask.src = paintedMaskUrl(id)
+    }
+    painted[id] = { still: img, mask, video: null, asked: false }
+  }
+  /** Worlds whose video was wanted this frame; the rest are paused after drawing. */
+  const moving = new Set<string>()
+  function videoFor(id: string, p: PaintedState) {
+    if (still) return null
+    if (!p.video) {
+      const video = document.createElement('video')
       video.muted = true
       video.loop = true
       video.playsInline = true
@@ -316,27 +335,62 @@ export function mountCrayonSky(canvas: HTMLCanvasElement, opts: SkyOptions = {})
       video.setAttribute('playsinline', '')
       video.preload = 'auto'
       video.src = paintedUrl(id, 'mp4')
-      video.play().catch(() => undefined) // blocked autoplay just leaves the still showing
+      p.video = video
     }
-    painted[id] = { still: img, video }
+    if (p.video.paused && !p.asked) {
+      p.asked = true
+      p.video
+        .play()
+        .catch(() => undefined) // blocked autoplay just leaves the still showing
+        .finally(() => (p.asked = false))
+    }
+    return p.video
   }
-  /** Draws a painted world at (x, y) with radius r. False when nothing has loaded yet, so the crayon drawing stands in. */
+  function pauseUnused() {
+    for (const [id, p] of Object.entries(painted)) if (p.video && !p.video.paused && !moving.has(id)) p.video.pause()
+    moving.clear()
+  }
+  /** Saturn's video has a black box around the planet and its rings: copy the frame here and cut it to shape. */
+  let cutout: HTMLCanvasElement | null = null
+  function cutOut(video: HTMLVideoElement, mask: HTMLImageElement) {
+    cutout ??= makeCanvas(video.videoWidth, video.videoHeight)
+    const c = cutout.getContext('2d')!
+    c.globalCompositeOperation = 'source-over'
+    c.clearRect(0, 0, cutout.width, cutout.height)
+    c.drawImage(video, 0, 0, cutout.width, cutout.height)
+    c.globalCompositeOperation = 'destination-in'
+    c.drawImage(mask, 0, 0, cutout.width, cutout.height)
+    return cutout
+  }
+  /** Draws a painted world whose round body is at (x, y) with radius r. False when nothing has loaded yet, so the crayon drawing stands in. */
   function drawPainted(id: string, x: number, y: number, r: number) {
     const p = painted[id]
-    if (!p) return false
-    const half = r / DISC
-    if (p.video && p.video.readyState >= 2) {
-      // The video has a black square around the world, so cut it to a circle.
-      ctx.save()
-      ctx.beginPath()
-      ctx.arc(x, y, r, 0, Math.PI * 2)
-      ctx.clip()
-      ctx.drawImage(p.video, x - half, y - half, half * 2, half * 2)
-      ctx.restore()
-      return true
+    const art = PAINTED[id]
+    if (!p || !art) return false
+    const W = r / art.r
+    const H = W / art.aspect
+    const left = x - art.cx * W
+    const top = y - art.cy * H
+    const video = r * dpr >= MOVING_MIN_PX ? videoFor(id, p) : null
+    if (video) moving.add(id)
+    if (video && video.readyState >= 2) {
+      if (!art.mask) {
+        // The video has a black square around the world, so cut it to a circle.
+        ctx.save()
+        ctx.beginPath()
+        ctx.arc(x, y, r, 0, Math.PI * 2)
+        ctx.clip()
+        ctx.drawImage(video, left, top, W, H)
+        ctx.restore()
+        return true
+      }
+      if (p.mask?.complete && p.mask.naturalWidth) {
+        ctx.drawImage(cutOut(video, p.mask), left, top, W, H)
+        return true
+      }
     }
     if (p.still.complete && p.still.naturalWidth) {
-      ctx.drawImage(p.still, x - half, y - half, half * 2, half * 2)
+      ctx.drawImage(p.still, left, top, W, H)
       return true
     }
     return false
@@ -349,7 +403,7 @@ export function mountCrayonSky(canvas: HTMLCanvasElement, opts: SkyOptions = {})
     return Math.min(SPRITE_CAP, r)
   }
   function prepareCloseUp(body: Body | undefined) {
-    if (!body || !o.focus || PAINTED.has(body.id)) return
+    if (!body || !o.focus || isPainted(body.id)) return
     const r = closeUpSize(body)
     if (closeUps[body.id] && closeUps[body.id].r >= r * 0.95) return
     const sp = makeSprite(body, r)
@@ -608,6 +662,7 @@ export function mountCrayonSky(canvas: HTMLCanvasElement, opts: SkyOptions = {})
       }
     }
 
+    pauseUnused()
     o.onFrame?.(positions)
   }
 
