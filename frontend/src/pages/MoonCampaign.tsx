@@ -105,7 +105,13 @@ export default function MoonCampaign() {
               </div>
               <div className="text-right">
                 <p className="font-display text-lg">{MOON_CAMPAIGN.badge.name} badge</p>
-                <p>{hasBadge ? '🏅 Earned!' : 'Catch all 4 machines to earn it'}</p>
+                {hasBadge ? (
+                  <Link to="/moon/certificate" className="link">
+                    🏅 Earned! Get your certificate
+                  </Link>
+                ) : (
+                  <p>Catch all 4 machines to earn it</p>
+                )}
               </div>
             </Paper>
 

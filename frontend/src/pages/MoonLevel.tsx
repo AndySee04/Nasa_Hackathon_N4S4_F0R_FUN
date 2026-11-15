@@ -164,7 +164,11 @@ export default function MoonLevel() {
                   </p>
                   <p className="mt-1">
                     Moon stars: <strong>{totals.earned} / {totals.max}</strong>
-                    {hasBadge && <span className="label c-yellow ml-2">🏅 {MOON_CAMPAIGN.badge.name} badge earned!</span>}
+                    {hasBadge && (
+                      <Link to="/moon/certificate" className="label c-yellow ml-2">
+                        🏅 {MOON_CAMPAIGN.badge.name} badge earned! Get your certificate
+                      </Link>
+                    )}
                   </p>
                   <ul className="mt-2 space-y-1">
                     <li>{saved?.best.caught ? '⭐' : '☆'} Caught it</li>
