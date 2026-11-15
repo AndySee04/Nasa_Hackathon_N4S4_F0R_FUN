@@ -5,9 +5,9 @@ import type { Progress } from './progress'
 export const LEVEL_STEPS = [
   { id: 'catch', label: 'Catch', ready: true },
   { id: 'discovery', label: 'Mission card', ready: true },
-  { id: 'repair', label: 'Repair', ready: false },
+  { id: 'repair', label: 'Repair', ready: true },
   { id: 'science', label: 'Real story', ready: true },
-  { id: 'quiz', label: 'Quiz', ready: false },
+  { id: 'quiz', label: 'Quiz', ready: true },
   { id: 'complete', label: 'Done', ready: true },
 ] as const
 

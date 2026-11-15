@@ -36,7 +36,7 @@ export default function RealStoryCard({ level, artifact, onNext }: { level: Camp
       <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
         <Sources artifact={artifact} />
         <button type="button" className="cbtn c-yellow" onClick={onNext}>
-          Finish this signal ⭐
+          Quiz time →
         </button>
       </div>
     </Paper>

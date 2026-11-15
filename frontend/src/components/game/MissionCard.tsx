@@ -74,7 +74,7 @@ export default function MissionCard({ artifact, onNext }: { artifact: Artifact; 
       <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
         <Sources artifact={artifact} />
         <button type="button" className="cbtn c-yellow" onClick={onNext}>
-          What did scientists learn? →
+          Start the repair mission 🔧
         </button>
       </div>
     </Paper>
