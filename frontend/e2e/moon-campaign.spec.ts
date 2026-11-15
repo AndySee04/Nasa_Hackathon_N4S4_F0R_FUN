@@ -50,7 +50,7 @@ test('saved stars show on the hub and survive a reload', async ({ page }) => {
   await expect(page.getByText('0 / 12')).toBeVisible()
 })
 
-test('catch the first machine with the keyboard and see it on the Moon', async ({ page }) => {
+test('a full signal: catch by keyboard, mission card, real story, next signal', async ({ page }) => {
   const errors: string[] = []
   page.on('pageerror', (e) => errors.push(e.message))
   await page.emulateMedia({ reducedMotion: 'reduce' })
@@ -71,9 +71,28 @@ test('catch the first machine with the keyboard and see it on the Moon', async (
   await expect(claw).toHaveAttribute('aria-valuetext', /right above it/)
   await page.keyboard.press('Space')
 
+  // Stage 3: the mission card shows NASA-sourced facts.
   await expect(page.getByRole('heading', { level: 1, name: 'Signal identified!' })).toBeVisible()
   await expect(page.getByRole('heading', { level: 2, name: 'Eagle Lunar Module descent stage' })).toBeVisible()
-  await page.getByRole('link', { name: /Back to the Moon/ }).click()
+  await expect(page.getByText('Laser Ranging Retroreflector')).toBeVisible()
+  await page.getByText('Where do these facts come from?').click()
+  await expect(page.getByRole('link', { name: /NASA NSSDCA: Apollo 11 Lunar Module/ })).toBeVisible()
+
+  // Stage 5: the real story, clearly marked as true.
+  await page.getByRole('button', { name: /What did scientists learn/ }).click()
+  await expect(page.getByRole('heading', { level: 1, name: 'The real story' })).toBeVisible()
+  await expect(page.getByText(/Real story · true facts from NASA records/)).toBeVisible()
+  await expect(page.getByText(/about 3.8 cm each year/)).toBeVisible()
+
+  // Done: stars, then on to the next uncaught signal.
+  await page.getByRole('button', { name: /Finish this signal/ }).click()
+  await expect(page.getByRole('heading', { level: 1, name: 'Signal complete!' })).toBeVisible()
+  await expect(page.getByText(/Moon stars:/)).toContainText('1 / 12')
+  await page.getByRole('link', { name: /Next signal/ }).click()
+  await expect(page.getByRole('heading', { level: 1, name: 'Catch the signal!' })).toBeVisible()
+  await expect(page.getByText(/Fra Mauro highlands/)).toBeVisible()
+
+  await page.goto('/moon/campaign')
   await expect(page.getByText('1 / 12')).toBeVisible()
   await expect(page.getByRole('button', { name: /Eagle Lunar Module descent stage: 1 of 3 stars/ })).toBeVisible()
   expect(errors).toEqual([])

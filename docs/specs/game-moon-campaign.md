@@ -132,7 +132,7 @@ Reuse what's already there: `ArtifactImage`, `StatusBadge`, `Paper`, the crayon 
 | G1 ✅ | Data + types | Antares, Falcon and Intrepid records added with sources; `campaign.ts`, `moon.ts`, `scoring.ts`, `progress.ts`; data tests pass |
 | G2 ✅ | Landing + hub | `/moon/campaign` shows the scene, clickable Moon facts and the briefing; works on phone and desktop |
 | G3 ✅ | Rocket catcher | Catch all 4 artifacts by mouse, touch and keyboard; Easy mode; hint after 2 misses |
-| G4 | Discovery + real story | Mission card for each artifact with photo, facts, status and links; Real story card |
+| G4 ✅ | Discovery + real story | Mission card for each artifact with photo, facts, status and links; Real story card |
 | G5 | Repairs + quiz + stars | 4 challenge types; quiz; stars saved; replay keeps the best |
 | G6 | Badge + certificate | Moon Explorer badge; printable certificate with the unofficial wording |
 | G7 | Polish + tests | e2e: full Antares mission from landing to 3 stars; Lighthouse accessibility ≥ 95 |
