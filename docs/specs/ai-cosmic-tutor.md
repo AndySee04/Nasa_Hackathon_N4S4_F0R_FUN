@@ -75,7 +75,7 @@ File `backend/app/data/knowledge.db`, built by `python -m app.kb.build` from fil
 | `records` | Structured mission and artifact facts (dates, agency, status, coordinates) | `artifacts.json` (shared with the game) |
 | `documents` | Curated short explainers, 150–400 words each, written from NASA pages | `kb/docs/*.md` with front-matter |
 | `chunks` | Documents split into ~120-word chunks + BM25 index (SQLite FTS5) | built |
-| `sources` | Every allowed URL, its title, publisher and `last_verified` | `kb/sources.yaml` |
+| `sources` | Every allowed URL, its title, publisher and `last_verified` | `kb/sources.json` + artifact sources |
 | `cache` | Normalised question + context hash → answer JSON, with expiry | runtime |
 
 Document front-matter (from the original prompt, extended):
@@ -94,7 +94,7 @@ reading_level: 8-12
 ```
 
 Rules:
-- **Only** URLs from `sources.yaml` may appear in answers. A model-written URL is stripped.
+- **Only** URLs from the source registry may appear in answers. A model-written URL is stripped.
 - AI answers are **never** written back into the knowledge base.
 - Retrieval: FTS5 BM25, top-k = 4, filtered by `topic`/`category`. Embeddings (sqlite-vec) can be added later behind the same `Retriever` interface without changing callers.
 - Seed corpus for the hackathon: the Moon campaign artifacts (Eagle, Antares, Falcon + LRV, Surveyor 3, Intrepid), the Moon itself, the 8 planets + Sun (1 page each), and 10 glossary-style explainers (descent stage, seismometer, retroreflector…).
@@ -137,7 +137,7 @@ Mixed questions ("Why is the Moon grey and which rovers went there?") may call *
 Already on `main` (`app/services/safety.py`): personal information, self-harm, prompt-injection and unsafe-topic rules; link allow-list; length caps; rate limit. Add:
 
 - **Secret-request patterns** ("system prompt", "API key", "env", "backend code", "your instructions") → *"I'm here to help you explore space! I can't share private system instructions, but I can explain how my space-learning features work."*
-- **Output check:** strip URLs not in `sources.yaml`; block replies that echo the system prompt (string-overlap check); cap 1,200 chars.
+- **Output check:** strip URLs not in the source registry; block replies that echo the system prompt (string-overlap check); cap 1,200 chars.
 - **Retrieved-text check:** reject chunks containing instruction-like text ("ignore previous…").
 - Don't over-block: "How do astronauts stay safe from radiation?" or "What is a computer virus?" are allowed educational questions.
 
@@ -163,7 +163,7 @@ backend/app/
   kb/
     build.py            builds knowledge.db from docs + sources + artifacts.json
     docs/*.md           curated explainers (§2)
-    sources.yaml        source registry
+    sources.json        source registry (JSON: no new dependency)
     suggestions.yaml    topic graph (§5)
   services/
     retriever.py        FTS5 BM25 (embeddings later behind the same class)
@@ -195,7 +195,7 @@ Run in knowledge mode in CI (free and deterministic). Run in LLM mode manually b
 
 | # | Milestone | Done when |
 |---|---|---|
-| A1 | Knowledge base | `knowledge.db` builds from curated docs + sources; FTS retrieval tests pass |
+| A1 ✅ | Knowledge base | `knowledge.db` builds from curated docs + sources; FTS retrieval tests pass |
 | A2 | Intent + Manager | Routing tests: "Why is Mars red?" → solar_system only; depth and max-modules enforced |
 | A3 | Response + cache | One LLM call max; knowledge-mode answers; cache hits return in < 300 ms |
 | A4 | Suggestions | Topic graph + de-dup; contract fields `suggestions`, `topic`, `confidence` |
@@ -206,4 +206,5 @@ Run in knowledge mode in CI (free and deterministic). Run in LLM mode manually b
 
 - BM25 misses some paraphrases. Add embeddings if eval shows it's needed.
 - Knowledge mode answers are plainer than LLM answers by design.
-- Deep-space content is a small seed until those campaigns exist.
+- Deep-space content is a small seed until those campaigns exist. Today "What is a black hole?" finds only loose matches, so A3's evidence check must answer "I'm not sure" when no document's name matches the question.
+- Planet numbers come from the NASA NSSDCA Planetary Fact Sheet (`app/kb/planetary_factsheet.json`) and are turned into sentences by code, so no figure is retyped by hand. Re-check the sheet when updating `last_verified`; moon counts change as new moons are confirmed.

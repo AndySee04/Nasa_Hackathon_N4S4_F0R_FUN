@@ -1,0 +1,11 @@
+[
+  {"id": "nssdca-planetary-factsheet", "title": "NASA NSSDCA: Planetary Fact Sheet (metric)", "url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/index.html", "publisher": "NASA NSSDCA", "last_verified": "2026-11-15"},
+  {"id": "nssdca-moon-factsheet", "title": "NASA NSSDCA: Moon Fact Sheet", "url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html", "publisher": "NASA NSSDCA", "last_verified": "2026-11-15"},
+  {"id": "nssdca-sun-factsheet", "title": "NASA NSSDCA: Sun Fact Sheet", "url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/sunfact.html", "publisher": "NASA NSSDCA", "last_verified": "2026-11-15"},
+  {"id": "nasa-science-moon-facts", "title": "NASA Science: Moon Facts", "url": "https://science.nasa.gov/moon/facts/", "publisher": "NASA Science", "last_verified": "2026-11-15"},
+  {"id": "nasa-science-sun-facts", "title": "NASA Science: Our Sun, Facts", "url": "https://science.nasa.gov/sun/facts/", "publisher": "NASA Science", "last_verified": "2026-11-15"},
+  {"id": "nasa-science-mars-facts", "title": "NASA Science: Mars Facts", "url": "https://science.nasa.gov/mars/facts/", "publisher": "NASA Science", "last_verified": "2026-11-15"},
+  {"id": "jpl-mars-in-a-minute-red", "title": "NASA JPL: Mars in a Minute, Is Mars really red?", "url": "https://www.jpl.nasa.gov/videos/mars-in-a-minute-is-mars-really-red/", "publisher": "NASA JPL", "last_verified": "2026-11-15"},
+  {"id": "nasa-science-saturn-facts", "title": "NASA Science: Saturn Facts", "url": "https://science.nasa.gov/saturn/facts/", "publisher": "NASA Science", "last_verified": "2026-11-15"},
+  {"id": "nasa-science-cassini-saturn", "title": "NASA Science: Cassini at Saturn", "url": "https://science.nasa.gov/?p=107817", "publisher": "NASA Science", "last_verified": "2026-11-15"}
+]
