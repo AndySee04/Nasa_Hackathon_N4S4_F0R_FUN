@@ -3,7 +3,7 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [main, game, ai]
 
 # Cancel an older run on the same branch when a newer commit arrives.
 concurrency:
