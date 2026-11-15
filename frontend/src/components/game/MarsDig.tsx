@@ -18,6 +18,7 @@ import {
   type DigState,
 } from '../../game/dig'
 import type { CatcherSprite, DigClue } from '../../types/campaign'
+import { useBringIntoView } from '../../hooks/useBringIntoView'
 import Paper from '../Paper'
 import { MachineSprite } from './Sprites'
 
@@ -60,6 +61,7 @@ export default function MarsDig({ artifactId, attempt, sprite, clues, easy, onFo
   const gridRef = useRef<HTMLDivElement>(null)
 
   const found = machineFound(layout, state)
+  const foundRef = useBringIntoView<HTMLDivElement>(found)
   const outOfEnergy = state.energy <= 0 && !found
   const k = (c: Cell) => `${c.col},${c.row}`
   const machineIndex = (c: Cell) => layout.machine.findIndex((m) => m.col === c.col && m.row === c.row)
@@ -138,24 +140,10 @@ export default function MarsDig({ artifactId, attempt, sprite, clues, easy, onFo
 
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
-      <Paper tone="cream" tilt={-0.3} innerClassName="p-4 sm:p-6">
-        <p className="tape c-orange mb-3">🎮 Pretend dig · Mars simulator</p>
-        <div className="mb-3 flex flex-wrap items-center gap-3">
-          <div className="min-w-40 flex-1">
-            <p className="font-display" id="energy-label">
-              🔋 Solar energy: {state.energy}
-            </p>
-            <div
-              className="mt-1 h-4 overflow-hidden rounded-full border-2 border-ink/70 bg-sticker"
-              role="meter"
-              aria-labelledby="energy-label"
-              aria-valuemin={0}
-              aria-valuemax={Math.max(energyMax, state.energy)}
-              aria-valuenow={state.energy}
-            >
-              <div className="h-full" style={{ width: `${energyPct}%`, background: energyPct > 30 ? '#7ccf9a' : '#f28b82' }} />
-            </div>
-          </div>
+      <Paper tone="cream" tilt={-0.3} innerClassName="p-3 sm:p-4">
+        {/* Kept to two short rows, so the whole dig site fits on screen under them. */}
+        <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+          <p className="tape c-orange">🎮 Pretend dig · the real machines sit on the surface</p>
           <button
             type="button"
             className={`chip sticker ${scanMode ? 'c-yellow' : 'c-white'}`}
@@ -169,78 +157,90 @@ export default function MarsDig({ artifactId, attempt, sprite, clues, easy, onFo
             📡 Scanner ({state.scansLeft} left)
           </button>
         </div>
+        <div className="mb-2 flex items-center gap-3">
+          <p className="shrink-0 font-display" id="energy-label">
+            🔋 Solar energy: {state.energy}
+          </p>
+          <div
+            className="h-4 flex-1 overflow-hidden rounded-full border-2 border-ink/70 bg-sticker"
+            role="meter"
+            aria-labelledby="energy-label"
+            aria-valuemin={0}
+            aria-valuemax={Math.max(energyMax, state.energy)}
+            aria-valuenow={state.energy}
+          >
+            <div className="h-full" style={{ width: `${energyPct}%`, background: energyPct > 30 ? '#7ccf9a' : '#f28b82' }} />
+          </div>
+        </div>
 
         {/* The sky strip above the ground. */}
-        <div className="flex h-8 items-end justify-center rounded-t-md" style={{ background: '#f6d7b0' }} aria-hidden="true">
-          <span className="text-sm text-ink-soft">surface of Mars</span>
-        </div>
-        <div
-          ref={gridRef}
-          role="grid"
-          aria-label="Dig site. Use arrow keys to move and Enter to dig."
-          onKeyDown={onKey}
-          className="grid gap-1 rounded-b-md border-[3px] border-ink/80 p-1"
-          style={{ gridTemplateColumns: `repeat(${COLS}, minmax(0, 1fr))`, background: '#5a2a1d' }}
-        >
-          {Array.from({ length: ROWS }, (_, row) =>
-            Array.from({ length: COLS }, (_, col) => {
-              const c = { col, row }
-              const g = layout.ground[row][col]
-              const open = isOpen(state, c)
-              const mi = machineIndex(c)
-              const ci = clueIndex(c)
-              const left = state.hitsLeft[row][col]
-              const diggable = canDig(layout, state, c)
-              const ping = pings[k(c)]
-              return (
-                <button
-                  key={k(c)}
-                  type="button"
-                  role="gridcell"
-                  data-cell={k(c)}
-                  tabIndex={focus.col === col && focus.row === row ? 0 : -1}
-                  aria-label={cellLabel(c)}
-                  onFocus={() => setFocus(c)}
-                  onClick={() => act(c)}
-                  className={`relative flex aspect-square items-center justify-center overflow-hidden rounded-sm text-xl sm:text-2xl ${
-                    diggable && !scanMode && !found ? 'ring-2 ring-yellow/80' : ''
-                  }`}
-                  style={{ background: open ? '#2a1712' : GROUND_STYLE[g].bg, minHeight: 40 }}
-                >
-                  {open && mi >= 0 && (
-                    <span className="absolute inset-0 overflow-hidden" aria-hidden="true">
-                      {/* Each tile shows its half of the machine. */}
-                      <span className="absolute top-0 h-full w-[200%]" style={{ left: mi === 0 ? 0 : '-100%' }}>
-                        <MachineSprite kind={sprite} className="h-full w-full" />
+        {/* Never taller than the screen leaves room for, so the whole dig site and its bottom row are in view. */}
+        <div className="mx-auto" style={{ maxWidth: `max(18rem, calc((100dvh - 24rem) * ${COLS / ROWS}))` }}>
+          <div className="flex h-6 items-end justify-center rounded-t-md" style={{ background: '#f6d7b0' }} aria-hidden="true">
+            <span className="text-sm text-ink-soft">surface of Mars</span>
+          </div>
+          <div
+            ref={gridRef}
+            role="grid"
+            aria-label="Dig site. Use arrow keys to move and Enter to dig."
+            onKeyDown={onKey}
+            className="grid gap-1 rounded-b-md border-[3px] border-ink/80 p-1"
+            style={{
+              gridTemplateColumns: `repeat(${COLS}, minmax(0, 1fr))`,
+              background: '#5a2a1d',
+            }}
+          >
+            {Array.from({ length: ROWS }, (_, row) =>
+              Array.from({ length: COLS }, (_, col) => {
+                const c = { col, row }
+                const g = layout.ground[row][col]
+                const open = isOpen(state, c)
+                const mi = machineIndex(c)
+                const ci = clueIndex(c)
+                const left = state.hitsLeft[row][col]
+                const diggable = canDig(layout, state, c)
+                const ping = pings[k(c)]
+                return (
+                  <button
+                    key={k(c)}
+                    type="button"
+                    role="gridcell"
+                    data-cell={k(c)}
+                    tabIndex={focus.col === col && focus.row === row ? 0 : -1}
+                    aria-label={cellLabel(c)}
+                    onFocus={() => setFocus(c)}
+                    onClick={() => act(c)}
+                    className={`relative flex aspect-square items-center justify-center overflow-hidden rounded-sm text-xl sm:text-2xl ${
+                      diggable && !scanMode && !found ? 'ring-2 ring-yellow/80' : ''
+                    }`}
+                    style={{ background: open ? '#2a1712' : GROUND_STYLE[g].bg, minHeight: 40 }}
+                  >
+                    {open && mi >= 0 && (
+                      <span className="absolute inset-0 overflow-hidden" aria-hidden="true">
+                        {/* Each tile shows its half of the machine. */}
+                        <span className="absolute top-0 h-full w-[200%]" style={{ left: mi === 0 ? 0 : '-100%' }}>
+                          <MachineSprite kind={sprite} className="h-full w-full" />
+                        </span>
                       </span>
-                    </span>
-                  )}
-                  {open && ci >= 0 && <span aria-hidden="true">{clues[ci].icon}</span>}
-                  {!open && g === 'boulder' && <span aria-hidden="true">🪨</span>}
-                  {!open && g !== 'boulder' && left < HITS[g] && (
-                    <span aria-hidden="true" className="text-base text-ink/70">
-                      {'⚡'.repeat(HITS[g] - left)}
-                    </span>
-                  )}
-                  {ping !== undefined && (
-                    <span aria-hidden="true" className="absolute right-0.5 top-0.5 rounded-full bg-sky px-1 text-xs font-bold text-ink">
-                      {ping}
-                    </span>
-                  )}
-                </button>
-              )
-            }),
-          )}
+                    )}
+                    {open && ci >= 0 && <span aria-hidden="true">{clues[ci].icon}</span>}
+                    {!open && g === 'boulder' && <span aria-hidden="true">🪨</span>}
+                    {!open && g !== 'boulder' && left < HITS[g] && (
+                      <span aria-hidden="true" className="text-base text-ink/70">
+                        {'⚡'.repeat(HITS[g] - left)}
+                      </span>
+                    )}
+                    {ping !== undefined && (
+                      <span aria-hidden="true" className="absolute right-0.5 top-0.5 rounded-full bg-sky px-1 text-xs font-bold text-ink">
+                        {ping}
+                      </span>
+                    )}
+                  </button>
+                )
+              }),
+            )}
+          </div>
         </div>
-        <ul className="mt-3 flex flex-wrap gap-3 text-sm" aria-label="Layers">
-          {LAYER_KEY.map((l) => (
-            <li key={l.ground} className="flex items-center gap-1">
-              <span className="inline-block h-4 w-4 rounded-sm border border-ink/50" style={{ background: GROUND_STYLE[l.ground].bg }} />
-              {l.label}: {l.hits} {l.hits === 1 ? 'hit' : 'hits'}
-            </li>
-          ))}
-          <li>🪨 Boulder: can&apos;t break</li>
-        </ul>
       </Paper>
 
       <div className="space-y-5">
@@ -248,10 +248,24 @@ export default function MarsDig({ artifactId, attempt, sprite, clues, easy, onFo
           <p className="text-lg font-bold" role="status" aria-live="polite">
             {message}
           </p>
-          <p className="mt-2 text-sm">
-            Every hit uses 1 energy. Dig smart: soft dust is cheap, bedrock is expensive. Find the machine{' '}
-            <strong>without the dust devil</strong> to earn the dig star.
-          </p>
+          <ul className="mt-2 space-y-1 text-sm">
+            <li>🔋 Every hit uses 1 energy.</li>
+            <li>
+              ⛏️ Layers take more hits as you go down:
+              <ul className="mt-1 flex flex-wrap gap-x-3 gap-y-1" aria-label="Layers">
+                {LAYER_KEY.map((l) => (
+                  <li key={l.ground} className="flex items-center gap-1">
+                    <span className="inline-block h-4 w-4 rounded-sm border border-ink/50" style={{ background: GROUND_STYLE[l.ground].bg }} />
+                    {l.label}: {l.hits} {l.hits === 1 ? 'hit' : 'hits'}
+                  </li>
+                ))}
+                <li>🪨 Boulder: can&apos;t break</li>
+              </ul>
+            </li>
+            <li>
+              ⭐ Find the machine <strong>without the dust devil</strong> to earn the dig star.
+            </li>
+          </ul>
           {outOfEnergy && (
             <div className="mt-4 flex flex-wrap gap-3">
               {!state.usedDustDevil ? (
@@ -261,7 +275,9 @@ export default function MarsDig({ artifactId, attempt, sprite, clues, easy, onFo
                   onClick={() => {
                     const s = dustDevil(state)
                     if (s) setState(s)
-                    setMessage('Whoosh! A dust devil blew the dust off your solar panels. On real Mars this helped Spirit and Opportunity keep going!')
+                    setMessage(
+                      'Whoosh! A dust devil blew the dust off your solar panels. On real Mars this helped Spirit and Opportunity keep going!',
+                    )
                   }}
                 >
                   🌪️ Wait for a dust devil (+10 energy, no dig star)
@@ -274,7 +290,12 @@ export default function MarsDig({ artifactId, attempt, sprite, clues, easy, onFo
             </div>
           )}
           {found && (
-            <motion.div initial={still ? false : { scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="mt-4">
+            <motion.div
+              ref={foundRef}
+              initial={still ? false : { scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="mt-4 scroll-mb-4"
+            >
               <p className="text-xl font-bold">
                 {earnedDigStar(layout, state) ? '⭐ Dig star earned!' : 'Found it! (The dust devil helped, so no dig star this time.)'}
               </p>

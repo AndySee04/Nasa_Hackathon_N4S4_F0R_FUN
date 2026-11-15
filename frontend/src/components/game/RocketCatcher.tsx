@@ -90,7 +90,8 @@ export default function RocketCatcher({ artifactId, attempt = 0, sprite, easy, o
   const clawTransition = { duration: (phase === 'dropping' ? 0.7 : 0.6) * speed, ease: 'easeInOut' as const }
 
   return (
-    <div>
+    // Wide screens: the controls sit beside the game. Narrow screens: under it, with the game sized so both fit on screen.
+    <div className="grid items-center gap-x-6 gap-y-4 lg:grid-cols-[minmax(0,1fr)_17rem]">
       <div
         ref={areaRef}
         role="slider"
@@ -109,7 +110,7 @@ export default function RocketCatcher({ artifactId, attempt = 0, sprite, easy, o
         onPointerMove={(e) => dragging.current && move(pointerX(e))}
         onPointerUp={() => (dragging.current = false)}
         onPointerLeave={() => (dragging.current = false)}
-        className="relative aspect-[16/11] w-full cursor-pointer touch-none select-none overflow-hidden rounded-[28px_22px_30px_24px] border-4 border-sticker bg-night-deep focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-yellow sm:aspect-[16/9]"
+        className="relative mx-auto aspect-[16/11] w-full max-w-[max(18rem,calc((100dvh-24rem)*16/9))] cursor-pointer lg:max-w-[max(18rem,calc((100dvh-17rem)*16/9))] touch-none select-none overflow-hidden rounded-[28px_22px_30px_24px] border-4 border-sticker bg-night-deep focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-yellow sm:aspect-[16/9]"
       >
         {/* Earth in the sky, and the grey ground. */}
         <span className="absolute right-[6%] top-[8%] text-4xl sm:text-5xl" aria-hidden="true">
@@ -127,7 +128,11 @@ export default function RocketCatcher({ artifactId, attempt = 0, sprite, easy, o
         ))}
 
         {!carrying && (
-          <div className={`absolute bottom-[11%] -translate-x-1/2 ${sprite === 'lander-rover' ? 'w-[30%] sm:w-[24%]' : 'w-[22%] sm:w-[17%]'}`} style={{ left: `${layout.target}%` }} aria-hidden="true">
+          <div
+            className={`absolute bottom-[11%] -translate-x-1/2 ${sprite === 'lander-rover' ? 'w-[30%] sm:w-[24%]' : 'w-[22%] sm:w-[17%]'}`}
+            style={{ left: `${layout.target}%` }}
+            aria-hidden="true"
+          >
             <MachineSprite kind={sprite} className="w-full" />
             {showHint && !still && <span className="absolute -inset-3 animate-ping rounded-full border-4 border-yellow/60" />}
           </div>
@@ -159,21 +164,23 @@ export default function RocketCatcher({ artifactId, attempt = 0, sprite, easy, o
         </motion.div>
       </div>
 
-      <p className="mt-4 min-h-[1.5em] text-center text-lg font-bold text-chalk" role="status" aria-live="polite">
-        {message}
-      </p>
-      {showHint && <p className="text-center text-yellow">💡 {hint}</p>}
+      <div className="flex flex-col items-center gap-3">
+        <p className="min-h-[1.5em] text-center text-lg font-bold text-chalk" role="status" aria-live="polite">
+          {message}
+        </p>
+        {showHint && <p className="text-center text-yellow">💡 {hint}</p>}
 
-      <div className="mt-4 flex items-center justify-center gap-3">
-        <button type="button" className="cbtn c-sky" aria-label="Move left" disabled={!aiming} onClick={() => move(x - CLAW_STEP * 2)}>
-          ◀
-        </button>
-        <button type="button" className="cbtn c-yellow px-10 text-xl" disabled={!aiming} onClick={release}>
-          DROP!
-        </button>
-        <button type="button" className="cbtn c-sky" aria-label="Move right" disabled={!aiming} onClick={() => move(x + CLAW_STEP * 2)}>
-          ▶
-        </button>
+        <div className="flex items-center justify-center gap-3">
+          <button type="button" className="cbtn c-sky" aria-label="Move left" disabled={!aiming} onClick={() => move(x - CLAW_STEP * 2)}>
+            ◀
+          </button>
+          <button type="button" className="cbtn c-yellow px-10 text-xl" disabled={!aiming} onClick={release}>
+            DROP!
+          </button>
+          <button type="button" className="cbtn c-sky" aria-label="Move right" disabled={!aiming} onClick={() => move(x + CLAW_STEP * 2)}>
+            ▶
+          </button>
+        </div>
       </div>
     </div>
   )

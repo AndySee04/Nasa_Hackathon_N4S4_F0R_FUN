@@ -18,8 +18,8 @@ export default function RepairChallenge({ challenge, seed, onDone }: Props) {
   return (
     <Paper tone="lilac" tilt={-0.4} innerClassName="p-5 sm:p-8">
       <p className="tape c-white mb-2">🎮 Pretend mission · training simulator</p>
-      <h2 className="text-3xl">{challenge.title}</h2>
-      <p className="mt-2 text-[0.95rem]">
+      <h2 className="text-2xl sm:text-3xl">{challenge.title}</h2>
+      <p className="mt-1.5 text-sm">
         This is a practice game, like the simulators astronauts train in on Earth. The real machines on the Moon were not repaired.
       </p>
       <div className="mt-6">
@@ -41,7 +41,9 @@ function MatchGame({ challenge, seed, onDone }: Props) {
   const [picked, setPicked] = useState<string | null>(null)
   const [matched, setMatched] = useState<Set<string>>(new Set())
   const [mistakes, setMistakes] = useState(0)
-  const [message, setMessage] = useState(challenge.kind === 'drag-parts' ? 'Pick a part, then tap where it goes.' : 'Pick an instrument, then tap its job.')
+  const [message, setMessage] = useState(
+    challenge.kind === 'drag-parts' ? 'Pick a part, then tap where it goes.' : 'Pick an instrument, then tap its job.',
+  )
   const done = matched.size === pairs.length
 
   function choose(targetId: string) {
@@ -60,7 +62,8 @@ function MatchGame({ challenge, seed, onDone }: Props) {
   return (
     <div>
       <div className="grid gap-6 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
-        <div>
+        {/* Phones: the parts stay stuck at the top while you scroll to where they go. */}
+        <div className="sticky top-[5.5rem] z-10 -mx-2 rounded-xl bg-lilac/95 px-2 py-2 md:static md:mx-0 md:bg-transparent md:p-0">
           <h3 className="mb-2 text-xl">{challenge.kind === 'drag-parts' ? 'Parts' : 'Instruments'}</h3>
           <div className="flex flex-wrap gap-2" role="group" aria-label="Choose one">
             {items.map((p) => (
@@ -111,7 +114,9 @@ function OrderGame({ challenge, seed, onDone }: Props) {
   const [placed, setPlaced] = useState<string[]>([])
   const [mistakes, setMistakes] = useState(0)
   const circuit = challenge.kind === 'circuit'
-  const [message, setMessage] = useState(circuit ? 'Connect the parts in order, starting where the power comes from.' : 'Tap what happened first, then what came next.')
+  const [message, setMessage] = useState(
+    circuit ? 'Connect the parts in order, starting where the power comes from.' : 'Tap what happened first, then what came next.',
+  )
   const done = placed.length === correct.length
 
   function choose(step: string) {
@@ -158,13 +163,16 @@ function OrderGame({ challenge, seed, onDone }: Props) {
 
 function Footer({ message, done, onDone }: { message: string; done: boolean; onDone: () => void }) {
   return (
-    <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
-      <p className="text-lg font-bold" role="status" aria-live="polite">
+    <>
+      <p className="mt-6 text-lg font-bold" role="status" aria-live="polite">
         {message}
       </p>
-      <button type="button" className="cbtn c-yellow" disabled={!done} onClick={onDone}>
-        {done ? 'Repair star! ⭐ Next →' : 'Finish the repair to continue'}
-      </button>
-    </div>
+      {/* Once the repair is done, the way on stays in reach at the bottom of the screen. */}
+      <div className={`mt-3 flex justify-end ${done ? 'next-dock' : ''}`}>
+        <button type="button" className="cbtn c-yellow" disabled={!done} onClick={onDone}>
+          {done ? 'Repair star! ⭐ Next →' : 'Finish the repair to continue'}
+        </button>
+      </div>
+    </>
   )
 }
