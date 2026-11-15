@@ -6,6 +6,21 @@ An interactive, story-driven digital space museum for the **2026 NASA Space Apps
 
 > A student hackathon project. Not affiliated with or endorsed by NASA.
 
+![The home page: a crayon solar system with ym's painted Sun and planets, and name tags for the Moon and Mars](docs/screenshots/home.webp)
+
+## Screenshots
+
+| | |
+|---|---|
+| ![Explore the Universe with Saturn chosen](docs/screenshots/explore.webp) **Explore the Universe:** spin the solar system and fly to a world | ![Moon Archive](docs/screenshots/moon-archive.webp) **Moon Archive:** every machine left on the Moon, with its status |
+| ![Moon Explorer Mission map](docs/screenshots/moon-mission.webp) **Moon Explorer Mission:** pick a signal on the painted Moon | ![Catch the signal with the rocket claw](docs/screenshots/rocket-claw.webp) **Catch the signal:** steer the rocket claw and drop it |
+| ![Mars dig site](docs/screenshots/mars-dig.webp) **Mars dig:** dig through dust, sand and bedrock to find clues | ![River of Stars timeline](docs/screenshots/timeline.webp) **River of Stars:** slide through the years of working spacecraft |
+| ![Science Lab](docs/screenshots/science-lab.webp) **Science Lab:** how machines far away move, talk and do science | ![Ask Astro AI](docs/screenshots/ask-astro.webp) **Ask Astro AI:** a child-safe guide that shows where its facts come from |
+
+![On a phone: the home page, the Mars mission map and the Moon Archive](docs/screenshots/phones.webp)
+
+<sub>The same site on a phone: home, the Mars mission map and the Moon Archive. Screenshots taken at 1280 × 720 and 390 × 844; the Astro answer was shown with a stand-in server, as in the browser tests.</sub>
+
 ## What's in version 0.1
 
 | Module | Page | What it does |
