@@ -1,4 +1,5 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react'
+import Paper from './Paper'
 
 interface Props {
   children: ReactNode
@@ -26,13 +27,15 @@ export default class ErrorBoundary extends Component<Props, State> {
   render() {
     if (!this.state.error) return this.props.children
     return (
-      <div className="mx-auto flex max-w-xl flex-col items-center gap-4 px-4 py-24 text-center" role="alert">
-        <p className="text-5xl" aria-hidden="true">🛰️</p>
-        <h1 className="text-3xl font-bold">Houston, we have a problem</h1>
-        <p className="text-lg text-muted">This part of the museum hit a glitch. Try reloading the page.</p>
-        <button type="button" className="btn btn-primary" onClick={() => window.location.reload()}>
-          Reload
-        </button>
+      <div className="mx-auto max-w-xl px-4 py-24" role="alert">
+        <Paper tilt={-1} innerClassName="flex flex-col items-center gap-4 px-6 py-10 text-center">
+          <p className="text-5xl" aria-hidden="true">🛰️</p>
+          <h1 className="text-3xl">Houston, we have a problem</h1>
+          <p className="text-lg">This part of the museum hit a glitch. Try reloading the page.</p>
+          <button type="button" className="cbtn c-yellow" onClick={() => window.location.reload()}>
+            Reload
+          </button>
+        </Paper>
       </div>
     )
   }
