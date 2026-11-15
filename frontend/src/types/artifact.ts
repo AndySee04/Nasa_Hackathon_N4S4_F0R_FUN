@@ -83,6 +83,8 @@ export interface Artifact {
   /** Search phrase for the NASA Image and Video Library. */
   imageQuery: string
   sources: Source[]
+  /** Date (YYYY-MM-DD) the facts were last checked against the NASA sources. */
+  lastVerified?: string
 }
 
 export const STATUS_LABELS: Record<ArtifactStatus, string> = {

@@ -4,6 +4,7 @@ const PAGES = [
   { path: '/', heading: 'N4S4 F0R FUN' },
   { path: '/explore', heading: 'Explore the Universe' },
   { path: '/moon', heading: 'Moon Archive' },
+  { path: '/moon/campaign', heading: 'Moon Explorer Mission' },
   { path: '/mars', heading: 'Mars Archive' },
   { path: '/deep-space', heading: 'Deep Space Archive' },
   { path: '/artifact/opportunity', heading: 'Opportunity rover' },
