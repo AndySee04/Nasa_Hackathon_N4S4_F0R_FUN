@@ -5,6 +5,10 @@ import LoadingScreen from '../components/LoadingScreen'
 import Paper from '../components/Paper'
 import ProfileAvatar from '../components/ProfileAvatar'
 import { useAuth } from '../hooks/useAuth'
+import { MARS_CAMPAIGN } from '../data/campaigns/mars'
+import { MOON_CAMPAIGN } from '../data/campaigns/moon'
+import { campaignStars } from '../game/progress'
+import { useProgress } from '../game/useProgress'
 import { usePageContext } from '../hooks/usePageContext'
 
 /** Google's "G", as its sign-in branding guidelines ask for on a sign-in button. */
@@ -31,6 +35,27 @@ function readReturnError(): string | null {
   if (code === 'access_denied') return 'Sign-in was cancelled. No problem, you can try again any time.'
   // Never echo error_description: anyone can put text in a link, and this is a children's site.
   return "Sign-in didn't work. Please try again."
+}
+
+/** The game stars kept in this account. */
+function SavedStars() {
+  const { progress } = useProgress()
+  const moon = campaignStars(progress, MOON_CAMPAIGN)
+  const mars = campaignStars(progress, MARS_CAMPAIGN)
+  return (
+    <div className="inset w-full px-5 py-4 text-left">
+      <p className="font-display">Game stars saved to this account</p>
+      <ul className="mt-1 flex flex-wrap gap-x-6 gap-y-1">
+        <li>
+          🌕 Moon: <strong>{moon.earned}</strong> / {moon.max}
+        </li>
+        <li>
+          🔴 Mars: <strong>{mars.earned}</strong> / {mars.max}
+        </li>
+      </ul>
+      <p className="muted mt-1 text-sm">They follow your explorer to any device where you sign in.</p>
+    </div>
+  )
 }
 
 export default function Account() {
@@ -101,8 +126,7 @@ export default function Account() {
             <p className="tape">For grown-ups</p>
             <h1 className="text-4xl">Sign in</h1>
             <p className="text-lg">
-              Kids: ask a grown-up to sign in for you. A grown-up&apos;s Google account lets the museum remember your explorer&apos;s
-              progress.
+              Kids: ask a grown-up to sign in for you. A grown-up&apos;s Google account keeps your explorer&apos;s game stars on any device.
             </p>
             <button
               type="button"
@@ -115,8 +139,9 @@ export default function Account() {
               {busy ? 'Opening Google…' : 'Sign in with Google'}
             </button>
             <p className="inset muted px-4 py-3 text-left text-sm">
-              We receive the name, email address and profile picture from the Google account, and use them only to keep this
-              account. No advertising, no tracking, and nothing is shared. Astro&apos;s chats are still not saved.
+              We receive the name, email address and profile picture from the Google account, and use them only to keep this account. We also save the
+              game stars, so they follow the explorer to other devices. No advertising, no tracking, and nothing is shared. Astro&apos;s chats are
+              still not saved.
             </p>
           </>
         )}
@@ -141,6 +166,7 @@ export default function Account() {
               <dt className="muted font-display">Signed in with</dt>
               <dd>Google</dd>
             </dl>
+            <SavedStars />
             <p className="muted text-sm">Your name and photo come from Google. To change them, update your Google account.</p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link to="/explore" className="cbtn c-yellow">

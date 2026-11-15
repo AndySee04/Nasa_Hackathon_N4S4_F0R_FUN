@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import MissionBriefing from '../components/game/MissionBriefing'
+import StarsSavedNote from '../components/game/StarsSavedNote'
 import MarsScene from '../components/game/MarsScene'
 import type { ScenePin } from '../components/game/MoonScene'
 import Paper from '../components/Paper'
@@ -234,7 +235,7 @@ export default function MarsCampaign() {
               </button>
             )}
           </div>
-          <p className="text-sm text-dusk">Your stars are saved only in this browser. We never ask for your name.</p>
+          <StarsSavedNote />
         </div>
       </div>
     </div>
