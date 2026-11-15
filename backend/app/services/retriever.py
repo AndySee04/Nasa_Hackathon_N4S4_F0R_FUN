@@ -24,7 +24,7 @@ MAX_QUERY_TERMS = 12
 # Common words like "moon" score low in BM25 because they appear everywhere, so a question
 # word that names a document (its title or an alias) adds this bonus on top.
 NAME_BONUS = 3.0
-NAME_NOISE = {"nasa", "fact", "sheet", "numbers", "stage", "module", "descent", "lunar"}
+NAME_NOISE = {"nasa", "fact", "sheet", "numbers", "stage", "module", "descent", "lunar", "planet", "planets", "system"}
 
 
 @dataclass(frozen=True)
@@ -45,6 +45,8 @@ class Hit:
     score: float  # higher is better
     last_verified: str | None
     sources: list[Source] = field(default_factory=list)
+    #: How many question words name this document (its title or an alias). Strong evidence it is on topic.
+    name_matches: int = 0
 
     @property
     def confidence(self) -> Confidence:
@@ -62,9 +64,10 @@ class Retriever:
         self.conn = conn
         self._lock = threading.Lock()
         self._sources = {r[0]: Source(*r) for r in conn.execute("SELECT id, title, url FROM sources")}
+        # Glossary entries keep every word of their term ("descent stage"); other names drop generic words.
         self._names = {
-            doc_id: set(tokenize(title + " " + " ".join(json.loads(aliases)))) - NAME_NOISE
-            for doc_id, title, aliases in conn.execute("SELECT id, title, aliases FROM documents")
+            doc_id: set(tokenize(title + " " + " ".join(json.loads(aliases)))) - (set() if kind == "glossary" else NAME_NOISE)
+            for doc_id, kind, title, aliases in conn.execute("SELECT id, kind, title, aliases FROM documents")
         }
 
     def search(
@@ -97,11 +100,12 @@ class Retriever:
         q_terms = set(tokenize(question))
         best: dict[str, Hit] = {}
         for doc_id, kind, title, topic, category, body, rank, verified, source_ids in rows:
-            score = -rank + NAME_BONUS * len(q_terms & self._names.get(doc_id, set()))
+            names = len(q_terms & self._names.get(doc_id, set()))
+            score = -rank + NAME_BONUS * names
             if doc_id in best and best[doc_id].score >= score:
                 continue
             sources = [self._sources[s] for s in json.loads(source_ids) if s in self._sources]
-            best[doc_id] = Hit(doc_id, kind, title, topic, category, body, score, verified, sources)
+            best[doc_id] = Hit(doc_id, kind, title, topic, category, body, score, verified, sources, names)
         return sorted(best.values(), key=lambda h: h.score, reverse=True)[:k]
 
     def is_allowed_url(self, url: str) -> bool:
