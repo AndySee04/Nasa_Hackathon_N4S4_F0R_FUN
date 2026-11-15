@@ -49,3 +49,53 @@ test('saved stars show on the hub and survive a reload', async ({ page }) => {
   await page.getByRole('button', { name: 'Yes, start over' }).click()
   await expect(page.getByText('0 / 12')).toBeVisible()
 })
+
+test('catch the first machine with the keyboard and see it on the Moon', async ({ page }) => {
+  const errors: string[] = []
+  page.on('pageerror', (e) => errors.push(e.message))
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto('/moon/campaign')
+  await page.getByRole('button', { name: /^Mystery signal/ }).first().click()
+  await page.getByRole('link', { name: /Launch rocket claw/ }).click()
+  await expect(page.getByRole('heading', { level: 1, name: 'Catch the signal!' })).toBeVisible()
+
+  // Turn easy mode off: the visible hint hides, but the slider's text still guides keyboard players.
+  await page.getByRole('button', { name: /Easy mode: on/ }).click()
+  const claw = page.getByRole('slider', { name: /Rocket claw position/ })
+  await claw.focus()
+  for (let i = 0; i < 30; i++) {
+    const text = (await claw.getAttribute('aria-valuetext')) ?? ''
+    if (text.includes('right above it')) break
+    await page.keyboard.press(text.includes('left') ? 'ArrowLeft' : 'ArrowRight')
+  }
+  await expect(claw).toHaveAttribute('aria-valuetext', /right above it/)
+  await page.keyboard.press('Space')
+
+  await expect(page.getByRole('heading', { level: 1, name: 'Signal identified!' })).toBeVisible()
+  await expect(page.getByRole('heading', { level: 2, name: 'Eagle Lunar Module descent stage' })).toBeVisible()
+  await page.getByRole('link', { name: /Back to the Moon/ }).click()
+  await expect(page.getByText('1 / 12')).toBeVisible()
+  await expect(page.getByRole('button', { name: /Eagle Lunar Module descent stage: 1 of 3 stars/ })).toBeVisible()
+  expect(errors).toEqual([])
+})
+
+test('two misses show a hint, and unknown signals are handled', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto('/moon/campaign/surveyor-3')
+  await page.getByRole('button', { name: /Easy mode: on/ }).click()
+  const claw = page.getByRole('slider', { name: /Rocket claw position/ })
+  await expect(page.getByText('💡')).toHaveCount(0)
+  for (let miss = 0; miss < 2; miss++) {
+    await claw.focus()
+    // Move to whichever edge is away from the signal, then drop on empty ground or a rock.
+    const text = (await claw.getAttribute('aria-valuetext')) ?? ''
+    await page.keyboard.press(text.includes('left') ? 'End' : 'Home')
+    await page.getByRole('button', { name: 'DROP!' }).click()
+    await expect(page.getByRole('status')).toHaveText(/Try again/)
+    await expect(page.getByRole('button', { name: 'DROP!' })).toBeEnabled()
+  }
+  await expect(page.getByText(/💡 The signal is/)).toBeVisible()
+
+  await page.goto('/moon/campaign/not-a-real-signal')
+  await expect(page.getByRole('heading', { name: 'Signal lost!' })).toBeVisible()
+})

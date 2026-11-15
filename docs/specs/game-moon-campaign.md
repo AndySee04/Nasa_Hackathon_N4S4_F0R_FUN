@@ -62,7 +62,7 @@ Content file: `frontend/src/data/campaigns/moon.ts`.
 |---|---|---|---|
 | `apollo-11-eagle` | lander | **drag-parts**: descent stage, ascent stage, landing legs, laser mirror | First crewed landing. The laser mirror still bounces lasers today. The top half left; the bottom half is still there. |
 | `apollo-14-antares` | lander | **match-instruments**: seismometer ↔ feels moonquakes; laser reflector ↔ measures distance; equipment cart (MET) ↔ carries tools | First landing in the highlands (Fra Mauro). The deliberate crash of the ascent stage was recorded by seismometers. |
-| `apollo-15-falcon` | rover | **circuit**: connect battery → rover controls → wheels → TV camera | The rover let astronauts travel about 27.9 km in three drives and collect 77.31 kg of samples. |
+| `apollo-15-falcon` | lander-rover (descent stage with the parked rover) | **circuit**: connect battery → rover controls → wheels → TV camera | The rover let astronauts travel about 27.9 km in three drives and collect 77.31 kg of samples. |
 | `surveyor-3` | robot-lander | **sequence**: launch → bounce landing → dig trenches → go silent → Apollo 12 visit | Showed the soil could hold a lander. Its parts came back to Earth for study. |
 | *bonus* `apollo-12-intrepid` | lander | **sequence**: find Surveyor 3, ~180 m away | Pinpoint landing next to an older robot. |
 
@@ -131,7 +131,7 @@ Reuse what's already there: `ArtifactImage`, `StatusBadge`, `Paper`, the crayon 
 |---|---|---|
 | G1 ✅ | Data + types | Antares, Falcon and Intrepid records added with sources; `campaign.ts`, `moon.ts`, `scoring.ts`, `progress.ts`; data tests pass |
 | G2 ✅ | Landing + hub | `/moon/campaign` shows the scene, clickable Moon facts and the briefing; works on phone and desktop |
-| G3 | Rocket catcher | Catch all 4 artifacts by mouse, touch and keyboard; Easy mode; hint after 2 misses |
+| G3 ✅ | Rocket catcher | Catch all 4 artifacts by mouse, touch and keyboard; Easy mode; hint after 2 misses |
 | G4 | Discovery + real story | Mission card for each artifact with photo, facts, status and links; Real story card |
 | G5 | Repairs + quiz + stars | 4 challenge types; quiz; stars saved; replay keeps the best |
 | G6 | Badge + certificate | Moon Explorer badge; printable certificate with the unofficial wording |
