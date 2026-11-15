@@ -88,8 +88,328 @@
       {
         "title": "NASA History: Apollo 11 mission summary (SP-4029)",
         "url": "https://www.nasa.gov/wp-content/uploads/static/history/SP-4029/Apollo_11a_Summary.htm"
+      },
+      {
+        "title": "NASA NSSDCA: Precise positions of the Apollo lunar modules",
+        "url": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html"
       }
-    ]
+    ],
+    "lastVerified": "2026-11-15"
+  },
+  {
+    "id": "apollo-12-intrepid",
+    "name": "Intrepid Lunar Module descent stage",
+    "missionName": "Apollo 12",
+    "agency": "NASA",
+    "world": "moon",
+    "hardwareType": "descent-stage",
+    "status": "inactive",
+    "statusNote": "The descent stage has stood in the Ocean of Storms since 1969, about 180 m from the Surveyor 3 robot lander. The science station the crew set up sent data until 30 September 1977.",
+    "launchDate": "1969-11-14",
+    "arrivalDate": "1969-11-19",
+    "endDate": "1969-11-20",
+    "location": {
+      "description": "Ocean of Storms (Oceanus Procellarum), about 180 m from Surveyor 3",
+      "lat": -3.0128,
+      "lon": -23.4219
+    },
+    "tagline": "The pinpoint landing next to an old robot friend.",
+    "story": [
+      "Meet Intrepid's descent stage: the bottom half of the lunar module that landed Pete Conrad and Alan Bean on the Moon on 19 November 1969, while Richard Gordon circled overhead in the command module.",
+      "Apollo 11 had landed a long way from its target. Apollo 12 had to prove astronauts could land exactly where they aimed, and Intrepid came down within about 180 m of Surveyor 3, a robot lander that had arrived two and a half years earlier.",
+      "The crew spent 31 hours and 31 minutes on the Moon. When they left, the top half (the ascent stage) carried them back up, and the descent stage stayed behind for good."
+    ],
+    "objectives": [
+      "Make a pinpoint landing close to the Surveyor 3 robot lander",
+      "Set up a long-lasting science station on the Moon",
+      "Bring home parts of Surveyor 3 to see how materials change on the Moon"
+    ],
+    "instruments": [
+      {
+        "name": "Passive seismometer",
+        "purpose": "Felt moonquakes and impacts. It was part of a science station that sent data to Earth until 1977."
+      },
+      {
+        "name": "Lunar surface magnetometer",
+        "purpose": "Measured the Moon's magnetic field at the landing site."
+      },
+      {
+        "name": "Solar wind spectrometer",
+        "purpose": "Measured the stream of particles flowing out from the Sun."
+      }
+    ],
+    "discoveries": [
+      "Astronauts could land exactly where they planned: Intrepid touched down within about 180 m of Surveyor 3.",
+      "The crew brought back 34.35 kg of Moon rocks and soil, plus Surveyor 3's camera and soil scoop.",
+      "When the empty ascent stage was crashed into the Moon on purpose, the seismometer kept recording signals for nearly an hour."
+    ],
+    "timeline": [
+      {
+        "date": "1969-11-14",
+        "label": "Apollo 12 launches on a Saturn V rocket",
+        "kind": "launch"
+      },
+      {
+        "date": "1969-11-19",
+        "label": "Intrepid lands in the Ocean of Storms, close to Surveyor 3",
+        "kind": "arrival"
+      },
+      {
+        "date": "1969-11-19",
+        "label": "First moonwalk: the crew sets up the science station",
+        "kind": "operations"
+      },
+      {
+        "date": "1969-11-20",
+        "label": "Second moonwalk: the crew visits Surveyor 3 and removes its camera and scoop",
+        "kind": "discovery"
+      },
+      {
+        "date": "1969-11-20",
+        "label": "Ascent stage lifts off; it is later crashed on purpose as a test moonquake",
+        "kind": "end"
+      },
+      {
+        "date": "1977-09-30",
+        "label": "The science station is switched off",
+        "kind": "status"
+      }
+    ],
+    "funFact": "Intrepid's empty top half was crashed into the Moon on purpose, so the seismometer could feel a moonquake of known size and timing.",
+    "imageQuery": "Apollo 12 Intrepid Surveyor 3",
+    "sources": [
+      {
+        "title": "NASA NSSDCA: Apollo 12 Lunar Module / ALSEP",
+        "url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1969-099C"
+      },
+      {
+        "title": "NASA: 50 Years Ago, Apollo 12 heads for home",
+        "url": "https://www.nasa.gov/?p=168434"
+      },
+      {
+        "title": "NASA NSSDCA: Impact sites of the Apollo lunar modules and S-IVBs",
+        "url": "https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo_impact.html"
+      },
+      {
+        "title": "NASA NSSDCA: Apollo lunar landings (sites, moonwalk hours, distance, samples)",
+        "url": "https://nssdc.gsfc.nasa.gov/planetary/lunar/apolloland.html"
+      }
+    ],
+    "lastVerified": "2026-11-15"
+  },
+  {
+    "id": "apollo-14-antares",
+    "name": "Antares Lunar Module descent stage",
+    "missionName": "Apollo 14",
+    "agency": "NASA",
+    "world": "moon",
+    "hardwareType": "descent-stage",
+    "status": "inactive",
+    "statusNote": "The descent stage has stood in the hilly Fra Mauro region since 1971. The top half was crashed into the Moon on purpose after the crew left.",
+    "launchDate": "1971-01-31",
+    "arrivalDate": "1971-02-05",
+    "endDate": "1971-02-06",
+    "location": {
+      "description": "Fra Mauro highlands, about 24 km north of Fra Mauro crater",
+      "lat": -3.64589,
+      "lon": -17.47194
+    },
+    "tagline": "The lander that helped make a moonquake on purpose.",
+    "story": [
+      "Meet Antares's descent stage: the bottom half of the lunar module that landed Alan Shepard and Edgar Mitchell on the Moon on 5 February 1971. Stuart Roosa stayed in orbit in the command module Kitty Hawk.",
+      "Antares landed in the hilly upland region north of Fra Mauro crater. The crew stayed a record 33 hours and 30 minutes and made two moonwalks, setting up a science station and pulling their tools along in an equipment cart.",
+      "After the crew flew back up, the empty top half (the ascent stage) was steered to crash into the Moon on purpose. Seismometers at the Apollo 12 and Apollo 14 sites felt the shaking for 1.5 hours. The descent stage is still at Fra Mauro."
+    ],
+    "objectives": [
+      "Explore the hilly Fra Mauro region",
+      "Set up a science station on the Moon",
+      "Collect rocks and soil and take photographs, on the surface and from orbit"
+    ],
+    "instruments": [
+      {
+        "name": "Passive seismometer",
+        "purpose": "Felt moonquakes and impacts, including the crash of Antares's own top half."
+      },
+      {
+        "name": "Laser ranging retroreflector",
+        "purpose": "Special mirrors that bounce laser light from Earth straight back, to measure the distance to the Moon."
+      },
+      {
+        "name": "Lunar portable magnetometer",
+        "purpose": "A carry-along instrument that measured magnetism at different places."
+      },
+      {
+        "name": "Modular Equipment Transporter",
+        "purpose": "An equipment cart the astronauts used to carry tools and samples."
+      }
+    ],
+    "discoveries": [
+      "The crew collected 42.28 kg of Moon rocks and soil and walked about 3.45 km during their moonwalks.",
+      "The planned crash of the ascent stage gave scientists a moonquake of known size, which two seismometers recorded for 1.5 hours.",
+      "Seeds carried around the Moon by Stuart Roosa were later grown into 'Moon Trees' and planted across the United States."
+    ],
+    "timeline": [
+      {
+        "date": "1971-01-31",
+        "label": "Apollo 14 launches on a Saturn V rocket",
+        "kind": "launch"
+      },
+      {
+        "date": "1971-02-05",
+        "label": "Antares lands in the Fra Mauro highlands",
+        "kind": "arrival"
+      },
+      {
+        "date": "1971-02-05",
+        "label": "First moonwalk: the crew sets up the science station",
+        "kind": "operations"
+      },
+      {
+        "date": "1971-02-06",
+        "label": "Ascent stage lifts off after a record 33 hours and 30 minutes on the Moon",
+        "kind": "end"
+      },
+      {
+        "date": "1971-02-07",
+        "label": "The empty ascent stage is crashed on purpose; seismometers feel it for 1.5 hours",
+        "kind": "discovery"
+      },
+      {
+        "date": "1971-02-09",
+        "label": "The crew splashes down safely on Earth",
+        "kind": "status"
+      }
+    ],
+    "funFact": "Command module pilot Stuart Roosa carried about 500 tree seeds around the Moon. Trees grown from them are called Moon Trees.",
+    "imageQuery": "Apollo 14 lunar module Antares",
+    "sources": [
+      {
+        "title": "NASA NSSDCA: Apollo 14 mission page",
+        "url": "https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo14info.html"
+      },
+      {
+        "title": "NASA: 50 Years Ago, Apollo 14 heads for home",
+        "url": "https://www.nasa.gov/history/50-years-ago-apollo-14-heads-for-home/"
+      },
+      {
+        "title": "NASA NSSDCA: Apollo lunar landings (sites, moonwalk hours, distance, samples)",
+        "url": "https://nssdc.gsfc.nasa.gov/planetary/lunar/apolloland.html"
+      },
+      {
+        "title": "NASA NSSDCA: Impact sites of the Apollo lunar modules and S-IVBs",
+        "url": "https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo_impact.html"
+      },
+      {
+        "title": "NASA NSSDCA: Precise positions of the Apollo lunar modules",
+        "url": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html"
+      }
+    ],
+    "lastVerified": "2026-11-15"
+  },
+  {
+    "id": "apollo-15-falcon",
+    "name": "Falcon Lunar Module descent stage",
+    "missionName": "Apollo 15",
+    "agency": "NASA",
+    "world": "moon",
+    "hardwareType": "descent-stage",
+    "status": "inactive",
+    "statusNote": "The descent stage has stood at Hadley–Apennine since 1971, with the parked Lunar Roving Vehicle nearby. The science station the crew set up sent data until 30 September 1977.",
+    "launchDate": "1971-07-26",
+    "arrivalDate": "1971-07-30",
+    "endDate": "1971-08-02",
+    "location": {
+      "description": "Hadley–Apennine, at the foot of the Apennine Mountains near Hadley Rille",
+      "lat": 26.13239,
+      "lon": 3.6333
+    },
+    "tagline": "The lander that brought the first car to the Moon.",
+    "story": [
+      "Meet Falcon's descent stage: the bottom half of the lunar module that landed David Scott and James Irwin on the Moon on 30 July 1971, while Alfred Worden orbited above in the command module.",
+      "Falcon carried something new folded up on its side: the Lunar Roving Vehicle. With the rover, the crew could explore much farther, driving about 27.9 km in three trips near Hadley Rille and the Apennine Mountains.",
+      "The crew stayed 66 hours and 55 minutes. Then the top half (the ascent stage) carried them back to orbit, and the descent stage stayed behind for good."
+    ],
+    "objectives": [
+      "Explore Hadley Rille and the Apennine Mountains using the first Moon car",
+      "Set up a seven-instrument science station",
+      "Collect rocks from many different places"
+    ],
+    "instruments": [
+      {
+        "name": "Passive seismometer",
+        "purpose": "Felt moonquakes and impacts until the station was switched off in 1977."
+      },
+      {
+        "name": "Heat flow experiment",
+        "purpose": "Measured how much heat flows out from inside the Moon."
+      },
+      {
+        "name": "Lunar surface magnetometer",
+        "purpose": "Measured the Moon's magnetic field at the landing site."
+      },
+      {
+        "name": "Lunar Roving Vehicle",
+        "purpose": "A folding electric car that carried the astronauts and their tools across the Moon."
+      }
+    ],
+    "discoveries": [
+      "With the rover, the crew drove about 27.9 km in three trips and stayed within 5 km of Falcon.",
+      "They brought back 77.31 kg of Moon rocks and soil.",
+      "The empty ascent stage crashed into the Moon on 3 August 1971 at 26.36° N, 0.25° E, giving the seismometers another known impact to study."
+    ],
+    "timeline": [
+      {
+        "date": "1971-07-26",
+        "label": "Apollo 15 launches on a Saturn V rocket",
+        "kind": "launch"
+      },
+      {
+        "date": "1971-07-30",
+        "label": "Falcon lands at Hadley–Apennine",
+        "kind": "arrival"
+      },
+      {
+        "date": "1971-07-31",
+        "label": "The first drive of a car on the Moon",
+        "kind": "operations"
+      },
+      {
+        "date": "1971-08-02",
+        "label": "Ascent stage lifts off after 66 hours and 55 minutes on the Moon",
+        "kind": "end"
+      },
+      {
+        "date": "1971-08-03",
+        "label": "The empty ascent stage crashes into the Moon",
+        "kind": "discovery"
+      },
+      {
+        "date": "1977-09-30",
+        "label": "The science station is switched off",
+        "kind": "status"
+      }
+    ],
+    "funFact": "Falcon carried the folded-up Moon car in a compartment on its side.",
+    "imageQuery": "Apollo 15 lunar module Falcon",
+    "sources": [
+      {
+        "title": "NASA NSSDCA: Apollo 15 Lunar Module / ALSEP",
+        "url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1971-063C"
+      },
+      {
+        "title": "NASA NSSDCA: Apollo lunar landings (sites, moonwalk hours, distance, samples)",
+        "url": "https://nssdc.gsfc.nasa.gov/planetary/lunar/apolloland.html"
+      },
+      {
+        "title": "NASA NSSDCA: Impact sites of the Apollo lunar modules and S-IVBs",
+        "url": "https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo_impact.html"
+      },
+      {
+        "title": "NASA NSSDCA: Precise positions of the Apollo lunar modules",
+        "url": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html"
+      }
+    ],
+    "lastVerified": "2026-11-15"
   },
   {
     "id": "apollo-15-lrv",
@@ -130,7 +450,7 @@
       }
     ],
     "discoveries": [
-      "The astronauts drove about 28 km across the Moon over three trips.",
+      "The astronauts drove about 27.9 km across the Moon over three trips.",
       "They found the 'Genesis Rock', a piece of the Moon's very ancient crust.",
       "The mission showed that a rover could greatly expand how much of the Moon astronauts could explore."
     ],
@@ -167,8 +487,13 @@
       {
         "title": "NASA NSSDCA: Apollo 15 Lunar Module / ALSEP",
         "url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1971-063C"
+      },
+      {
+        "title": "NASA NSSDCA: Apollo lunar landings (sites, moonwalk hours, distance, samples)",
+        "url": "https://nssdc.gsfc.nasa.gov/planetary/lunar/apolloland.html"
       }
-    ]
+    ],
+    "lastVerified": "2026-11-15"
   },
   {
     "id": "surveyor-3",
@@ -209,9 +534,9 @@
       }
     ],
     "discoveries": [
-      "The Moon's soil was firm enough to support landing spacecraft and astronauts.",
-      "It was the first spacecraft to dig into the surface of another world.",
-      "Parts returned by Apollo 12 helped scientists study how materials age on the Moon."
+      "The Moon's soil behaved like wet sand and was firm enough to hold up an Apollo lunar module.",
+      "It was the first spacecraft to dig into the surface of another world: it dug four trenches with its scoop.",
+      "Its camera took 6,326 pictures, and parts returned by Apollo 12 helped scientists study how materials age on the Moon."
     ],
     "timeline": [
       {
@@ -240,14 +565,19 @@
         "kind": "status"
       }
     ],
-    "funFact": "Its engines did not shut off right away when it landed, so Surveyor 3 bounced across the Moon before settling down.",
+    "funFact": "Its engine did not shut off at the right moment, so Surveyor 3 bounced twice, about 10 m and then about 3 m high, before it settled.",
     "imageQuery": "Surveyor 3 Apollo 12 Conrad",
     "sources": [
       {
         "title": "NASA NSSDCA: Surveyor 3",
         "url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1967-035A"
+      },
+      {
+        "title": "NASA Science: Surveyor 3",
+        "url": "https://science.nasa.gov/mission/surveyor-3"
       }
-    ]
+    ],
+    "lastVerified": "2026-11-15"
   },
   {
     "id": "lunokhod-1",
