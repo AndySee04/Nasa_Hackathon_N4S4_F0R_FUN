@@ -122,6 +122,12 @@ class Retriever:
         sources = [self._sources[s] for s in json.loads(source_ids) if s in self._sources]
         return Hit(doc_id, kind, title, topic, category, body, 0.0, verified, sources, name_matches=1)
 
+    def document_text(self, doc_id: str) -> str:
+        """All chunks of one document, in order. Lets knowledge mode find the sentence that answers the question."""
+        with self._lock:
+            rows = self.conn.execute("SELECT body FROM chunks WHERE doc_id = ? ORDER BY rowid", (doc_id,)).fetchall()
+        return "\n\n".join(r[0] for r in rows)
+
     def image_query(self, doc_id: str) -> str | None:
         """The NASA Image Library search phrase for a document, if it has one."""
         with self._lock:
