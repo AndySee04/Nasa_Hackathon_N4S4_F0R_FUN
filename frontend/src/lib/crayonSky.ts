@@ -7,18 +7,12 @@
  * Sizes and distances are squashed so everything fits (see data/planets.ts).
  */
 import { BODIES, MOON_BODY, type Body } from '../data/planets'
+import { DISC, PAINTED, paintedUrl } from './paintedWorlds'
 
 const ALL: Body[] = [...BODIES, MOON_BODY]
 const MAX_ORBIT = Math.max(...BODIES.map((b) => b.orbit))
 
-/**
- * Worlds with painted, gently moving art (public/planets: a looping video and a transparent still each).
- * They are drawn instead of the crayon colouring; the Sun keeps its crayon rays around the painting.
- */
-const PAINTED = new Set(['sun', 'earth', 'mars', 'moon'])
-const paintedUrl = (id: string, ext: 'mp4' | 'webp') => `${import.meta.env.BASE_URL}planets/${id}.${ext}`
-/** How much of the painted picture's width the round world fills. */
-const DISC = 0.975
+// Painted worlds are drawn instead of the crayon colouring; the Sun keeps its crayon rays around the painting.
 
 export interface SkyPos {
   x: number
@@ -369,8 +363,7 @@ export function mountCrayonSky(canvas: HTMLCanvasElement, opts: SkyOptions = {})
     if (!o.focus) return
     const job = ++warmJob
     const queue = [...ALL]
-    const later = (cb: () => void) =>
-      'requestIdleCallback' in window ? requestIdleCallback(cb, { timeout: 500 }) : setTimeout(cb, 50)
+    const later = (cb: () => void) => ('requestIdleCallback' in window ? requestIdleCallback(cb, { timeout: 500 }) : setTimeout(cb, 50))
     const next = () => {
       if (!alive || job !== warmJob || !queue.length) return
       prepareCloseUp(queue.shift())

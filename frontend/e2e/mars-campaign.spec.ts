@@ -15,13 +15,18 @@ test('Mars campaign hub: briefing, Mars facts and buried signals', async ({ page
   await expect(page.getByRole('heading', { level: 1, name: 'Mars Explorer Mission' })).toBeVisible()
   await expect(page.getByText('0 / 15')).toBeVisible()
 
-  // Tap open ground near the corner, away from the pins.
-  await page.getByRole('button', { name: 'Tap Mars for Mars facts' }).click({ position: { x: 40, y: 40 } })
+  // Tap open ground near the bottom of the planet, away from the pins.
+  const mars = page.getByRole('button', { name: 'Tap Mars for Mars facts' })
+  const box = (await mars.boundingBox())!
+  await mars.click({ position: { x: box.width * 0.5, y: box.height * 0.88 } })
   await expect(page.getByRole('region', { name: 'Mars facts' })).toBeVisible()
   await expect(page.getByText(/687 Earth days/)).toBeVisible()
 
   await expect(page.getByRole('button', { name: /^Buried signal/ })).toHaveCount(7)
-  await page.getByRole('button', { name: /^Buried signal/ }).first().click()
+  await page
+    .getByRole('button', { name: /^Buried signal/ })
+    .first()
+    .click()
   await expect(page.getByRole('heading', { name: 'Something is buried here…' })).toBeVisible()
   expect(errors).toEqual([])
 })
@@ -95,7 +100,10 @@ test('the Mars certificate unlocks only with full stars', async ({ page }) => {
   )
   await page.evaluate(
     (artifacts) =>
-      localStorage.setItem('n4s4.progress.v1', JSON.stringify({ version: 1, settings: {}, campaigns: { mars: { artifacts, badges: ['mars-explorer'] } } })),
+      localStorage.setItem(
+        'n4s4.progress.v1',
+        JSON.stringify({ version: 1, settings: {}, campaigns: { mars: { artifacts, badges: ['mars-explorer'] } } }),
+      ),
     full,
   )
   await page.reload()
