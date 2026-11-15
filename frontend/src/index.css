@@ -298,6 +298,13 @@ body::after {
 
 /* ---------- Astro chat ---------- */
 /* Suggestions sit in one sideways-scrolling row. The right edge fades out, so it's clear there is more to swipe to. */
+/* The button for the next game step stays in reach at the bottom of the screen while a child reads a long card. */
+.next-dock { position: sticky; bottom: 0.75rem; z-index: 5; display: flex; justify-content: flex-end; pointer-events: none; }
+.next-dock > * { pointer-events: auto; filter: drop-shadow(0 8px 12px rgba(15, 14, 40, 0.55)); }
+/* Map marks for signals not found yet rock gently. Only the drawing moves, never the button, so it stays easy to tap. */
+@keyframes map-mark-rock { 0%, 100% { rotate: -7deg; } 50% { rotate: 7deg; } }
+.map-mark-new { animation: map-mark-rock 2.6s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .map-mark-new { animation: none; } }
 .chip-row {
   scrollbar-width: none;
   scroll-snap-type: x proximity;

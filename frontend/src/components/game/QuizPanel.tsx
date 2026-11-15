@@ -43,9 +43,7 @@ export default function QuizPanel({
         <h2 className="text-3xl">
           You got {score} out of {questions.length}! {passed ? '🌟' : '💪'}
         </h2>
-        <p className="mt-2 text-lg">
-          {passed ? 'Quiz star earned!' : `Get ${pass} right to earn the quiz star. You can play again any time.`}
-        </p>
+        <p className="mt-2 text-lg">{passed ? 'Quiz star earned!' : `Get ${pass} right to earn the quiz star. You can play again any time.`}</p>
         <button type="button" className="cbtn c-mint mt-5" onClick={() => onDone(score)}>
           See my stars →
         </button>
@@ -82,13 +80,17 @@ export default function QuizPanel({
         })}
       </div>
       {picked !== null && (
-        <div className="mt-5" role="status" aria-live="polite">
-          <p className="text-lg font-bold">{correct ? 'Yes, that’s right! 🎉' : 'Good try! Here’s the answer:'}</p>
-          <p className="mt-1">{q.explain}</p>
-          <button type="button" className="cbtn c-yellow mt-4" onClick={next}>
-            {last ? 'See my score' : 'Next question →'}
-          </button>
-        </div>
+        <>
+          <div className="mt-5" role="status" aria-live="polite">
+            <p className="text-lg font-bold">{correct ? 'Yes, that’s right! 🎉' : 'Good try! Here’s the answer:'}</p>
+            <p className="mt-1">{q.explain}</p>
+          </div>
+          <div className="next-dock mt-4">
+            <button type="button" className="cbtn c-yellow" onClick={next}>
+              {last ? 'See my score' : 'Next question →'}
+            </button>
+          </div>
+        </>
       )}
     </Paper>
   )

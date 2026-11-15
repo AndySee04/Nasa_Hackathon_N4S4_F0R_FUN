@@ -13,7 +13,10 @@ test('Moon campaign hub: briefing, Moon facts and signals', async ({ page }) => 
   await expect(page.getByText('Mission briefing')).toBeVisible()
   await expect(page.getByText('0 / 12')).toBeVisible()
 
-  await page.getByRole('button', { name: 'Tap the Moon for Moon facts' }).click()
+  // Tap open ground in the lower right, away from the pins.
+  const moon = page.getByRole('button', { name: 'Tap the Moon for Moon facts' })
+  const box = (await moon.boundingBox())!
+  await moon.click({ position: { x: box.width * 0.75, y: box.height * 0.75 } })
   await expect(page.getByRole('region', { name: 'Moon facts' })).toBeVisible()
   await expect(page.getByText('384,400 km')).toBeVisible()
   await page.getByRole('button', { name: 'Close ✕' }).click()

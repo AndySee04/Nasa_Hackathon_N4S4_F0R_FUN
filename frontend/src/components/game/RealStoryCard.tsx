@@ -32,8 +32,10 @@ export default function RealStoryCard({ level, artifact, onNext }: { level: { sc
       <p className="mt-5 text-lg">
         <strong>Today:</strong> {artifact.statusNote}
       </p>
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
+      <div className="mt-6">
         <Sources artifact={artifact} />
+      </div>
+      <div className="next-dock mt-4">
         <button type="button" className="cbtn c-yellow" onClick={onNext}>
           Quiz time →
         </button>
