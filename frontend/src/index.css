@@ -317,6 +317,13 @@ body::after {
 }
 .sources[open] > summary::before { transform: rotate(90deg); }
 
+/* Astro's promise: ruled like a page from a notebook. Every line of text is 2rem tall (leading-8), and the
+   rules start below the 1.75rem top padding (pt-7), so each line of writing sits on a rule. */
+.ruled {
+  background-image: repeating-linear-gradient(to bottom, transparent 0 calc(2rem - 2px), rgba(99, 183, 240, 0.45) calc(2rem - 2px) 2rem);
+  background-position: 0 1.75rem;
+}
+
 /* ---------- Loading ---------- */
 .crayon-spin {
   width: 64px;
