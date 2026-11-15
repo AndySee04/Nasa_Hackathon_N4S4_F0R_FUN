@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import Annotated, Literal
 
 from pydantic import BaseModel, Field
 
@@ -17,6 +17,11 @@ class Source(BaseModel):
 class PageContext(BaseModel):
     page: str | None = Field(default=None, max_length=50)
     artifactId: str | None = Field(default=None, max_length=60)
+    #: Game context (docs/specs/contract-game-ai.md). All optional, so older clients keep working.
+    campaign: Literal["moon"] | None = None
+    stage: Literal["landing", "catch", "discovery", "repair", "science", "quiz", "complete"] | None = None
+    #: Questions the child already asked, so suggestions don't repeat them.
+    askedQuestions: list[Annotated[str, Field(max_length=200)]] = Field(default_factory=list, max_length=10)
 
 
 class ChatTurn(BaseModel):
