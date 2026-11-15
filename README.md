@@ -14,7 +14,7 @@ An interactive, story-driven digital space museum for the **2026 NASA Space Apps
 | A · Solar System Explorer | `/explore` | Spin the crayon solar system and tap a world to fly in close; facts and links to its archive |
 | B · Forgotten Space Explorers | `/moon`, `/mars`, `/deep-space` | 18 verified artifact records with status filters and a slide-in information panel |
 | C · Artifact Stories | `/artifact/:id` | Story, mission facts, objectives, instruments, discoveries, timeline, status, "words to know", sources |
-| D · Mission Timeline | `/timeline` | All mission events in date order, filterable by destination, era, hardware type and event type |
+| D · Mission Timeline | `/timeline` | Scrub a river of colored mission comets by year; ended missions drift out of focus while all 18 full equipment records remain in the archive |
 | E · Science Lab | `/science-lab` | Six "how does it work?" explainers with animations, a signal-delay timer and a quiz |
 | F · Astro AI | `/ask-astro` + floating button on every page | Child-safe AI guide, grounded in the museum's data, with a visible backend status badge |
 | About | `/about` | Project, accuracy, child safety and privacy, tech stack |

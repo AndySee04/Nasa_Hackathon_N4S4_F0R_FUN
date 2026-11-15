@@ -8,7 +8,7 @@ const PAGES = [
   { path: '/mars', heading: 'Mars Archive' },
   { path: '/deep-space', heading: 'Deep Space Archive' },
   { path: '/artifact/opportunity', heading: 'Opportunity rover' },
-  { path: '/timeline', heading: 'Mission Timeline' },
+  { path: '/timeline', heading: 'River of Stars' },
   { path: '/science-lab', heading: 'Science Lab' },
   { path: '/ask-astro', heading: 'Ask Astro AI' },
   { path: '/about', heading: 'About N4S4 F0R FUN' },
@@ -45,6 +45,25 @@ test('navigating between pages keeps working', async ({ page }) => {
   await page.goBack()
   await expect(page.getByRole('heading', { level: 1, name: 'Mars Archive' })).toBeVisible()
   expect(errors).toEqual([])
+})
+
+test('the mission river scrubs time and keeps every equipment record available', async ({ page }) => {
+  await page.goto('/timeline')
+  const slider = page.getByRole('slider', { name: 'Mission timeline year' })
+  await expect(slider).toHaveValue('2026')
+  await expect(page.getByRole('button', { name: 'Voyager 1, 2026: Still working' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Voyager 2, 2026: Still working' })).toBeVisible()
+  await page.getByRole('button', { name: 'Show 15 departed comets' }).click()
+  await expect(page.getByRole('button', { name: 'Opportunity rover, 2026: Mission ended' })).toBeVisible()
+
+  await page.getByRole('button', { name: 'New Horizons, 2026: Still working' }).click()
+  await expect(page.getByRole('heading', { name: 'New Horizons' })).toBeVisible()
+  await expect(page.locator('#selected-equipment')).toBeInViewport()
+  await slider.focus()
+  await slider.press('Home')
+  await expect(slider).toHaveValue('1967')
+  await expect(page.getByText('Mission status in 1967: Not launched yet')).toBeVisible()
+  await expect(page.locator('.star-river-library > summary')).toContainText('all 18 equipment records stay available')
 })
 
 test('unknown pages show the friendly 404', async ({ page }) => {
