@@ -1,0 +1,66 @@
+/**
+ * Data model for game campaigns (see docs/specs/game-moon-campaign.md).
+ *
+ * A campaign is content, not code: adding Mars or a nebula later means adding
+ * a new data file, not new engine logic. Facts about each artifact live in
+ * artifacts.json; a campaign only adds the game layer on top.
+ */
+
+export type StageId = 'landing' | 'catch' | 'discovery' | 'repair' | 'science' | 'quiz' | 'complete'
+
+export const STAGES: StageId[] = ['landing', 'catch', 'discovery', 'repair', 'science', 'quiz', 'complete']
+
+export type CampaignId = 'moon'
+
+export interface Campaign {
+  id: CampaignId
+  title: string
+  /** The opening story, read by the mission guide. */
+  briefing: string
+  /** Order is the suggested play order. All are needed for the badge. */
+  artifacts: CampaignArtifact[]
+  /** Extra levels for more stars; not needed for the badge. */
+  bonusArtifacts: CampaignArtifact[]
+  badge: BadgeDef
+}
+
+export type CatcherSprite = 'lander' | 'rover' | 'robot-lander'
+
+export interface CampaignArtifact {
+  /** Must match an id in artifacts.json. */
+  artifactId: string
+  catcherSprite: CatcherSprite
+  /** Stage 4. Always shown as a pretend training-simulator mission. */
+  repair: RepairChallenge
+  /** Stage 5: what really happened. Every point must come from the artifact's record. */
+  science: { headline: string; points: string[] }
+  /** Stage 6: exactly three questions. */
+  quiz: QuizQuestion[]
+}
+
+export interface DragSlot {
+  id: string
+  label: string
+  hint: string
+}
+
+export type RepairChallenge =
+  | { kind: 'drag-parts'; title: string; slots: DragSlot[] }
+  | { kind: 'match-instruments'; title: string; pairs: { instrument: string; job: string }[] }
+  | { kind: 'circuit'; title: string; nodes: string[]; correctPath: string[] }
+  | { kind: 'sequence'; title: string; steps: string[] }
+
+export interface QuizQuestion {
+  question: string
+  options: string[]
+  /** Index into options. */
+  answer: number
+  /** Shown after answering, right or wrong. */
+  explain: string
+}
+
+export interface BadgeDef {
+  id: string
+  name: string
+  description: string
+}

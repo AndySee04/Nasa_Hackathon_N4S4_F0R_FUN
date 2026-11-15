@@ -129,7 +129,7 @@ Reuse what's already there: `ArtifactImage`, `StatusBadge`, `Paper`, the crayon 
 
 | # | Milestone | Done when |
 |---|---|---|
-| G1 | Data + types | Antares, Falcon and Intrepid records added with sources; `campaign.ts`, `moon.ts`; data tests pass |
+| G1 ✅ | Data + types | Antares, Falcon and Intrepid records added with sources; `campaign.ts`, `moon.ts`, `scoring.ts`, `progress.ts`; data tests pass |
 | G2 | Landing + hub | `/moon/campaign` shows the scene, clickable Moon facts and the briefing; works on phone and desktop |
 | G3 | Rocket catcher | Catch all 4 artifacts by mouse, touch and keyboard; Easy mode; hint after 2 misses |
 | G4 | Discovery + real story | Mission card for each artifact with photo, facts, status and links; Real story card |
@@ -147,4 +147,5 @@ Reuse what's already there: `ArtifactImage`, `StatusBadge`, `Paper`, the crayon 
 
 - Progress lives on one device and browser only (by design, for privacy).
 - Ascent-stage facts are shown as story facts, not as catchable objects.
-- `NSSDCA 1971-008C` (Apollo 14 LM) must be checked by hand before publishing Antares.
+- Antares facts are sourced from the NSSDCA Apollo 14 mission page and NSSDCA landing, position and impact tables. The NSSDCA record page for 1971-008C served Apollo 11 text when checked on 2026-11-15, so it is not cited.
+- All dates are UT, as NSSDCA uses. Some NASA pages give US local dates (for example, the Surveyor 3 visit on 19 Nov 1969 US time is 20 Nov UT).
