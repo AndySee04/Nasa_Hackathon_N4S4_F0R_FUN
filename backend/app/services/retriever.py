@@ -122,6 +122,12 @@ class Retriever:
         sources = [self._sources[s] for s in json.loads(source_ids) if s in self._sources]
         return Hit(doc_id, kind, title, topic, category, body, 0.0, verified, sources, name_matches=1)
 
+    def image_query(self, doc_id: str) -> str | None:
+        """The NASA Image Library search phrase for a document, if it has one."""
+        with self._lock:
+            row = self.conn.execute("SELECT image_query FROM documents WHERE id = ?", (doc_id,)).fetchone()
+        return row[0] if row and row[0] else None
+
     def is_allowed_url(self, url: str) -> bool:
         """Only URLs in the source registry may appear in an answer."""
         return any(s.url == url for s in self._sources.values())

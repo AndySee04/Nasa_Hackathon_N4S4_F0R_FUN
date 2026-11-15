@@ -19,6 +19,7 @@ client = TestClient(app)
 @pytest.fixture(autouse=True)
 def _clean(monkeypatch):
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.setenv("NASA_IMAGES", "off")
     rate_limit.reset()
     answer_cache.clear()
 

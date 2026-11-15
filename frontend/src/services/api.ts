@@ -18,6 +18,15 @@ export interface AstroSource {
   url: string
 }
 
+/** A real NASA photo returned for "show me…" questions. */
+export interface AstroImage {
+  url: string
+  title: string
+  credit: string
+  page_url: string
+  kind: 'nasa_photo' | 'illustration'
+}
+
 export interface AstroReply {
   reply: string
   sources: AstroSource[]
@@ -30,6 +39,8 @@ export interface AstroReply {
   topic?: 'solar_system' | 'missions' | 'deep_space' | 'general' | 'blocked' | null
   /** 'unsure' means Astro had no reliable NASA-sourced facts and said so. */
   confidence?: 'sourced' | 'general_knowledge' | 'unsure' | null
+  /** Up to 2 NASA photos. Older backends leave this out. */
+  images?: AstroImage[]
 }
 
 export interface ChatTurn {

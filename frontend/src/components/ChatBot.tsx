@@ -104,6 +104,21 @@ export default function ChatBot({ compact = false }: { compact?: boolean }) {
             >
               <p className="whitespace-pre-line leading-relaxed">{m.content}</p>
               {m.safetyNote && <p className="label c-yellow mt-2 text-sm">🛡️ {m.safetyNote}</p>}
+              {m.images && m.images.length > 0 && (
+                <div className="mt-3 grid grid-cols-2 gap-2">
+                  {m.images.map((img) => (
+                    <figure key={img.url} className="m-0">
+                      <a href={img.page_url} target="_blank" rel="noopener noreferrer" className="block">
+                        <img src={img.url} alt={img.title} loading="lazy" className="polaroid aspect-square w-full object-cover" />
+                      </a>
+                      <figcaption className="muted mt-1 text-xs leading-snug">
+                        {img.kind === 'illustration' ? '🎨 AI illustration · ' : '📷 '}
+                        {img.title} · {img.credit}
+                      </figcaption>
+                    </figure>
+                  ))}
+                </div>
+              )}
               {m.sources && m.sources.length > 0 && (
                 <div className="mt-3 border-t-2 border-dashed border-ink/20 pt-2">
                   <p className="muted font-display text-sm">Where this comes from:</p>

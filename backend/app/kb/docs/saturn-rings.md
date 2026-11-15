@@ -7,6 +7,7 @@ aliases: [Saturn, rings, ring system]
 source_ids: [nasa-science-saturn-facts, nasa-science-cassini-saturn]
 last_verified: 2026-11-15
 reading_level: 8-12
+image_query: Saturn rings Cassini
 ---
 Saturn is not the only planet with rings (Jupiter, Uranus and Neptune have them too), but Saturn's are the biggest and brightest.
 

@@ -14,6 +14,16 @@ class Source(BaseModel):
     url: str
 
 
+class Image(BaseModel):
+    """A real NASA photo (kind 'nasa_photo'). 'illustration' is reserved for later and must be labelled in the UI."""
+
+    url: str
+    title: str
+    credit: str
+    page_url: str
+    kind: Literal["nasa_photo", "illustration"] = "nasa_photo"
+
+
 class PageContext(BaseModel):
     page: str | None = Field(default=None, max_length=50)
     artifactId: str | None = Field(default=None, max_length=60)
@@ -51,6 +61,8 @@ class AstroReply(BaseModel):
     topic: Literal["solar_system", "missions", "deep_space", "general", "blocked"] | None = None
     #: "sourced": from NASA-sourced facts; "general_knowledge": from the glossary; "unsure": no reliable facts.
     confidence: Literal["sourced", "general_knowledge", "unsure"] | None = None
+    #: Up to 2 real NASA photos, only for "show me…" questions.
+    images: list[Image] = Field(default_factory=list, max_length=2)
 
 
 class SuggestedQuestions(BaseModel):

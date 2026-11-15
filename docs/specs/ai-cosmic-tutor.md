@@ -134,6 +134,8 @@ A retrieved chunk counts as evidence only if a question word names the document 
 
 - `visual` module calls `images-api.nasa.gov/search` (no key) with the topic's `image_query`; take ≤ 2 results; return url, title, credit, NASA page.
 - Cache image lookups for 24 h.
+- The search phrase is the answering document's `image_query` (front-matter, artifact `imageQuery`, or "<Planet> planet" for fact sheets), or else a word from the classifier's fixed space-word lists (e.g. "nebula"). The child's raw message is never sent to the image search.
+- If photos are found but there are no facts, Astro says so honestly ("I don't have checked facts about that yet…") and still shows the NASA photos. `NASA_IMAGES=off` disables lookups.
 - **No image generation in v1.** The contract already has `kind: "illustration"` for later; such images must be labelled *AI illustration* in the UI.
 
 ## 7. Safety and security
@@ -203,7 +205,7 @@ Run in knowledge mode in CI (free and deterministic). Run in LLM mode manually b
 | A2 ✅ | Intent + Manager | Routing tests: "Why is Mars red?" → solar_system only; depth and max-modules enforced |
 | A3 ✅ | Response + cache | One LLM call max; knowledge-mode answers; cache hits return in < 300 ms |
 | A4 ✅ | Suggestions | Topic graph + de-dup; contract fields `suggestions`, `topic`, `confidence` |
-| A5 | Visual | `images` field with real NASA photos and credit |
+| A5 ✅ | Visual | `images` field with real NASA photos and credit |
 | A6 | Safety + eval | Extra safety rules; all ~40 eval cases pass in knowledge mode |
 
 ## 12. Known limits

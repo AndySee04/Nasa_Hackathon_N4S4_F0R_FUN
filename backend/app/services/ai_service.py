@@ -24,8 +24,9 @@ import httpx
 from app.agents import suggestions as suggest
 from app.agents.manager import MAX_EVIDENCE, CosmicManager
 from app.config import Settings
-from app.models import AstroReply, ChatTurn, PageContext, Source
+from app.models import AstroReply, ChatTurn, Image, PageContext, Source
 from app.services.cache import AnswerCache, answer_cache
+from app.services.images import search_nasa_images
 from app.services.knowledge_service import KnowledgeBase
 from app.services.retriever import Hit
 from app.services.safety import check_message, sanitize_reply
@@ -105,7 +106,13 @@ NOT_SURE = (
     "Hmm, I'm not sure about that one. I only answer from facts I have checked with NASA sources, and I don't have this one yet. "
     "You could explore NASA's websites with a grown-up, or ask me about the Moon, the planets, or a spacecraft in this museum!"
 )
+PHOTOS_ONLY = (
+    "I don't have checked facts about that yet, so I won't guess. But here are real photos from NASA's image library! "
+    "You could read more about them on NASA's website with a grown-up."
+)
 MAX_SOURCES = 4
+#: Words from the classifier's lists that are too general to search photos for on their own.
+VAGUE_PHOTO_WORDS = {"planet", "planets", "orbit", "gravity", "phase", "phases", "stars", "universe", "cosmos", "solar"}
 
 
 def _sources(evidence: list[Hit]) -> list[Source]:
@@ -127,12 +134,14 @@ class AstroService:
         client: httpx.AsyncClient | None = None,
         manager: CosmicManager | None = None,
         cache: AnswerCache | None = None,
+        image_client: httpx.AsyncClient | None = None,
     ):
         self.settings = settings
         self.kb = kb
         self.client = client
         self.manager = manager or CosmicManager()
         self.cache = answer_cache if cache is None else cache
+        self.image_client = image_client
 
     # ---------- public API ----------
     def suggested_questions(self, page: str | None, artifact_id: str | None) -> list[str]:
@@ -198,6 +207,12 @@ class AstroService:
 
         reply.topic = topic
         reply.confidence = confidence
+        if route.intent.visual and self.settings.nasa_images:
+            query = self._photo_query(evidence, route.intent.reasons)
+            photos = await search_nasa_images(query, self.image_client) if query else []
+            reply.images = [Image(url=p.url, title=p.title, credit=p.credit, page_url=p.page_url) for p in photos]
+            if photos and not evidence:
+                reply.reply = PHOTOS_ONLY
         page_artifact = route.intent.artifact_ids[0] if route.intent.artifact_ids else context.artifactId
         options = suggest.candidates(
             [h.doc_id for h in evidence],
@@ -213,6 +228,17 @@ class AstroService:
     def _pick_suggestions(self, options: list[str], message: str, history: list[ChatTurn], context: PageContext) -> list[str]:
         asked = [message, *context.askedQuestions, *(t.content for t in history if t.role == "user")]
         return suggest.pick(options, asked=asked, answerable=self.is_answerable)
+
+    def _photo_query(self, evidence: list[Hit], reasons: dict[str, list[str]]) -> str | None:
+        """A safe search phrase: from the answering document, or a known space word. Never the child's raw text."""
+        for hit in evidence:
+            if q := self.manager.retriever.image_query(hit.doc_id):
+                return q
+        for topic in ("deep_space", "solar_system"):
+            words = [w for w in reasons.get(topic, []) if w not in VAGUE_PHOTO_WORDS]
+            if words:
+                return words[0]
+        return None
 
     def is_answerable(self, question: str) -> bool:
         """True if the knowledge base has NASA-sourced or glossary evidence for this question."""
