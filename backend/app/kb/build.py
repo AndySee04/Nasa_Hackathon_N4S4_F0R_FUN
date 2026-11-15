@@ -49,7 +49,7 @@ SCHEMA = """
 CREATE TABLE sources (id TEXT PRIMARY KEY, title TEXT NOT NULL, url TEXT NOT NULL UNIQUE, publisher TEXT, last_verified TEXT);
 CREATE TABLE documents (
   id TEXT PRIMARY KEY, kind TEXT NOT NULL, title TEXT NOT NULL, category TEXT NOT NULL, topic TEXT NOT NULL,
-  aliases TEXT NOT NULL, source_ids TEXT NOT NULL, last_verified TEXT, body TEXT NOT NULL
+  aliases TEXT NOT NULL, source_ids TEXT NOT NULL, last_verified TEXT, body TEXT NOT NULL, image_query TEXT
 );
 CREATE TABLE records (id TEXT PRIMARY KEY, world TEXT, status TEXT, last_verified TEXT, json TEXT NOT NULL);
 CREATE VIRTUAL TABLE chunks USING fts5(
@@ -76,6 +76,8 @@ class Document:
     source_ids: list[str] = field(default_factory=list)
     aliases: list[str] = field(default_factory=list)
     last_verified: str | None = None
+    #: Search phrase for the NASA Image and Video Library, for "show me…" questions.
+    image_query: str | None = None
 
 
 # ---------- parsing ----------
@@ -149,7 +151,7 @@ def load_docs(kb_dir: Path, sources: dict[str, dict]) -> list[Document]:
             Document(
                 id=meta["id"], kind="doc", title=meta["title"], category=meta["category"], topic=meta["topic"],
                 body=body, source_ids=list(meta["source_ids"]), aliases=list(meta.get("aliases", [])),
-                last_verified=meta["last_verified"],
+                last_verified=meta["last_verified"], image_query=meta.get("image_query"),
             )
         )  # fmt: skip
     return docs
@@ -208,7 +210,7 @@ def factsheet_docs(kb_dir: Path, sources: dict[str, dict]) -> list[Document]:
             Document(
                 id=f"factsheet-{key}", kind="factsheet", title=f"{title}: NASA fact sheet numbers", category=category,
                 topic="solar_system", body=" ".join(lines), source_ids=[sheet["source_id"]], aliases=[title, key],
-                last_verified=sheet["last_verified"],
+                last_verified=sheet["last_verified"], image_query="full Moon" if key == "moon" else f"{title} planet",
             )
         )  # fmt: skip
     return docs
@@ -242,7 +244,7 @@ def artifact_docs(data_dir: Path, sources: dict[str, dict]) -> tuple[list[Docume
             Document(
                 id=a["id"], kind="artifact", title=a["name"], category="mission", topic="missions", body=text,
                 source_ids=ids, aliases=[a["missionName"], a["name"], a["id"].replace("-", " ")],
-                last_verified=a.get("lastVerified"),
+                last_verified=a.get("lastVerified"), image_query=a.get("imageQuery"),
             )
         )  # fmt: skip
     return docs, artifacts
@@ -303,7 +305,7 @@ def build_database(target: str | Path = ":memory:", kb_dir: Path = KB_DIR, data_
     )
     for d in docs:
         conn.execute(
-            "INSERT INTO documents VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO documents VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             (
                 d.id,
                 d.kind,
@@ -314,6 +316,7 @@ def build_database(target: str | Path = ":memory:", kb_dir: Path = KB_DIR, data_
                 json.dumps(d.source_ids),
                 d.last_verified,
                 d.body,
+                d.image_query,
             ),
         )
         for piece in chunk(d.body):

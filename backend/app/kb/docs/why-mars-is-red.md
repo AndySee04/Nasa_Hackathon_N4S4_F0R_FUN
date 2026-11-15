@@ -7,6 +7,7 @@ aliases: [Mars, red planet, rust]
 source_ids: [nasa-science-mars-facts, jpl-mars-in-a-minute-red]
 last_verified: 2026-11-15
 reading_level: 8-12
+image_query: Mars globe
 ---
 Mars is called the Red Planet because its rocks, soil and dust contain lots of iron. When iron is exposed to oxygen, it oxidizes, or rusts, and turns reddish, just like an old bike left outside.
 

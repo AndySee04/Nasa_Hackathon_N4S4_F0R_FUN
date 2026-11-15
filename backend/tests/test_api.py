@@ -21,6 +21,7 @@ ROOT = Path(__file__).resolve().parents[2]
 def _no_llm(monkeypatch):
     """Tests run in knowledge mode so they never call a paid AI model."""
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.setenv("NASA_IMAGES", "off")
     rate_limit.reset()
     answer_cache.clear()
 

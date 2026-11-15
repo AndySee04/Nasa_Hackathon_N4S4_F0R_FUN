@@ -36,6 +36,7 @@ export function AstroProvider({ children }: { children: ReactNode }) {
             role: 'assistant',
             content: res.reply,
             sources: res.sources,
+            images: res.images ?? [],
             suggestions: res.suggestions,
             safetyNote: res.safety_note,
           },
