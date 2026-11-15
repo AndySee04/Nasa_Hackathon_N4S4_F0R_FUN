@@ -96,6 +96,7 @@ export default function UniverseExplorer() {
         {/* The title, small, so the drawing gets the room. The how-to line goes once a world is chosen. */}
         <div ref={titleRef} className="absolute left-3 top-3 max-w-[calc(100%-1.5rem)] sm:left-5 sm:top-5 sm:max-w-[30rem]">
           <Paper tilt={-1} innerClassName="px-4 py-2.5">
+            <p className="tape -ml-1 mb-1.5 text-sm">Module A · Solar System Explorer</p>
             <h1 className="text-2xl leading-tight sm:text-3xl">Explore the Universe</h1>
             {!body && (
               <p className="mt-1 text-sm leading-snug sm:text-base">
@@ -128,11 +129,7 @@ export default function UniverseExplorer() {
                     <h2 id="world-name" className="text-2xl sm:text-3xl">
                       {body.name}
                     </h2>
-                    <button
-                      type="button"
-                      onClick={() => selectRef.current(null)}
-                      className="sticker c-white btn btn-sm h-10 w-10 shrink-0 p-0!"
-                    >
+                    <button type="button" onClick={() => selectRef.current(null)} className="sticker c-white btn btn-sm h-10 w-10 shrink-0 p-0!">
                       <span aria-hidden="true">✕</span>
                       <span className="sr-only">Back to the whole solar system</span>
                     </button>
@@ -148,11 +145,7 @@ export default function UniverseExplorer() {
                         {body.archive.label}
                       </Link>
                     )}
-                    <button
-                      type="button"
-                      className="sticker c-white btn btn-sm"
-                      onClick={() => open(`Tell me a cool fact about ${body.name}.`)}
-                    >
+                    <button type="button" className="sticker c-white btn btn-sm" onClick={() => open(`Tell me a cool fact about ${body.name}.`)}>
                       Ask Astro about {body.name}
                     </button>
                   </div>
