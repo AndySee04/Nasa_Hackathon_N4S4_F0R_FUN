@@ -1,15 +1,20 @@
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useAstro } from '../hooks/useAstro'
 import AstroAvatar from './AstroAvatar'
-import ChatBot from './ChatBot'
+import ChatBot, { NewChatButton, StatusPill } from './ChatBot'
 import Paper from './Paper'
 
-/** Astro's chat, on a sheet of paper that slides up. Opened from the "Ask Astro" sticker in the header. */
+/**
+ * Astro's chat in a full-height panel on the right, opened from the "Ask Astro" sticker in the header.
+ * Desktop: the page stays visible on the left, so a child can read and ask at the same time.
+ * Phone: the panel fills the screen, because a narrow strip of page beside it is no use.
+ */
 export default function AstroDrawer() {
   const { isOpen, close } = useAstro()
   const { pathname } = useLocation()
+  const still = useReducedMotion()
 
   useEffect(() => {
     if (!isOpen) return
@@ -27,31 +32,31 @@ export default function AstroDrawer() {
           role="dialog"
           aria-modal="false"
           aria-labelledby="astro-drawer-title"
-          initial={{ opacity: 0, y: 60, rotate: 2 }}
-          animate={{ opacity: 1, y: 0, rotate: 0 }}
-          exit={{ opacity: 0, y: 60, rotate: 2 }}
-          transition={{ type: 'spring', damping: 22, stiffness: 260 }}
-          className="fixed inset-x-3 bottom-3 z-[60] h-[78vh] sm:inset-x-auto sm:bottom-5 sm:right-5 sm:w-[27rem]"
+          initial={still ? { opacity: 0 } : { opacity: 0, x: 60 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={still ? { opacity: 0 } : { opacity: 0, x: 60 }}
+          transition={{ type: 'spring', damping: 26, stiffness: 280 }}
+          className="fixed inset-1.5 z-[60] sm:inset-y-3 sm:left-auto sm:right-3 sm:w-[30rem]"
         >
-          <Paper className="h-full" innerClassName="flex h-full flex-col p-4 sm:p-5">
-            <div className="mb-2 flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
-                <AstroAvatar className="h-10 w-10" />
-                <h2 id="astro-drawer-title" className="text-2xl">
-                  Astro AI
+          <Paper className="h-full" innerClassName="flex h-full flex-col px-4 pb-3 pt-4 sm:px-5">
+            <div className="mb-2 flex items-center gap-2.5">
+              <AstroAvatar className="h-10 w-10 shrink-0" />
+              <div className="min-w-0 flex-1">
+                <h2 id="astro-drawer-title" className="text-2xl leading-none">
+                  Astro
                 </h2>
+                <StatusPill />
               </div>
-              <div className="flex items-center gap-2">
-                <Link to="/ask-astro" onClick={close} className="link font-display text-sm font-normal">
-                  Full screen
-                </Link>
-                <button type="button" onClick={close} className="sticker c-white btn btn-sm h-11 w-11 p-0!">
-                  <span aria-hidden="true">✕</span>
-                  <span className="sr-only">Close Astro</span>
-                </button>
-              </div>
+              <NewChatButton />
+              <Link to="/ask-astro" onClick={close} className="link hidden font-display text-sm font-normal sm:inline">
+                Full screen
+              </Link>
+              <button type="button" onClick={close} className="sticker c-white btn btn-sm h-11 w-11 shrink-0 p-0!">
+                <span aria-hidden="true">✕</span>
+                <span className="sr-only">Close Astro</span>
+              </button>
             </div>
-            <ChatBot compact />
+            <ChatBot compact toolbar={false} />
           </Paper>
         </motion.div>
       )}

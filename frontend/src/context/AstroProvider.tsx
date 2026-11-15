@@ -42,18 +42,22 @@ export function AstroProvider({ children }: { children: ReactNode }) {
           },
         ])
       } catch (err) {
-        const offline = err instanceof ApiError && err.status === 0
+        const offline = err instanceof ApiError && (err.status === 0 || err.status === 408)
+        // A sleeping server takes up to a minute to start: say so, instead of sounding broken.
+        const starting = offline && backend.state !== 'online' && backend.state !== 'offline'
         setMessages((prev) => [
           ...prev,
           {
             id: nextId.current++,
             role: 'assistant',
             error: true,
-            content: offline
-              ? "I can't reach my mission control right now, so I can't answer. Ask a grown-up to check that the Astro AI server is running, then try again."
-              : err instanceof Error
-                ? err.message
-                : 'Something went wrong. Please try again.',
+            content: starting
+              ? "I'm still waking up! That can take up to a minute. Please ask me again in a moment."
+              : offline
+                ? "I can't reach my mission control right now, so I can't answer. Ask a grown-up to check that the Astro AI server is running, then try again."
+                : err instanceof Error
+                  ? err.message
+                  : 'Something went wrong. Please try again.',
           },
         ])
         if (offline) recheck()
@@ -61,7 +65,7 @@ export function AstroProvider({ children }: { children: ReactNode }) {
         setLoading(false)
       }
     },
-    [loading, messages, pageContext, recheck],
+    [loading, messages, pageContext, recheck, backend.state],
   )
 
   const open = useCallback(

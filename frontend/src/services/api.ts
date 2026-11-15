@@ -99,11 +99,18 @@ async function request<T>(path: string, init?: RequestInit, timeoutMs = 30000): 
 
 export const getHealth = () => request<HealthResponse>('/api/health', undefined, 5000)
 
+/** A question may arrive while a sleeping server starts up (up to about a minute), so it gets longer than other calls. */
+const CHAT_TIMEOUT_MS = 60000
+
 export const sendChat = (message: string, history: ChatTurn[], context: AstroContextInfo) =>
-  request<AstroReply>('/api/ai/chat', {
-    method: 'POST',
-    body: JSON.stringify({ message, history: history.slice(-6), context }),
-  })
+  request<AstroReply>(
+    '/api/ai/chat',
+    {
+      method: 'POST',
+      body: JSON.stringify({ message, history: history.slice(-6), context }),
+    },
+    CHAT_TIMEOUT_MS,
+  )
 
 export const explainTerm = (term: string, context: AstroContextInfo) =>
   request<AstroReply>('/api/ai/explain', {
