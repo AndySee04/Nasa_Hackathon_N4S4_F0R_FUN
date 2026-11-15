@@ -175,8 +175,13 @@ export default function ScienceLab() {
       </PageHeader>
 
       <div className="mx-auto max-w-7xl space-y-12 px-4 sm:px-6">
-        <div className="grid items-start gap-8 lg:grid-cols-[330px_1fr]">
-          <div className="grid gap-3" role="tablist" aria-label="Science questions">
+        <div className="grid items-start gap-4 lg:grid-cols-[330px_1fr] lg:gap-8">
+          {/* Phones: one row of questions that slides sideways, so the answer sits right under it. */}
+          <div
+            className="chip-row chip-row-until-lg -mx-4 flex gap-2.5 overflow-x-auto px-4 py-1 lg:mx-0 lg:grid lg:gap-2.5 lg:overflow-visible lg:px-0"
+            role="tablist"
+            aria-label="Science questions"
+          >
             {SCIENCE_TOPICS.map((t, i) => (
               <button
                 key={t.id}
@@ -185,7 +190,7 @@ export default function ScienceLab() {
                 aria-selected={t.id === topicId}
                 aria-controls="science-panel"
                 onClick={() => setTopicId(t.id)}
-                className="chip sticker c-paper min-h-14 rounded-[22px] px-4 py-2 text-[1.05rem]"
+                className="chip sticker c-paper min-h-12 shrink-0 whitespace-nowrap rounded-[22px] px-4 py-1.5 text-[1.05rem] lg:whitespace-normal"
                 style={{ '--r': `${i % 2 ? 0.8 : -0.8}deg` } as React.CSSProperties}
               >
                 {t.question}
@@ -201,9 +206,9 @@ export default function ScienceLab() {
               exit={{ opacity: 0, y: -12 }}
               transition={{ type: 'spring', damping: 18, stiffness: 200 }}
             >
-              <Paper as="section" id="science-panel" role="tabpanel" tilt={0.4} innerClassName="grid gap-7 p-6 sm:p-8 xl:grid-cols-2">
+              <Paper as="section" id="science-panel" role="tabpanel" tilt={0.4} innerClassName="grid gap-7 p-5 sm:p-8 xl:grid-cols-2">
                 <div>
-                  <h2 className="text-3xl">{topic.question}</h2>
+                  <h2 className="text-2xl sm:text-3xl">{topic.question}</h2>
                   <p className="mt-3 text-lg">
                     <span className="label c-sky text-lg">{topic.short}</span>
                   </p>

@@ -228,8 +228,8 @@ export default function MissionTimeline() {
   return (
     <>
       <PageHeader eyebrow="Module D · Mission Timeline" title="River of Stars">
-        Slide through mission years and watch working spacecraft ride the river. Missions that have ended drift away, but
-        every equipment record and its full story are still here in the archive.
+        Slide the mission clock and watch working spacecraft ride the river. Ended missions drift away, but their records stay in
+        the archive.
       </PageHeader>
 
       <div className="star-river-page mx-auto max-w-7xl px-4 pb-20 sm:px-6">
