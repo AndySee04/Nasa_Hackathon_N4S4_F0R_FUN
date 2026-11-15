@@ -40,6 +40,11 @@ export interface ChatTurn {
 export interface AstroContextInfo {
   page?: string
   artifactId?: string
+  /** Game context (docs/specs/contract-game-ai.md). */
+  campaign?: 'moon'
+  stage?: 'landing' | 'catch' | 'discovery' | 'repair' | 'science' | 'quiz' | 'complete'
+  /** Up to 10 questions already asked, so Astro doesn't suggest them again. */
+  askedQuestions?: string[]
 }
 
 export class ApiError extends Error {

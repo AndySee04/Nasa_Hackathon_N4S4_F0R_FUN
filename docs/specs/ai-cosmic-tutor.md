@@ -127,8 +127,8 @@ A retrieved chunk counts as evidence only if a question word names the document 
 ## 5. Contextual suggestions
 
 1. In LLM mode, `follow_ups` come from the same call (no extra cost).
-2. In knowledge mode, a **topic graph** in `kb/suggestions.yaml` gives 3–6 next questions per topic and artifact, e.g. `moon → [How was the Moon formed?, How big is the Moon?, How do astronauts land on the Moon?, How did the lunar rover move?]`.
-3. **Filter:** drop anything in `context.askedQuestions` or the history, anything too similar (normalised text), and anything off-topic. Return 3.
+2. A **topic graph** in `kb/suggestions.json` gives 3–6 next questions per topic and artifact, e.g. `moon → [How was the Moon formed?, How big is the Moon?, How do astronauts land on the Moon?, How did the lunar rover move?]`.
+3. **Filter:** drop anything in `context.askedQuestions` or the history, anything too similar (shared key words), and **anything the knowledge base can't answer** (a suggestion must never lead to "I'm not sure"). Return 3. CI checks that every graph question is answerable.
 
 ## 6. Images ("Show me a nebula")
 
@@ -202,7 +202,7 @@ Run in knowledge mode in CI (free and deterministic). Run in LLM mode manually b
 | A1 ✅ | Knowledge base | `knowledge.db` builds from curated docs + sources; FTS retrieval tests pass |
 | A2 ✅ | Intent + Manager | Routing tests: "Why is Mars red?" → solar_system only; depth and max-modules enforced |
 | A3 ✅ | Response + cache | One LLM call max; knowledge-mode answers; cache hits return in < 300 ms |
-| A4 | Suggestions | Topic graph + de-dup; contract fields `suggestions`, `topic`, `confidence` |
+| A4 ✅ | Suggestions | Topic graph + de-dup; contract fields `suggestions`, `topic`, `confidence` |
 | A5 | Visual | `images` field with real NASA photos and credit |
 | A6 | Safety + eval | Extra safety rules; all ~40 eval cases pass in knowledge mode |
 

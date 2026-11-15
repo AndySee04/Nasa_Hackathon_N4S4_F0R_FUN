@@ -21,6 +21,7 @@ import re
 
 import httpx
 
+from app.agents import suggestions as suggest
 from app.agents.manager import MAX_EVIDENCE, CosmicManager
 from app.config import Settings
 from app.models import AstroReply, ChatTurn, PageContext, Source
@@ -161,7 +162,9 @@ class AstroService:
         follow_up = _is_follow_up(message) and bool(context.artifactId or history)
         cache_key = None if follow_up else self.cache.key(message, context.artifactId, self.settings.ai_mode)
         if cache_key and (cached := self.cache.get(cache_key)) is not None:
-            return cached.model_copy(update={"mode": "cache"})
+            # The cache keeps all candidate suggestions; each child gets ones they haven't asked yet.
+            picked = self._pick_suggestions(cached.suggestions, message, history, context)
+            return cached.model_copy(update={"mode": "cache", "suggestions": picked})
 
         route = self.manager.route(message, page=context.page, artifact_id=context.artifactId)
         evidence = list(route.evidence)
@@ -195,9 +198,25 @@ class AstroService:
 
         reply.topic = topic
         reply.confidence = confidence
+        page_artifact = route.intent.artifact_ids[0] if route.intent.artifact_ids else context.artifactId
+        options = suggest.candidates(
+            [h.doc_id for h in evidence],
+            topic,
+            self.suggested_questions(context.page, page_artifact),
+            model_follow_ups=reply.suggestions if reply.mode == "llm" else None,
+        )
         if cache_key:
-            self.cache.put(cache_key, reply)
+            self.cache.put(cache_key, reply.model_copy(update={"suggestions": options}))
+        reply.suggestions = self._pick_suggestions(options, message, history, context)
         return reply
+
+    def _pick_suggestions(self, options: list[str], message: str, history: list[ChatTurn], context: PageContext) -> list[str]:
+        asked = [message, *context.askedQuestions, *(t.content for t in history if t.role == "user")]
+        return suggest.pick(options, asked=asked, answerable=self.is_answerable)
+
+    def is_answerable(self, question: str) -> bool:
+        """True if the knowledge base has NASA-sourced or glossary evidence for this question."""
+        return bool(self.manager.route(question).evidence)
 
     async def explain(self, term: str, context: PageContext) -> AstroReply:
         return await self.chat(f"What does {term} mean?", [], context)

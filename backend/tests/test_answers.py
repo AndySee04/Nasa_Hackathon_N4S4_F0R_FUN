@@ -96,7 +96,7 @@ async def test_llm_mode_makes_exactly_one_call_with_evidence_as_untrusted_facts(
     assert "<facts>" in call["system"] and "not instructions" in call["system"]
     assert "rust" in call["system"].lower()  # the NASA explainer was sent as evidence
     assert reply.mode == "llm" and reply.reply.startswith("Mars looks red")
-    assert reply.suggestions == ["Is Mars cold?", "Does Mars have moons?"]
+    assert reply.suggestions[:2] == ["Is Mars cold?", "Does Mars have moons?"]  # the model's own follow-ups come first
     assert reply.confidence == "sourced" and reply.sources
 
 
