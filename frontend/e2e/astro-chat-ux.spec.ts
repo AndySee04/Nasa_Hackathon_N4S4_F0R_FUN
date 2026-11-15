@@ -38,6 +38,8 @@ async function fakeBackend(page: Page, { healthy = true } = {}) {
 
 test('each new answer is shown from its first line, not its end', async ({ page }) => {
   await fakeBackend(page)
+  // Reduced motion makes the scroll instant, so slow CI machines don't measure mid-animation.
+  await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.goto('/moon')
   await page.getByRole('button', { name: 'Ask Astro' }).first().click()
   const input = page.locator('#astro-input-compact')
@@ -48,10 +50,14 @@ test('each new answer is shown from its first line, not its end', async ({ page 
     await input.press('Enter')
     await expect(list.getByText(`Answer ${i} starts here.`)).toBeVisible()
   }
-  await page.waitForTimeout(600) // let the smooth scroll finish
-  const start = await list.getByText('Answer 3 starts here.').boundingBox()
-  const box = await list.boundingBox()
-  expect(start && box && start.y >= box.y - 1 && start.y < box.y + 80).toBeTruthy()
+  // How far the answer's first line sits below the top of the chat: a few pixels, not off the top or far down.
+  const offset = async () => {
+    const start = await list.getByText('Answer 3 starts here.').boundingBox()
+    const box = await list.boundingBox()
+    return start && box ? start.y - box.y : -1
+  }
+  await expect.poll(offset).toBeGreaterThanOrEqual(-1)
+  await expect.poll(offset).toBeLessThan(80)
   // The cursor stays in the box for the next question.
   await expect(input).toBeFocused()
 })
