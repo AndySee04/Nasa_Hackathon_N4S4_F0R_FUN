@@ -1,14 +1,13 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import type { Artifact } from '../../types/artifact'
-import type { CampaignArtifact } from '../../types/campaign'
 import Paper from '../Paper'
 import { Sources } from './MissionCard'
 
 /**
  * Stage 5: what really happened. Kept visibly separate from anything pretend
- * (the training-simulator repairs), so children always know which parts are true.
+ * (the training-simulator challenges), so children always know which parts are true.
  */
-export default function RealStoryCard({ level, artifact, onNext }: { level: CampaignArtifact; artifact: Artifact; onNext: () => void }) {
+export default function RealStoryCard({ level, artifact, onNext }: { level: { science: { headline: string; points: string[] } }; artifact: Artifact; onNext: () => void }) {
   const still = useReducedMotion()
   return (
     <Paper tone="sky" tilt={0.6} innerClassName="p-5 sm:p-8">

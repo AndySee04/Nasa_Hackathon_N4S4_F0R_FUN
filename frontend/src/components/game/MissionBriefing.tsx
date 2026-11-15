@@ -5,7 +5,15 @@ import Paper from '../Paper'
 const canSpeak = () => typeof window !== 'undefined' && 'speechSynthesis' in window
 
 /** The mission guide reads the briefing. "Read it to me" uses the browser's own voice (nothing is sent anywhere). */
-export default function MissionBriefing({ text, onStart }: { text: string; onStart: () => void }) {
+export default function MissionBriefing({
+  text,
+  onStart,
+  startLabel = 'Pick a signal on the Moon 👇',
+}: {
+  text: string
+  onStart: () => void
+  startLabel?: string
+}) {
   const [speaking, setSpeaking] = useState(false)
   const speech = canSpeak()
 
@@ -39,7 +47,7 @@ export default function MissionBriefing({ text, onStart }: { text: string; onSta
         </p>
         <div className="mt-4 flex flex-wrap gap-3">
           <button type="button" className="cbtn c-mint" onClick={onStart}>
-            Pick a signal on the Moon 👇
+            {startLabel}
           </button>
           {speech && (
             <button type="button" className="chip sticker c-white" aria-pressed={speaking} onClick={toggleSpeech}>

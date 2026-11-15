@@ -12,7 +12,7 @@ import {
   saveProgress,
   STORAGE_KEY,
 } from './progress'
-import { bestOf, starsFor } from './scoring'
+import { bestOf, quizPassFor, starsFor } from './scoring'
 
 const perfect = { caught: true, repaired: true, quizCorrect: 3 }
 const caughtOnly = { caught: true, repaired: false, quizCorrect: 1 }
@@ -45,6 +45,15 @@ describe('scoring', () => {
     expect(starsFor(caughtOnly)).toBe(1)
     expect(starsFor({ caught: true, repaired: false, quizCorrect: 2 })).toBe(2)
     expect(starsFor(perfect)).toBe(3)
+  })
+
+  it('uses each campaign\'s quiz bar: Mars needs 3 of 4', () => {
+    const r = { caught: true, repaired: true, quizCorrect: 2 }
+    expect(starsFor(r, quizPassFor('moon'))).toBe(3)
+    expect(starsFor(r, quizPassFor('mars'))).toBe(2)
+    const p = recordResult(emptyProgress(), 'mars', 'spirit', r)
+    expect(p.campaigns.mars.artifacts.spirit.stars).toBe(2)
+    expect(parseProgress(JSON.stringify(p)).campaigns.mars.artifacts.spirit.stars).toBe(2)
   })
 
   it('keeps the best of two results', () => {
@@ -97,7 +106,7 @@ describe('progress', () => {
     })
     const p = parseProgress(tampered)
     expect(p.settings).toMatchObject({ easyMode: false, sound: false })
-    expect(p.campaigns.moon.artifacts.x).toEqual({ stars: 2, best: { caught: true, repaired: false, quizCorrect: 3 }, plays: 1 })
+    expect(p.campaigns.moon.artifacts.x).toEqual({ stars: 2, best: { caught: true, repaired: false, quizCorrect: 10 }, plays: 1 })
     expect(p.campaigns.moon.artifacts.y).toBeUndefined()
     expect(p.campaigns.moon.badges).toEqual(['a'])
   })

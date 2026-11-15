@@ -9,12 +9,20 @@ export interface LevelResult {
 
 export type Stars = 0 | 1 | 2 | 3
 
-/** Quiz answers needed for the quiz star. */
+/** Quiz answers needed for the quiz star on the Moon (3 questions). */
 export const QUIZ_PASS = 2
 
-/** One star each for catching, repairing and passing the quiz. */
-export function starsFor(r: LevelResult): Stars {
-  return ((r.caught ? 1 : 0) + (r.repaired ? 1 : 0) + (r.quizCorrect >= QUIZ_PASS ? 1 : 0)) as Stars
+/** Each campaign sets its own quiz bar: Mars is harder (3 of 4). */
+export const QUIZ_PASS_BY_CAMPAIGN: Record<string, number> = { moon: 2, mars: 3 }
+
+export const quizPassFor = (campaignId: string): number => QUIZ_PASS_BY_CAMPAIGN[campaignId] ?? QUIZ_PASS
+
+/**
+ * One star each for the first challenge (catch on the Moon, dig on Mars), the second
+ * (repair on the Moon, drive on Mars) and passing the quiz.
+ */
+export function starsFor(r: LevelResult, quizPass: number = QUIZ_PASS): Stars {
+  return ((r.caught ? 1 : 0) + (r.repaired ? 1 : 0) + (r.quizCorrect >= quizPass ? 1 : 0)) as Stars
 }
 
 /** Combines two results so a replay can only ever improve the saved best. */

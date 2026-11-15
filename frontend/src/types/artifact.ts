@@ -21,6 +21,7 @@ export type HardwareType =
   | 'impactor'
   | 'probe'
   | 'orbiter'
+  | 'helicopter'
 
 export type TimelineKind =
   | 'launch'
@@ -102,6 +103,7 @@ export const HARDWARE_LABELS: Record<HardwareType, string> = {
   impactor: 'Impactor',
   probe: 'Probe',
   orbiter: 'Orbiter',
+  helicopter: 'Helicopter',
 }
 
 export const WORLD_LABELS: Record<World, string> = {
