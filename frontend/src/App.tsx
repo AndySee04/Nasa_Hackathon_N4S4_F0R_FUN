@@ -7,6 +7,7 @@ import LoadingScreen from './components/LoadingScreen'
 import Navbar from './components/Navbar'
 import { AstroProvider } from './context/AstroProvider'
 import { AuthProvider } from './context/AuthProvider'
+import CloudProgressSync from './components/CloudProgressSync'
 import About from './pages/About'
 import Account from './pages/Account'
 import ArtifactDetail from './pages/ArtifactDetail'
@@ -111,6 +112,8 @@ export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
+        {/* Saves game stars to the account while a grown-up is signed in. */}
+        <CloudProgressSync />
         <AstroProvider>
           <Shell />
         </AstroProvider>

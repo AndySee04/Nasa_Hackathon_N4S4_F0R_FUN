@@ -1,6 +1,7 @@
 /**
- * Saved game progress. Lives only in this browser's localStorage: no account,
- * no name, nothing sent to a server. The certificate nickname is never saved.
+ * Saved game progress. Lives in this browser's localStorage, and also in the grown-up's
+ * account when one is signed in (see cloudProgress.ts). It holds stars and settings only:
+ * no names. The certificate nickname is never saved.
  */
 import { bestOf, quizPassFor, starsFor, type LevelResult, type Stars } from './scoring'
 
@@ -15,6 +16,15 @@ export interface CampaignLike {
 }
 
 export const STORAGE_KEY = 'n4s4.progress.v1'
+
+/** Fired on this window after progress is saved or cleared, so every open page and the account sync can follow. */
+export const PROGRESS_EVENT = 'n4s4:progress'
+
+function announce() {
+  if (typeof window === 'undefined') return
+  // Later, not during the save: saves happen inside React state updates, and listeners update state too.
+  queueMicrotask(() => window.dispatchEvent(new Event(PROGRESS_EVENT)))
+}
 
 export interface ArtifactProgress {
   stars: Stars
@@ -115,6 +125,7 @@ export function saveProgress(p: Progress, store: Storage | null = storage()): bo
   try {
     if (!store) return false
     store.setItem(STORAGE_KEY, JSON.stringify(p))
+    announce()
     return true
   } catch {
     return false
@@ -127,6 +138,45 @@ export function clearProgress(store: Storage | null = storage()): void {
   } catch {
     /* nothing to clear */
   }
+  announce()
+}
+
+/**
+ * Combines two saves of the same explorer (this browser and the account) without losing anything:
+ * the best result for every machine, the most plays, and every badge. Settings come from `mine`.
+ */
+export function mergeProgress(mine: Progress, theirs: Progress): Progress {
+  const out: Progress = { version: 1, campaigns: {}, settings: { ...mine.settings } }
+  for (const cid of new Set([...Object.keys(mine.campaigns), ...Object.keys(theirs.campaigns)])) {
+    const a = mine.campaigns[cid] ?? { artifacts: {}, badges: [] }
+    const b = theirs.campaigns[cid] ?? { artifacts: {}, badges: [] }
+    const artifacts: Record<string, ArtifactProgress> = {}
+    for (const aid of new Set([...Object.keys(a.artifacts), ...Object.keys(b.artifacts)])) {
+      const x = a.artifacts[aid]
+      const y = b.artifacts[aid]
+      const best = x && y ? bestOf(x.best, y.best) : (x ?? y)!.best
+      artifacts[aid] = { best, stars: starsFor(best, quizPassFor(cid)), plays: Math.max(x?.plays ?? 0, y?.plays ?? 0) }
+    }
+    out.campaigns[cid] = { artifacts, badges: [...new Set([...a.badges, ...b.badges])] }
+  }
+  return out
+}
+
+/** True when two saves hold the same stars and badges (settings aside). */
+export function sameStars(a: Progress, b: Progress): boolean {
+  const key = (p: Progress) =>
+    JSON.stringify(
+      Object.keys(p.campaigns)
+        .sort()
+        .map((cid) => [
+          cid,
+          Object.keys(p.campaigns[cid].artifacts)
+            .sort()
+            .map((aid) => [aid, p.campaigns[cid].artifacts[aid]]),
+          [...p.campaigns[cid].badges].sort(),
+        ]),
+    )
+  return key(a) === key(b)
 }
 
 /** Records one finished level. Never lowers stars. Returns a new object. */

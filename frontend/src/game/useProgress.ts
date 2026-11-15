@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
-import { clearProgress, emptyProgress, loadProgress, saveProgress, STORAGE_KEY, type Progress } from './progress'
+import { clearProgress, emptyProgress, loadProgress, PROGRESS_EVENT, saveProgress, STORAGE_KEY, type Progress } from './progress'
 
-/** Saved game progress as React state. Saves on every change and follows changes made in other tabs. */
+/** Saved game progress as React state. Saves on every change and follows changes made in other tabs and by the account sync. */
 export function useProgress() {
   const [progress, setProgress] = useState<Progress>(() => loadProgress())
 
@@ -9,8 +9,18 @@ export function useProgress() {
     const onStorage = (e: StorageEvent) => {
       if (e.key === STORAGE_KEY || e.key === null) setProgress(loadProgress())
     }
+    // Another part of this page saved (for example, stars arriving from the account).
+    const onSave = () =>
+      setProgress((prev) => {
+        const now = loadProgress()
+        return JSON.stringify(now) === JSON.stringify(prev) ? prev : now
+      })
     window.addEventListener('storage', onStorage)
-    return () => window.removeEventListener('storage', onStorage)
+    window.addEventListener(PROGRESS_EVENT, onSave)
+    return () => {
+      window.removeEventListener('storage', onStorage)
+      window.removeEventListener(PROGRESS_EVENT, onSave)
+    }
   }, [])
 
   const update = useCallback((change: (p: Progress) => Progress) => {
