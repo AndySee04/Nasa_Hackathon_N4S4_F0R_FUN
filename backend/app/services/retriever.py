@@ -108,6 +108,20 @@ class Retriever:
             best[doc_id] = Hit(doc_id, kind, title, topic, category, body, score, verified, sources, names)
         return sorted(best.values(), key=lambda h: h.score, reverse=True)[:k]
 
+    def document_hit(self, doc_id: str) -> Hit | None:
+        """The first chunk of one document, e.g. the artifact page the child is looking at."""
+        with self._lock:
+            row = self.conn.execute(
+                "SELECT c.doc_id, d.kind, d.title, d.topic, d.category, c.body, d.last_verified, d.source_ids "
+                "FROM chunks c JOIN documents d ON d.id = c.doc_id WHERE c.doc_id = ? LIMIT 1",
+                (doc_id,),
+            ).fetchone()
+        if not row:
+            return None
+        doc_id, kind, title, topic, category, body, verified, source_ids = row
+        sources = [self._sources[s] for s in json.loads(source_ids) if s in self._sources]
+        return Hit(doc_id, kind, title, topic, category, body, 0.0, verified, sources, name_matches=1)
+
     def is_allowed_url(self, url: str) -> bool:
         """Only URLs in the source registry may appear in an answer."""
         return any(s.url == url for s in self._sources.values())

@@ -9,6 +9,7 @@ from app.config import Settings
 from app.main import app
 from app.models import ChatTurn, PageContext
 from app.services.ai_service import AstroService, _clean_history, _parse_model_json
+from app.services.cache import answer_cache
 from app.services.knowledge_service import get_knowledge_base
 from app.services.safety import check_message, sanitize_reply
 
@@ -21,6 +22,7 @@ def _no_llm(monkeypatch):
     """Tests run in knowledge mode so they never call a paid AI model."""
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
     rate_limit.reset()
+    answer_cache.clear()
 
 
 # ---------- data ----------
