@@ -1,0 +1,26 @@
+{
+  "source_id": "nssdca-planetary-factsheet",
+  "last_verified": "2026-11-15",
+  "units": {
+    "mass_1e24_kg": "10^24 kg",
+    "diameter_km": "km",
+    "gravity_m_s2": "m/s^2",
+    "length_of_day_hours": "hours",
+    "distance_from_sun_1e6_km": "million km (the Moon's value is its distance from Earth)",
+    "orbital_period_days": "Earth days (the Moon's value is its orbit around Earth)",
+    "mean_temperature_c": "degrees Celsius",
+    "moons": "count"
+  },
+  "bodies": {
+    "mercury": {"name": "Mercury", "order": 1, "mass_1e24_kg": 0.330, "diameter_km": 4879, "gravity_m_s2": 3.7, "length_of_day_hours": 4222.6, "distance_from_sun_1e6_km": 57.9, "orbital_period_days": 88.0, "mean_temperature_c": 167, "moons": 0, "rings": false, "magnetic_field": "yes"},
+    "venus": {"name": "Venus", "order": 2, "mass_1e24_kg": 4.87, "diameter_km": 12104, "gravity_m_s2": 8.9, "length_of_day_hours": 2802.0, "distance_from_sun_1e6_km": 108.2, "orbital_period_days": 224.7, "mean_temperature_c": 464, "moons": 0, "rings": false, "magnetic_field": "no"},
+    "earth": {"name": "Earth", "order": 3, "mass_1e24_kg": 5.97, "diameter_km": 12756, "gravity_m_s2": 9.8, "length_of_day_hours": 24.0, "distance_from_sun_1e6_km": 149.6, "orbital_period_days": 365.2, "mean_temperature_c": 15, "moons": 1, "rings": false, "magnetic_field": "yes"},
+    "moon": {"name": "the Moon", "order": null, "mass_1e24_kg": 0.073, "diameter_km": 3475, "gravity_m_s2": 1.6, "length_of_day_hours": 708.7, "distance_from_sun_1e6_km": 0.384, "orbital_period_days": 27.3, "mean_temperature_c": -20, "moons": 0, "rings": false, "magnetic_field": "no"},
+    "mars": {"name": "Mars", "order": 4, "mass_1e24_kg": 0.642, "diameter_km": 6792, "gravity_m_s2": 3.7, "length_of_day_hours": 24.7, "distance_from_sun_1e6_km": 228.0, "orbital_period_days": 687.0, "mean_temperature_c": -65, "moons": 2, "rings": false, "magnetic_field": "no"},
+    "jupiter": {"name": "Jupiter", "order": 5, "mass_1e24_kg": 1898, "diameter_km": 142984, "gravity_m_s2": 23.1, "length_of_day_hours": 9.9, "distance_from_sun_1e6_km": 778.5, "orbital_period_days": 4331, "mean_temperature_c": -110, "moons": 95, "rings": true, "magnetic_field": "yes"},
+    "saturn": {"name": "Saturn", "order": 6, "mass_1e24_kg": 568, "diameter_km": 120536, "gravity_m_s2": 9.0, "length_of_day_hours": 10.7, "distance_from_sun_1e6_km": 1432.0, "orbital_period_days": 10747, "mean_temperature_c": -140, "moons": 274, "rings": true, "magnetic_field": "yes"},
+    "uranus": {"name": "Uranus", "order": 7, "mass_1e24_kg": 86.8, "diameter_km": 51118, "gravity_m_s2": 8.7, "length_of_day_hours": 17.2, "distance_from_sun_1e6_km": 2867.0, "orbital_period_days": 30589, "mean_temperature_c": -195, "moons": 28, "rings": true, "magnetic_field": "yes"},
+    "neptune": {"name": "Neptune", "order": 8, "mass_1e24_kg": 102, "diameter_km": 49528, "gravity_m_s2": 11.0, "length_of_day_hours": 16.1, "distance_from_sun_1e6_km": 4515.0, "orbital_period_days": 59800, "mean_temperature_c": -200, "moons": 16, "rings": true, "magnetic_field": "yes"},
+    "pluto": {"name": "Pluto", "order": null, "mass_1e24_kg": 0.0130, "diameter_km": 2376, "gravity_m_s2": 0.6, "length_of_day_hours": 153.3, "distance_from_sun_1e6_km": 5906.4, "orbital_period_days": 90560, "mean_temperature_c": -225, "moons": 5, "rings": false, "magnetic_field": "unknown"}
+  }
+}
