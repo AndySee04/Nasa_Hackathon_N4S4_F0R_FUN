@@ -24,7 +24,7 @@ MAX_QUERY_TERMS = 12
 # Common words like "moon" score low in BM25 because they appear everywhere, so a question
 # word that names a document (its title or an alias) adds this bonus on top.
 NAME_BONUS = 3.0
-NAME_NOISE = {"nasa", "fact", "sheet", "numbers", "stage", "module", "descent", "lunar"}
+NAME_NOISE = {"nasa", "fact", "sheet", "numbers", "stage", "module", "descent", "lunar", "planet", "planets", "system"}
 
 
 @dataclass(frozen=True)
@@ -45,6 +45,8 @@ class Hit:
     score: float  # higher is better
     last_verified: str | None
     sources: list[Source] = field(default_factory=list)
+    #: How many question words name this document (its title or an alias). Strong evidence it is on topic.
+    name_matches: int = 0
 
     @property
     def confidence(self) -> Confidence:
@@ -62,9 +64,10 @@ class Retriever:
         self.conn = conn
         self._lock = threading.Lock()
         self._sources = {r[0]: Source(*r) for r in conn.execute("SELECT id, title, url FROM sources")}
+        # Glossary entries keep every word of their term ("descent stage"); other names drop generic words.
         self._names = {
-            doc_id: set(tokenize(title + " " + " ".join(json.loads(aliases)))) - NAME_NOISE
-            for doc_id, title, aliases in conn.execute("SELECT id, title, aliases FROM documents")
+            doc_id: set(tokenize(title + " " + " ".join(json.loads(aliases)))) - (set() if kind == "glossary" else NAME_NOISE)
+            for doc_id, kind, title, aliases in conn.execute("SELECT id, kind, title, aliases FROM documents")
         }
 
     def search(
@@ -97,12 +100,33 @@ class Retriever:
         q_terms = set(tokenize(question))
         best: dict[str, Hit] = {}
         for doc_id, kind, title, topic, category, body, rank, verified, source_ids in rows:
-            score = -rank + NAME_BONUS * len(q_terms & self._names.get(doc_id, set()))
+            names = len(q_terms & self._names.get(doc_id, set()))
+            score = -rank + NAME_BONUS * names
             if doc_id in best and best[doc_id].score >= score:
                 continue
             sources = [self._sources[s] for s in json.loads(source_ids) if s in self._sources]
-            best[doc_id] = Hit(doc_id, kind, title, topic, category, body, score, verified, sources)
+            best[doc_id] = Hit(doc_id, kind, title, topic, category, body, score, verified, sources, names)
         return sorted(best.values(), key=lambda h: h.score, reverse=True)[:k]
+
+    def document_hit(self, doc_id: str) -> Hit | None:
+        """The first chunk of one document, e.g. the artifact page the child is looking at."""
+        with self._lock:
+            row = self.conn.execute(
+                "SELECT c.doc_id, d.kind, d.title, d.topic, d.category, c.body, d.last_verified, d.source_ids "
+                "FROM chunks c JOIN documents d ON d.id = c.doc_id WHERE c.doc_id = ? LIMIT 1",
+                (doc_id,),
+            ).fetchone()
+        if not row:
+            return None
+        doc_id, kind, title, topic, category, body, verified, source_ids = row
+        sources = [self._sources[s] for s in json.loads(source_ids) if s in self._sources]
+        return Hit(doc_id, kind, title, topic, category, body, 0.0, verified, sources, name_matches=1)
+
+    def image_query(self, doc_id: str) -> str | None:
+        """The NASA Image Library search phrase for a document, if it has one."""
+        with self._lock:
+            row = self.conn.execute("SELECT image_query FROM documents WHERE id = ?", (doc_id,)).fetchone()
+        return row[0] if row and row[0] else None
 
     def is_allowed_url(self, url: str) -> bool:
         """Only URLs in the source registry may appear in an answer."""

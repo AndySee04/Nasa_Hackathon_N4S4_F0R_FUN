@@ -74,9 +74,9 @@ File `backend/app/data/knowledge.db`, built by `python -m app.kb.build` from fil
 |---|---|---|
 | `records` | Structured mission and artifact facts (dates, agency, status, coordinates) | `artifacts.json` (shared with the game) |
 | `documents` | Curated short explainers, 150–400 words each, written from NASA pages | `kb/docs/*.md` with front-matter |
-| `chunks` | Documents split into ~120-word chunks + BM25 index (SQLite FTS5) | built |
+| `chunks` | Documents split into ~200-word chunks (a short explainer stays whole) + BM25 index (SQLite FTS5) | built |
 | `sources` | Every allowed URL, its title, publisher and `last_verified` | `kb/sources.json` + artifact sources |
-| `cache` | Normalised question + context hash → answer JSON, with expiry | runtime |
+| `cache` | Reserved for a file-backed deployment. v1 caches answers in memory (`services/cache.py`): normalised question + page artifact + AI mode, 7-day expiry, 500 entries | runtime |
 
 Document front-matter (from the original prompt, extended):
 
@@ -113,6 +113,10 @@ Rules:
 
 Mixed questions ("Why is the Moon grey and which rovers went there?") may call **two** modules. Never more.
 
+### Evidence rule (A2)
+
+A retrieved chunk counts as evidence only if a question word names the document (title or alias), or its BM25 score is at least 6. Glossary entries need a name match: "hole" in the definition of *crater* says nothing about black holes. No evidence means confidence `unsure`, and the answer step must say "I'm not sure" instead of guessing.
+
 ## 4. Response generation
 
 - **One** LLM call, `max_tokens` 400, timeout 15 s, temperature 0.3, JSON output `{reply, follow_ups[3]}`.
@@ -123,13 +127,15 @@ Mixed questions ("Why is the Moon grey and which rovers went there?") may call *
 ## 5. Contextual suggestions
 
 1. In LLM mode, `follow_ups` come from the same call (no extra cost).
-2. In knowledge mode, a **topic graph** in `kb/suggestions.yaml` gives 3–6 next questions per topic and artifact, e.g. `moon → [How was the Moon formed?, How big is the Moon?, How do astronauts land on the Moon?, How did the lunar rover move?]`.
-3. **Filter:** drop anything in `context.askedQuestions` or the history, anything too similar (normalised text), and anything off-topic. Return 3.
+2. A **topic graph** in `kb/suggestions.json` gives 3–6 next questions per topic and artifact, e.g. `moon → [How was the Moon formed?, How big is the Moon?, How do astronauts land on the Moon?, How did the lunar rover move?]`.
+3. **Filter:** drop anything in `context.askedQuestions` or the history, anything too similar (shared key words), and **anything the knowledge base can't answer** (a suggestion must never lead to "I'm not sure"). Return 3. CI checks that every graph question is answerable.
 
 ## 6. Images ("Show me a nebula")
 
 - `visual` module calls `images-api.nasa.gov/search` (no key) with the topic's `image_query`; take ≤ 2 results; return url, title, credit, NASA page.
 - Cache image lookups for 24 h.
+- The search phrase is the answering document's `image_query` (front-matter, artifact `imageQuery`, or "<Planet> planet" for fact sheets), or else a word from the classifier's fixed space-word lists (e.g. "nebula"). The child's raw message is never sent to the image search.
+- If photos are found but there are no facts, Astro says so honestly ("I don't have checked facts about that yet…") and still shows the NASA photos. `NASA_IMAGES=off` disables lookups.
 - **No image generation in v1.** The contract already has `kind: "illustration"` for later; such images must be labelled *AI illustration* in the UI.
 
 ## 7. Safety and security
@@ -149,7 +155,7 @@ Already on `main` (`app/services/safety.py`): personal information, self-harm, p
 | Retrieved context sent to the LLM | ≤ 4 chunks, ≤ 2,000 tokens |
 | Output | ≤ 400 tokens |
 | p95 latency | < 4 s with LLM, < 300 ms from cache or knowledge mode |
-| Cache | exact key = normalised question + topic + artifactId; 7-day expiry; never cache blocked or personal messages |
+| Cache | exact key = normalised question + artifactId + AI mode; 7-day expiry; 500 entries; never cache blocked messages or follow-ups that depend on the conversation |
 | Limits | 20 requests per minute per IP (exists); global daily LLM call cap (new, env `LLM_DAILY_CAP`) |
 
 ## 9. Files to create or change
@@ -157,9 +163,9 @@ Already on `main` (`app/services/safety.py`): personal information, self-harm, p
 ```
 backend/app/
   agents/
-    manager.py          route + enforce depth 1, max 2 modules, timeouts
+    manager.py          route + enforce depth 1, max 2 modules, time budget
     intent.py           rules classifier (§3)
-    modules/solar_system.py, missions.py, deep_space.py, visual.py
+    modules/__init__.py solar_system, missions, deep_space, general (visual comes in A5)
   kb/
     build.py            builds knowledge.db from docs + sources + artifacts.json
     docs/*.md           curated explainers (§2)
@@ -196,10 +202,10 @@ Run in knowledge mode in CI (free and deterministic). Run in LLM mode manually b
 | # | Milestone | Done when |
 |---|---|---|
 | A1 ✅ | Knowledge base | `knowledge.db` builds from curated docs + sources; FTS retrieval tests pass |
-| A2 | Intent + Manager | Routing tests: "Why is Mars red?" → solar_system only; depth and max-modules enforced |
-| A3 | Response + cache | One LLM call max; knowledge-mode answers; cache hits return in < 300 ms |
-| A4 | Suggestions | Topic graph + de-dup; contract fields `suggestions`, `topic`, `confidence` |
-| A5 | Visual | `images` field with real NASA photos and credit |
+| A2 ✅ | Intent + Manager | Routing tests: "Why is Mars red?" → solar_system only; depth and max-modules enforced |
+| A3 ✅ | Response + cache | One LLM call max; knowledge-mode answers; cache hits return in < 300 ms |
+| A4 ✅ | Suggestions | Topic graph + de-dup; contract fields `suggestions`, `topic`, `confidence` |
+| A5 ✅ | Visual | `images` field with real NASA photos and credit |
 | A6 | Safety + eval | Extra safety rules; all ~40 eval cases pass in knowledge mode |
 
 ## 12. Known limits

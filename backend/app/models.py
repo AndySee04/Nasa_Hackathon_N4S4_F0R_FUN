@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import Annotated, Literal
 
 from pydantic import BaseModel, Field
 
@@ -14,9 +14,24 @@ class Source(BaseModel):
     url: str
 
 
+class Image(BaseModel):
+    """A real NASA photo (kind 'nasa_photo'). 'illustration' is reserved for later and must be labelled in the UI."""
+
+    url: str
+    title: str
+    credit: str
+    page_url: str
+    kind: Literal["nasa_photo", "illustration"] = "nasa_photo"
+
+
 class PageContext(BaseModel):
     page: str | None = Field(default=None, max_length=50)
     artifactId: str | None = Field(default=None, max_length=60)
+    #: Game context (docs/specs/contract-game-ai.md). All optional, so older clients keep working.
+    campaign: Literal["moon"] | None = None
+    stage: Literal["landing", "catch", "discovery", "repair", "science", "quiz", "complete"] | None = None
+    #: Questions the child already asked, so suggestions don't repeat them.
+    askedQuestions: list[Annotated[str, Field(max_length=200)]] = Field(default_factory=list, max_length=10)
 
 
 class ChatTurn(BaseModel):
@@ -39,8 +54,15 @@ class AstroReply(BaseModel):
     reply: str
     sources: list[Source] = Field(default_factory=list)
     suggestions: list[str] = Field(default_factory=list)
-    mode: Literal["llm", "knowledge"]
+    #: "cache" means the same question was answered recently and nothing new was computed.
+    mode: Literal["llm", "knowledge", "cache"]
     safety_note: str | None = None
+    #: Which part of the knowledge base answered (contract-game-ai.md §4). "blocked" when safety refused.
+    topic: Literal["solar_system", "missions", "deep_space", "general", "blocked"] | None = None
+    #: "sourced": from NASA-sourced facts; "general_knowledge": from the glossary; "unsure": no reliable facts.
+    confidence: Literal["sourced", "general_knowledge", "unsure"] | None = None
+    #: Up to 2 real NASA photos, only for "show me…" questions.
+    images: list[Image] = Field(default_factory=list, max_length=2)
 
 
 class SuggestedQuestions(BaseModel):

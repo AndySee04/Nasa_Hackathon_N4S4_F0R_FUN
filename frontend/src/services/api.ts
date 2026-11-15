@@ -18,13 +18,29 @@ export interface AstroSource {
   url: string
 }
 
+/** A real NASA photo returned for "show me…" questions. */
+export interface AstroImage {
+  url: string
+  title: string
+  credit: string
+  page_url: string
+  kind: 'nasa_photo' | 'illustration'
+}
+
 export interface AstroReply {
   reply: string
   sources: AstroSource[]
   suggestions: string[]
-  mode: AiMode
+  /** 'cache' means the same question was answered recently. */
+  mode: AiMode | 'cache'
   /** Set when the safety filter changed or refused the request. */
   safety_note?: string | null
+  /** Which part of the knowledge base answered (docs/specs/contract-game-ai.md). */
+  topic?: 'solar_system' | 'missions' | 'deep_space' | 'general' | 'blocked' | null
+  /** 'unsure' means Astro had no reliable NASA-sourced facts and said so. */
+  confidence?: 'sourced' | 'general_knowledge' | 'unsure' | null
+  /** Up to 2 NASA photos. Older backends leave this out. */
+  images?: AstroImage[]
 }
 
 export interface ChatTurn {
@@ -35,6 +51,11 @@ export interface ChatTurn {
 export interface AstroContextInfo {
   page?: string
   artifactId?: string
+  /** Game context (docs/specs/contract-game-ai.md). */
+  campaign?: 'moon'
+  stage?: 'landing' | 'catch' | 'discovery' | 'repair' | 'science' | 'quiz' | 'complete'
+  /** Up to 10 questions already asked, so Astro doesn't suggest them again. */
+  askedQuestions?: string[]
 }
 
 export class ApiError extends Error {

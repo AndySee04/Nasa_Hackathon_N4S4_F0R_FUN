@@ -7,6 +7,7 @@ aliases: [Moon, lunar, Earth's Moon]
 source_ids: [nasa-science-moon-facts, nssdca-moon-factsheet]
 last_verified: 2026-11-15
 reading_level: 8-12
+image_query: full Moon
 ---
 The Moon is Earth's only natural moon. It is about 3,475 km across and, on average, about 384,400 km away from Earth.
 

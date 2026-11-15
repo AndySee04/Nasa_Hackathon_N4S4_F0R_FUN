@@ -1,0 +1,32 @@
+{
+  "_about": "Next questions to offer after an answer, keyed by the document that answered (or the topic). Every question here must be answerable from the knowledge base; tests check this.",
+  "documents": {
+    "moon": ["How big is the Moon?", "Why do we always see the same side of the Moon?", "What are the dark patches on the Moon?", "Why does the Moon have so many craters?", "What is a descent stage?"],
+    "factsheet-moon": ["How was the Moon formed?", "Why does the Moon have so many craters?", "Why did astronauts visit Surveyor 3?"],
+    "sun": ["How far is the Sun from Earth?", "How hot is the Sun's core?", "Does the Sun have moons?", "How big is Jupiter?"],
+    "why-mars-is-red": ["How many moons does Mars have?", "How long is a day on Mars?", "What did Opportunity discover?", "What is a sol?"],
+    "factsheet-mars": ["Why is Mars red?", "What is a marsquake?", "Why did Opportunity stop working?"],
+    "saturn-rings": ["How many moons does Saturn have?", "Why did Cassini dive into Saturn?", "Does Jupiter have rings?"],
+    "factsheet-saturn": ["What are Saturn's rings made of?", "Why did Cassini dive into Saturn?"],
+    "factsheet-jupiter": ["How many moons does Jupiter have?", "What is a gravity assist?", "Which planets has Voyager 2 visited?"],
+    "factsheet-earth": ["How was the Moon formed?", "How far is the Sun from Earth?"],
+    "factsheet-venus": ["How long is a day on Venus?", "How hot is Mercury?"],
+    "factsheet-mercury": ["How hot is Venus?", "How long is a year on Mercury?"],
+    "factsheet-uranus": ["How many moons does Uranus have?", "Which planets has Voyager 2 visited?"],
+    "factsheet-neptune": ["How cold is Neptune?", "Which planets has Voyager 2 visited?"],
+    "factsheet-pluto": ["What did New Horizons see on Pluto?", "How many moons does Pluto have?"],
+    "apollo-11-eagle": ["What is a retroreflector?", "Why did astronauts visit Surveyor 3?", "What is a descent stage?"],
+    "apollo-15-lrv": ["What is a lunar rover?", "What did Apollo 11 leave on the Moon?"],
+    "surveyor-3": ["What is a descent stage?", "How was the Moon formed?", "What did Apollo 11 leave on the Moon?"],
+    "opportunity": ["What is a sol?", "Why is Mars red?", "What did Phoenix find under the ground?"],
+    "voyager-1": ["What is interstellar space?", "What is the golden record?", "How does Voyager 1 get power?"],
+    "voyager-2": ["What is a gravity assist?", "Is Voyager 1 still working?"],
+    "cassini": ["What are Saturn's rings made of?", "How many moons does Saturn have?"]
+  },
+  "topics": {
+    "solar_system": ["Why is Mars red?", "How was the Moon formed?", "What are Saturn's rings made of?", "How hot is the Sun's core?"],
+    "missions": ["Why did astronauts visit Surveyor 3?", "Is Voyager 1 still working?", "What did Opportunity discover?"],
+    "deep_space": ["What is interstellar space?", "Where is Voyager 1 now?", "What did New Horizons see on Pluto?"],
+    "general": ["What is a descent stage?", "Why is Mars red?", "How was the Moon formed?"]
+  }
+}

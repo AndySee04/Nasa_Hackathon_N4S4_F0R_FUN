@@ -30,6 +30,8 @@ class Settings:
     allowed_origins: list[str] = field(default_factory=_origins)
     rate_limit_per_minute: int = field(default_factory=lambda: int(os.getenv("RATE_LIMIT_PER_MINUTE", "20")))
     llm_timeout_seconds: float = field(default_factory=lambda: float(os.getenv("LLM_TIMEOUT_SECONDS", "20")))
+    #: Look up NASA Image Library photos for "show me…" questions. Set NASA_IMAGES=off to disable.
+    nasa_images: bool = field(default_factory=lambda: os.getenv("NASA_IMAGES", "on").lower() not in ("0", "off", "false", "no"))
     data_dir: Path = Path(__file__).resolve().parent / "data"
 
     @property

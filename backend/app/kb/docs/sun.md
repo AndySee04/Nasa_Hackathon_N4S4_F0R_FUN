@@ -7,6 +7,7 @@ aliases: [Sun, solar, our star]
 source_ids: [nasa-science-sun-facts, nssdca-sun-factsheet]
 last_verified: 2026-11-15
 reading_level: 8-12
+image_query: Sun Solar Dynamics Observatory
 ---
 The Sun is a star: a hot, glowing ball of hydrogen and helium at the center of our solar system. It is about 4.5 billion years old, and scientists call it a yellow dwarf star.
 
