@@ -34,8 +34,9 @@ export const PAINTED: Record<string, PaintedArt> = {
   moon: ROUND,
   mars: ROUND,
   jupiter: ROUND,
-  // Measured from ym's video: a 1024 × 578 picture with the ball in the middle and the rings reaching both sides.
-  saturn: { aspect: 1024 / 578, cx: 0.504, cy: 0.5, r: 0.277, mask: true },
+  // Measured from ym's video: a 1024 × 556 picture with the ball in the middle and the rings reaching both sides,
+  // with a little room past the faint ring tips so they are never cut off.
+  saturn: { aspect: 1024 / 556, cx: 0.506, cy: 0.5, r: 0.262, mask: true },
   uranus: ROUND,
   neptune: ROUND,
 }
