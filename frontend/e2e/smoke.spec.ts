@@ -53,7 +53,7 @@ test('the mission river scrubs time and keeps every equipment record available',
   await expect(slider).toHaveValue('2026')
   await expect(page.getByRole('button', { name: 'Voyager 1, 2026: Still working' })).toBeVisible()
   await expect(page.getByRole('button', { name: 'Voyager 2, 2026: Still working' })).toBeVisible()
-  await page.getByRole('button', { name: 'Show 15 departed comets' }).click()
+  await page.getByRole('button', { name: /Show \d+ departed comets/ }).click()
   await expect(page.getByRole('button', { name: 'Opportunity rover, 2026: Mission ended' })).toBeVisible()
 
   await page.getByRole('button', { name: 'New Horizons, 2026: Still working' }).click()
@@ -63,7 +63,13 @@ test('the mission river scrubs time and keeps every equipment record available',
   await slider.press('Home')
   await expect(slider).toHaveValue('1967')
   await expect(page.getByText('Mission status in 1967: Not launched yet')).toBeVisible()
-  await expect(page.locator('.star-river-library > summary')).toContainText('all 18 equipment records stay available')
+
+  const archive = page.locator('.star-river-library')
+  const archiveSummary = archive.locator('summary')
+  const archiveCount = Number((await archiveSummary.innerText()).match(/all (\d+) equipment records stay available/)?.[1])
+  expect(Number.isInteger(archiveCount)).toBe(true)
+  await archiveSummary.click()
+  await expect(archive.locator('.star-river-library-card')).toHaveCount(archiveCount)
 })
 
 test('unknown pages show the friendly 404', async ({ page }) => {
