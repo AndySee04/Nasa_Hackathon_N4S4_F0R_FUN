@@ -26,11 +26,12 @@ from app.agents.manager import MAX_EVIDENCE, CosmicManager
 from app.config import Settings
 from app.models import AstroReply, ChatTurn, Image, PageContext, Source
 from app.services.answer_pick import artifact_sentences, best_sentences, rank_sentences, sentences
+from app.services.budget import DailyBudget, llm_budget
 from app.services.cache import AnswerCache, answer_cache
 from app.services.images import search_nasa_images
 from app.services.knowledge_service import KnowledgeBase
 from app.services.retriever import Hit
-from app.services.safety import check_message, sanitize_reply
+from app.services.safety import check_message, echoes_prompt, looks_like_instructions, sanitize_reply
 
 log = logging.getLogger("astro")
 
@@ -111,6 +112,21 @@ PHOTOS_ONLY = (
     "I don't have checked facts about that yet, so I won't guess. But here are real photos from NASA's image library! "
     "You could read more about them on NASA's website with a grown-up."
 )
+#: Questions about Astro itself. Narrow on purpose: "How do you land on the Moon?" is a space question.
+ABOUT_ASTRO = re.compile(
+    r"\b((who|what) are you|how (do|does) (you|astro) (work|answer|know|learn|find)|"
+    r"how (do|does) your [\w-]+ (work|features)|your (space-learning|features|sources)|"
+    r"where do (you|your answers) (get|come)|are you (a robot|an ai|real|human))\b",
+    re.I,
+)
+ABOUT_ASTRO_REPLY = (
+    "I'm Astro, an AI space guide! 🤖 Here's how I work:\n"
+    "• I look up your question in a library of facts checked against NASA websites.\n"
+    "• I explain what I find in simple words, and show you where each fact came from.\n"
+    "• If I can't find a checked fact, I say I'm not sure instead of guessing.\n"
+    "• I suggest next questions to keep you exploring.\n"
+    "I can't browse the internet, run programs or remember you after you leave. What shall we explore?"
+)
 MAX_SOURCES = 4
 #: Words from the classifier's lists that are too general to search photos for on their own.
 VAGUE_PHOTO_WORDS = {"planet", "planets", "orbit", "gravity", "phase", "phases", "stars", "universe", "cosmos", "solar"}
@@ -136,8 +152,10 @@ class AstroService:
         manager: CosmicManager | None = None,
         cache: AnswerCache | None = None,
         image_client: httpx.AsyncClient | None = None,
+        budget: DailyBudget | None = None,
     ):
         self.settings = settings
+        self.budget = llm_budget if budget is None else budget
         self.kb = kb
         self.client = client
         self.manager = manager or CosmicManager()
@@ -168,6 +186,16 @@ class AstroService:
                 topic="blocked",
             )
 
+        # "How do you work?" gets a fixed, honest description. The secret-request reply invites this question.
+        if ABOUT_ASTRO.search(message):
+            return AstroReply(
+                reply=ABOUT_ASTRO_REPLY,
+                mode="knowledge",
+                topic="general",
+                confidence="general_knowledge",
+                suggestions=self._pick_suggestions(DEFAULT_QUESTIONS, message, history, context),
+            )
+
         # "What did it find?" depends on what came before, so only self-contained questions are cached.
         follow_up = _is_follow_up(message) and bool(context.artifactId or history)
         cache_key = None if follow_up else self.cache.key(message, context.artifactId, self.settings.ai_mode)
@@ -182,8 +210,10 @@ class AstroService:
             page_hit = self.manager.retriever.document_hit(context.artifactId)
             if page_hit:
                 evidence.insert(0, page_hit)
-        evidence = evidence[:MAX_EVIDENCE]
+        # Retrieved text is untrusted: drop any chunk that talks to the AI instead of stating facts.
+        evidence = [h for h in evidence if not looks_like_instructions(h.text)][:MAX_EVIDENCE]
         topic = route.intent.topics[0]
+        fell_back = False
 
         if not evidence:
             reply = AstroReply(
@@ -196,13 +226,16 @@ class AstroService:
             confidence = "sourced" if any(h.sources for h in evidence) else "general_knowledge"
             reply = None
             if self.settings.ai_mode == "llm":
-                try:
-                    text, follow_ups = await self._ask_llm(message, history, evidence, context)
-                    reply = AstroReply(
-                        reply=sanitize_reply(text), sources=_sources(evidence), suggestions=follow_ups[:3], mode="llm"
-                    )
-                except Exception as exc:  # noqa: BLE001 - fall back to knowledge mode on any model error
-                    log.warning("LLM call failed, using knowledge mode: %s", type(exc).__name__)
+                if not self.budget.take(self.settings.llm_daily_cap):
+                    fell_back = True
+                    log.warning("Daily AI model cap (%d) reached, using knowledge mode", self.settings.llm_daily_cap)
+                else:
+                    try:
+                        reply = await self._llm_reply(message, history, evidence, context)
+                    except Exception as exc:  # noqa: BLE001 - fall back to knowledge mode on any model error
+                        log.warning("LLM call failed, using knowledge mode: %s", type(exc).__name__)
+                    if reply is None:
+                        fell_back = True
             if reply is None:
                 reply = self._knowledge_answer(message, evidence, route.intent.artifact_ids, context)
 
@@ -221,7 +254,9 @@ class AstroService:
             self.suggested_questions(context.page, page_artifact),
             model_follow_ups=reply.suggestions if reply.mode == "llm" else None,
         )
-        if cache_key:
+        # A knowledge-mode stand-in (cap reached, model down or reply rejected) is not cached under the AI-mode
+        # key, so the proper AI answer comes back once the model is available again.
+        if cache_key and not fell_back:
             self.cache.put(cache_key, reply.model_copy(update={"suggestions": options}))
         reply.suggestions = self._pick_suggestions(options, message, history, context)
         return reply
@@ -299,6 +334,19 @@ class AstroService:
         )
 
     # ---------- LLM mode ----------
+    async def _llm_reply(
+        self, message: str, history: list[ChatTurn], evidence: list[Hit], context: PageContext
+    ) -> AstroReply | None:
+        """The one AI model call, with output checks. None means 'use knowledge mode instead'."""
+        text, follow_ups = await self._ask_llm(message, history, evidence, context)
+        if echoes_prompt(text, SYSTEM_PROMPT):
+            log.warning("AI reply repeated its instructions; using knowledge mode instead")
+            return None
+        # Only links from the source registry survive (the prompt also asks for no links at all).
+        text = sanitize_reply(text, is_allowed=self.manager.retriever.is_allowed_url)
+        follow_ups = [q for q in follow_ups if "http" not in q.lower() and not echoes_prompt(q, SYSTEM_PROMPT, n=6)]
+        return AstroReply(reply=text, sources=_sources(evidence), suggestions=follow_ups[:3], mode="llm")
+
     async def _ask_llm(
         self, message: str, history: list[ChatTurn], evidence: list[Hit], context: PageContext
     ) -> tuple[str, list[str]]:
