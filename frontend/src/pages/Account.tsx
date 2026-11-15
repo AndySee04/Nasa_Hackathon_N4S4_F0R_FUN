@@ -19,8 +19,8 @@ function GoogleG() {
 }
 
 /**
- * Supabase sends errors back on the return URL (?error=…&error_description=…, or after # for older flows).
- * Read them once, then tidy the address bar so a refresh doesn't show the message again.
+ * Supabase sends errors back on the return URL (?error=…, or after # for older flows).
+ * Read them once and map them to fixed messages, then tidy the address bar so a refresh doesn't show them again.
  */
 function readReturnError(): string | null {
   const params = new URLSearchParams(window.location.search)
@@ -28,8 +28,8 @@ function readReturnError(): string | null {
   const code = params.get('error') ?? hash.get('error')
   if (!code) return null
   if (code === 'access_denied') return 'Sign-in was cancelled. No problem, you can try again any time.'
-  const detail = params.get('error_description') ?? hash.get('error_description')
-  return `Sign-in didn't work${detail ? `: ${detail}` : ''}. Please try again.`
+  // Never echo error_description: anyone can put text in a link, and this is a children's site.
+  return "Sign-in didn't work. Please try again."
 }
 
 export default function Account() {
