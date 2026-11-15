@@ -6,7 +6,7 @@ An interactive, story-driven digital space museum for the **2026 NASA Space Apps
 
 > A student hackathon project. Not affiliated with or endorsed by NASA.
 
-![The home page: a crayon solar system with ym's painted Sun and planets, and name tags for the Moon and Mars](docs/screenshots/home.webp)
+![The home page: a crayon solar system with Yvonne Lee Yee Mun's painted Sun and planets, and name tags for the Moon and Mars](docs/screenshots/home.webp)
 
 ## Screenshots
 
@@ -156,11 +156,15 @@ Never add a fact you can't source. See `docs/data_sources.md`.
 
 ## Known limits and next steps
 
-- Planet textures are drawn in code (no large downloads). Real NASA texture maps can go in `frontend/public/textures/`.
+- The Sun, the Moon and the planets use painted art (short looping videos and stills in `frontend/public/planets/`, 4.8 MB in all). A world plays its video only while it is on screen and big enough to see, so the home page loads one video, not ten.
 - Leaflet maps of landing sites are planned for the Moon and Mars archives (coordinates are already in the data).
 - Artifact photos load live from the NASA Image and Video Library; if none is found, an illustration is shown.
 - The rate limiter is in-memory (fine for one server; use Redis if you scale out).
 - Facts were written from NASA NSSDCA records and NASA Science pages. Re-check dates and statuses before the final submission, especially for spacecraft that are still working.
+
+## Thank you
+
+Thank you to **Yvonne Lee Yee Mun** for the painted art of the Sun, the Moon and all eight planets. Her art is what you see in the solar system on the home page, in Explore, and on the Moon and Mars mission maps.
 
 ## Licence
 
