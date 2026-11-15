@@ -113,6 +113,10 @@ Rules:
 
 Mixed questions ("Why is the Moon grey and which rovers went there?") may call **two** modules. Never more.
 
+### Evidence rule (A2)
+
+A retrieved chunk counts as evidence only if a question word names the document (title or alias), or its BM25 score is at least 6. Glossary entries need a name match: "hole" in the definition of *crater* says nothing about black holes. No evidence means confidence `unsure`, and the answer step must say "I'm not sure" instead of guessing.
+
 ## 4. Response generation
 
 - **One** LLM call, `max_tokens` 400, timeout 15 s, temperature 0.3, JSON output `{reply, follow_ups[3]}`.
@@ -157,9 +161,9 @@ Already on `main` (`app/services/safety.py`): personal information, self-harm, p
 ```
 backend/app/
   agents/
-    manager.py          route + enforce depth 1, max 2 modules, timeouts
+    manager.py          route + enforce depth 1, max 2 modules, time budget
     intent.py           rules classifier (§3)
-    modules/solar_system.py, missions.py, deep_space.py, visual.py
+    modules/__init__.py solar_system, missions, deep_space, general (visual comes in A5)
   kb/
     build.py            builds knowledge.db from docs + sources + artifacts.json
     docs/*.md           curated explainers (§2)
@@ -196,7 +200,7 @@ Run in knowledge mode in CI (free and deterministic). Run in LLM mode manually b
 | # | Milestone | Done when |
 |---|---|---|
 | A1 ✅ | Knowledge base | `knowledge.db` builds from curated docs + sources; FTS retrieval tests pass |
-| A2 | Intent + Manager | Routing tests: "Why is Mars red?" → solar_system only; depth and max-modules enforced |
+| A2 ✅ | Intent + Manager | Routing tests: "Why is Mars red?" → solar_system only; depth and max-modules enforced |
 | A3 | Response + cache | One LLM call max; knowledge-mode answers; cache hits return in < 300 ms |
 | A4 | Suggestions | Topic graph + de-dup; contract fields `suggestions`, `topic`, `confidence` |
 | A5 | Visual | `images` field with real NASA photos and credit |
