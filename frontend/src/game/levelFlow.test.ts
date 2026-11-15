@@ -6,10 +6,12 @@ import { emptyProgress, recordResult } from './progress'
 const caught = { caught: true, repaired: false, quizCorrect: 0 }
 
 describe('level steps', () => {
-  it('goes catch → mission card → real story → done, skipping steps not built yet', () => {
+  it('goes catch → mission card → repair → real story → quiz → done', () => {
     expect(nextStep('catch')).toBe('discovery')
-    expect(nextStep('discovery')).toBe('science')
-    expect(nextStep('science')).toBe('complete')
+    expect(nextStep('discovery')).toBe('repair')
+    expect(nextStep('repair')).toBe('science')
+    expect(nextStep('science')).toBe('quiz')
+    expect(nextStep('quiz')).toBe('complete')
     expect(nextStep('complete')).toBe('complete')
   })
 })

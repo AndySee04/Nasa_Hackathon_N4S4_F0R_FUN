@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test, type Page } from '@playwright/test'
 
 const isRealError = (text: string) => !/Failed to load resource|ERR_|net::|Failed to fetch|CORS/i.test(text)
 
@@ -50,16 +50,8 @@ test('saved stars show on the hub and survive a reload', async ({ page }) => {
   await expect(page.getByText('0 / 12')).toBeVisible()
 })
 
-test('a full signal: catch by keyboard, mission card, real story, next signal', async ({ page }) => {
-  const errors: string[] = []
-  page.on('pageerror', (e) => errors.push(e.message))
-  await page.emulateMedia({ reducedMotion: 'reduce' })
-  await page.goto('/moon/campaign')
-  await page.getByRole('button', { name: /^Mystery signal/ }).first().click()
-  await page.getByRole('link', { name: /Launch rocket claw/ }).click()
-  await expect(page.getByRole('heading', { level: 1, name: 'Catch the signal!' })).toBeVisible()
-
-  // Turn easy mode off: the visible hint hides, but the slider's text still guides keyboard players.
+/** Steers the claw with the keyboard until it is over the signal, then drops it. */
+async function catchByKeyboard(page: Page) {
   await page.getByRole('button', { name: /Easy mode: on/ }).click()
   const claw = page.getByRole('slider', { name: /Rocket claw position/ })
   await claw.focus()
@@ -70,32 +62,91 @@ test('a full signal: catch by keyboard, mission card, real story, next signal', 
   }
   await expect(claw).toHaveAttribute('aria-valuetext', /right above it/)
   await page.keyboard.press('Space')
+}
 
-  // Stage 3: the mission card shows NASA-sourced facts.
+test('a full mission for 3 stars: catch, mission card, repair, real story, quiz', async ({ page }) => {
+  const errors: string[] = []
+  page.on('pageerror', (e) => errors.push(e.message))
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto('/moon/campaign')
+  await page.getByRole('button', { name: /^Mystery signal/ }).first().click()
+  await page.getByRole('link', { name: /Launch rocket claw/ }).click()
+  await expect(page.getByRole('heading', { level: 1, name: 'Catch the signal!' })).toBeVisible()
+  await catchByKeyboard(page)
+
+  // Stage 3: mission card with NASA-sourced facts.
   await expect(page.getByRole('heading', { level: 1, name: 'Signal identified!' })).toBeVisible()
   await expect(page.getByRole('heading', { level: 2, name: 'Eagle Lunar Module descent stage' })).toBeVisible()
   await expect(page.getByText('Laser Ranging Retroreflector')).toBeVisible()
   await page.getByText('Where do these facts come from?').click()
   await expect(page.getByRole('link', { name: /NASA NSSDCA: Apollo 11 Lunar Module/ })).toBeVisible()
+  await page.getByRole('button', { name: /Start the repair mission/ }).click()
 
-  // Stage 5: the real story, clearly marked as true.
-  await page.getByRole('button', { name: /What did scientists learn/ }).click()
+  // Stage 4: the pretend repair, clearly labelled. A wrong match gets a kind clue, never "wrong".
+  await expect(page.getByText(/Pretend mission · training simulator/)).toBeVisible()
+  await expect(page.getByText(/The real machines on the Moon were not repaired/)).toBeVisible()
+  await page.getByRole('button', { name: 'Landing legs', exact: true }).click()
+  await page.getByRole('button', { name: /bounce laser light/ }).click()
+  await expect(page.getByRole('status')).toHaveText(/Good try|Nearly|keep going/)
+  const parts: [string, RegExp][] = [
+    ['Descent stage', /bottom half with the landing legs/],
+    ['Ascent stage', /top half with the crew cabin/],
+    ['Landing legs', /hold the lander up/],
+    ['Laser retroreflector', /bounce laser light/],
+  ]
+  for (const [part, slot] of parts) {
+    await page.getByRole('button', { name: part, exact: true }).click()
+    await page.getByRole('button', { name: slot }).click()
+  }
+  await page.getByRole('button', { name: /Repair star/ }).click()
+
+  // Stage 5: the real story.
   await expect(page.getByRole('heading', { level: 1, name: 'The real story' })).toBeVisible()
   await expect(page.getByText(/Real story · true facts from NASA records/)).toBeVisible()
   await expect(page.getByText(/about 3.8 cm each year/)).toBeVisible()
+  await page.getByRole('button', { name: /Quiz time/ }).click()
 
-  // Done: stars, then on to the next uncaught signal.
-  await page.getByRole('button', { name: /Finish this signal/ }).click()
+  // Stage 6: quiz, all three right.
+  for (const answer of ['The bottom half (descent stage)', 'Bounces laser light back to Earth', '21.5 kg']) {
+    await page.getByRole('button', { name: answer }).click()
+    await expect(page.getByText(/Yes, that’s right!/)).toBeVisible()
+    await page.getByRole('button', { name: /Next question|See my score/ }).click()
+  }
+  await expect(page.getByRole('heading', { name: /You got 3 out of 3/ })).toBeVisible()
+  await page.getByRole('button', { name: /See my stars/ }).click()
+
   await expect(page.getByRole('heading', { level: 1, name: 'Signal complete!' })).toBeVisible()
-  await expect(page.getByText(/Moon stars:/)).toContainText('1 / 12')
+  await expect(page.getByText(/Moon stars:/)).toContainText('3 / 12')
   await page.getByRole('link', { name: /Next signal/ }).click()
-  await expect(page.getByRole('heading', { level: 1, name: 'Catch the signal!' })).toBeVisible()
   await expect(page.getByText(/Fra Mauro highlands/)).toBeVisible()
 
   await page.goto('/moon/campaign')
-  await expect(page.getByText('1 / 12')).toBeVisible()
-  await expect(page.getByRole('button', { name: /Eagle Lunar Module descent stage: 1 of 3 stars/ })).toBeVisible()
+  await expect(page.getByText('3 / 12')).toBeVisible()
+  await expect(page.getByRole('button', { name: /Eagle Lunar Module descent stage: 3 of 3 stars/ })).toBeVisible()
   expect(errors).toEqual([])
+})
+
+test('sequence repair and a low quiz score: still friendly, quiz star not given', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto('/moon/campaign/surveyor-3')
+  await catchByKeyboard(page)
+  await page.getByRole('button', { name: /Start the repair mission/ }).click()
+  await page.getByRole('button', { name: 'Dig trenches with the scoop' }).click()
+  await expect(page.getByRole('status')).toHaveText(/Good try|Nearly|keep going/)
+  for (const step of ['Launch from Earth', 'Bounce twice while landing', 'Dig trenches with the scoop', 'Go silent when the lunar night comes', 'Get a visit from Apollo 12 astronauts']) {
+    await page.getByRole('button', { name: step }).click()
+  }
+  await expect(page.getByRole('status')).toHaveText('Perfect order!')
+  await page.getByRole('button', { name: /Repair star/ }).click()
+  await page.getByRole('button', { name: /Quiz time/ }).click()
+  for (const answer of ['A meteor hit it', 'The soil was runny like water', 'Apollo 12 astronauts Pete Conrad and Alan Bean']) {
+    await page.getByRole('button', { name: answer }).click()
+    await page.getByRole('button', { name: /Next question|See my score/ }).click()
+  }
+  await expect(page.getByRole('heading', { name: /You got 1 out of 3/ })).toBeVisible()
+  await expect(page.getByText(/Get 2 right to earn the quiz star/)).toBeVisible()
+  await page.getByRole('button', { name: /See my stars/ }).click()
+  await expect(page.getByText(/Moon stars:/)).toContainText('2 / 12')
 })
 
 test('two misses show a hint, and unknown signals are handled', async ({ page }) => {

@@ -2,7 +2,9 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import MissionCard from '../components/game/MissionCard'
+import QuizPanel from '../components/game/QuizPanel'
 import RealStoryCard from '../components/game/RealStoryCard'
+import RepairChallenge from '../components/game/RepairChallenge'
 import RocketCatcher from '../components/game/RocketCatcher'
 import { MachineSprite } from '../components/game/Sprites'
 import PageHeader from '../components/PageHeader'
@@ -11,12 +13,13 @@ import { artifactById } from '../data'
 import { MOON_CAMPAIGN } from '../data/campaigns/moon'
 import { LEVEL_STEPS, nextSignal, nextStep, type LevelStep } from '../game/levelFlow'
 import { awardBadge, campaignStars, recordResult } from '../game/progress'
+import { QUIZ_PASS } from '../game/scoring'
 import { useProgress } from '../game/useProgress'
 import { usePageContext } from '../hooks/usePageContext'
 
 const LEVELS = [...MOON_CAMPAIGN.artifacts, ...MOON_CAMPAIGN.bonusArtifacts]
 
-/** One Moon level: catch → mission card → (repair) → real story → (quiz) → done. Steps in brackets arrive in G5. */
+/** One Moon level: catch → mission card → pretend repair → real story → quiz → done. */
 export default function MoonLevel() {
   const { artifactId = '' } = useParams()
   const level = LEVELS.find((l) => l.artifactId === artifactId)
@@ -24,6 +27,7 @@ export default function MoonLevel() {
   usePageContext('moon-campaign', artifact?.id)
   const { progress, update } = useProgress()
   const [step, setStep] = useState<LevelStep>('catch')
+  const [lastQuiz, setLastQuiz] = useState<number | null>(null)
   // A new key restarts the catcher (and its layout) for "Play again".
   const [round, setRound] = useState(0)
 
@@ -50,8 +54,16 @@ export default function MoonLevel() {
   const hasBadge = progress.campaigns[MOON_CAMPAIGN.id]?.badges.includes(MOON_CAMPAIGN.badge.id) ?? false
   const isBonus = MOON_CAMPAIGN.bonusArtifacts.some((b) => b.artifactId === artifact.id)
 
+  /** Saves one part of the level. recordResult keeps the best, so stars never go down. */
+  function save(result: { caught?: boolean; repaired?: boolean; quizCorrect?: number }) {
+    update((p) =>
+      awardBadge(recordResult(p, MOON_CAMPAIGN.id, artifact!.id, { caught: true, repaired: false, quizCorrect: 0, ...result }), MOON_CAMPAIGN),
+    )
+  }
+
   function handleCaught() {
-    update((p) => awardBadge(recordResult(p, MOON_CAMPAIGN.id, artifact!.id, { caught: true, repaired: false, quizCorrect: 0 }), MOON_CAMPAIGN))
+    save({})
+    setLastQuiz(null)
     setStep('discovery')
   }
 
@@ -112,7 +124,29 @@ export default function MoonLevel() {
 
             {step === 'discovery' && <MissionCard artifact={artifact} onNext={() => go(nextStep('discovery'))} />}
 
+            {step === 'repair' && (
+              <RepairChallenge
+                challenge={level.repair}
+                seed={`${artifact.id}:${round}`}
+                onDone={() => {
+                  save({ repaired: true })
+                  go(nextStep('repair'))
+                }}
+              />
+            )}
+
             {step === 'science' && <RealStoryCard level={level} artifact={artifact} onNext={() => go(nextStep('science'))} />}
+
+            {step === 'quiz' && (
+              <QuizPanel
+                questions={level.quiz}
+                onDone={(correct) => {
+                  save({ quizCorrect: correct })
+                  setLastQuiz(correct)
+                  go(nextStep('quiz'))
+                }}
+              />
+            )}
 
             {step === 'complete' && (
               <Paper tone="mint" tilt={-0.6} innerClassName="flex flex-col gap-6 p-6 sm:flex-row sm:items-center sm:p-8">
@@ -132,7 +166,14 @@ export default function MoonLevel() {
                     Moon stars: <strong>{totals.earned} / {totals.max}</strong>
                     {hasBadge && <span className="label c-yellow ml-2">🏅 {MOON_CAMPAIGN.badge.name} badge earned!</span>}
                   </p>
-                  <p className="muted mt-1 text-sm">The repair mission and quiz, worth two more stars, arrive in the next update.</p>
+                  <ul className="mt-2 space-y-1">
+                    <li>{saved?.best.caught ? '⭐' : '☆'} Caught it</li>
+                    <li>{saved?.best.repaired ? '⭐' : '☆'} Fixed the training model</li>
+                    <li>
+                      {(saved?.best.quizCorrect ?? 0) >= QUIZ_PASS ? '⭐' : '☆'} Quiz: {lastQuiz ?? saved?.best.quizCorrect ?? 0} of 3 this time
+                      {saved && saved.best.quizCorrect > (lastQuiz ?? 0) && ` (best ${saved.best.quizCorrect})`}
+                    </li>
+                  </ul>
                   <div className="mt-5 flex flex-wrap gap-3">
                     {nextArtifact ? (
                       <Link to={`/moon/campaign/${nextArtifact.id}`} className="cbtn c-yellow" onClick={() => setStep('catch')}>
