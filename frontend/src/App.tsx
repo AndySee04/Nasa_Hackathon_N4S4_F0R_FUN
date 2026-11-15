@@ -14,6 +14,7 @@ import Home from './pages/Home'
 import MarsArchive from './pages/MarsArchive'
 import MissionTimeline from './pages/MissionTimeline'
 import MoonArchive from './pages/MoonArchive'
+import MoonCampaign from './pages/MoonCampaign'
 import NotFound from './pages/NotFound'
 import ScienceLab from './pages/ScienceLab'
 
@@ -73,6 +74,7 @@ function Shell() {
                 <Route path="/" element={<Home />} />
                 <Route path="/explore" element={<UniverseExplorer />} />
                 <Route path="/moon" element={<MoonArchive />} />
+                <Route path="/moon/campaign" element={<MoonCampaign />} />
                 <Route path="/mars" element={<MarsArchive />} />
                 <Route path="/deep-space" element={<DeepSpaceArchive />} />
                 <Route path="/artifact/:id" element={<ArtifactDetail />} />
