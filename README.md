@@ -18,7 +18,7 @@ An interactive, story-driven digital space museum for the **2026 NASA Space Apps
 | E · Science Lab | `/science-lab` | Six "how does it work?" explainers with animations, a signal-delay timer and a quiz |
 | F · Astro AI | `/ask-astro` + floating button on every page | Child-safe AI guide, grounded in the museum's data, with a visible backend status badge |
 | About | `/about` | Project, accuracy, child safety and privacy, tech stack |
-| Account | `/account` + "Sign in" sticker in the header | Optional Google sign-in for grown-ups (Supabase Auth), ready for saving game progress |
+| Account | `/account` + "Sign in" sticker in the header | Optional Google sign-in for grown-ups (Supabase Auth). Signed in, game stars are saved to the account and follow the explorer to any device |
 
 Statuses are always shown with colour **and** an icon **and** a word: *Still working*, *Inactive*, *Decommissioned*, *Lost contact*, *Unknown*.
 
@@ -92,7 +92,11 @@ Accounts are for grown-ups and are optional: with no Supabase settings, the site
 3. **Supabase → Authentication → Sign In / Providers → Google:** switch it on and paste the Google client ID and secret.
 4. **Supabase → Authentication → URL Configuration:** set **Site URL** to your Vercel URL, and add these **Redirect URLs**: `http://localhost:5173/account`, `https://<your-vercel-domain>/account`, and `https://*-<your-team>.vercel.app/account` for preview deploys.
 
+5. **Supabase → SQL Editor:** paste and run [`supabase/migrations/20261115120000_game_progress.sql`](supabase/migrations/20261115120000_game_progress.sql). It creates the `game_progress` table (one row of game stars per account) with Row Level Security, so each account can only read and change its own row. Without it, sign-in still works and stars stay in the browser.
+
 Google sends visitors back to `/account`, which finishes signing in.
+
+When a grown-up signs in, the stars in that browser and in the account are merged (the best result for every machine), and later changes are saved to the account. Signing out clears the stars from that browser, so the next explorer on a shared computer starts fresh.
 
 ### Tests and checks
 
