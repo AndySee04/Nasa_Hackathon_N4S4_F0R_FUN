@@ -4,7 +4,7 @@
  Browser (React SPA on Vercel)                       FastAPI server (Python host)
  ┌─────────────────────────────────┐                ┌──────────────────────────────────────┐
  │ Pages + components              │  REST / JSON   │ /api/health                          │
- │ 3D scene (three.js, lazy chunk) │ ─────────────▶ │ /api/ai/chat  /api/ai/explain        │
+ │ Crayon sky (2D canvas)          │ ─────────────▶ │ /api/ai/chat  /api/ai/explain        │
  │ AstroProvider (chat state,      │ ◀───────────── │ /api/ai/suggested-questions          │
  │   page + artifact context)      │                │ /api/artifacts[/{id}]                │
  │ data/artifacts.json (bundled)   │                │                                      │
@@ -18,8 +18,9 @@
 
 - **Data first.** All exhibit content lives in `src/data/artifacts.json`, typed by `src/types/artifact.ts`. Pages render from data, so adding an artifact means adding one record.
 - **Routing.** `react-router-dom`. Archive pages share one `ArchivePage` component.
-- **3D.** `SpaceScene` uses React Three Fiber. It is split into its own chunk (`LazySpaceScene`) so page text appears before three.js finishes downloading. Planet textures are drawn on a canvas. Motion stops when the visitor prefers reduced motion.
-- **Astro everywhere.** `AstroProvider` holds the conversation and the current page/artifact context. `usePageContext()` on each page tells Astro what the child is looking at. The floating launcher and the full `/ask-astro` page share the same chat.
+- **Look.** The crayon-and-paper style from design proposal 8b. Tokens and shared pieces live in `src/index.css`: paper for words (`components/Paper.tsx`, with scissor-cut edges), stickers for things you press, crayon buttons for big actions.
+- **Solar system.** `lib/crayonSky.ts` draws the planets on a 2D canvas, coloured in like wax crayon, with no image downloads. It handles drag-to-spin, tap-to-select, a follow camera that flies to a chosen world, and scroll zoom on the home page. Motion stops when the visitor prefers reduced motion.
+- **Astro everywhere.** `AstroProvider` holds the conversation and the current page/artifact context. `usePageContext()` on each page tells Astro what the child is looking at. The "Ask Astro" sticker in the header opens a chat drawer that shares its conversation with the full `/ask-astro` page.
 - **Images.** `services/nasaImages.ts` queries `images-api.nasa.gov` (no key) once per artifact and caches the result. On failure an original line illustration is shown.
 
 ## Backend (Astro AI)

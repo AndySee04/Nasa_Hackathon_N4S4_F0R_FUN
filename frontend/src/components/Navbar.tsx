@@ -1,99 +1,140 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { useState } from 'react'
-import { Link, NavLink } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import { NAV_ITEMS } from '../data/navigation'
+import { useAstro } from '../hooks/useAstro'
+import AstroAvatar from './AstroAvatar'
+import Paper from './Paper'
+
+/** Tabs across the top. Ask Astro has its own sticker on the right; About lives in the menu and footer. */
+const TABS = NAV_ITEMS.filter((i) => i.to !== '/ask-astro' && i.to !== '/about')
+/** Each tab is stuck on at its own slight angle. */
+const TILTS = [-2, 2, -1, 3, -2, 1.5, -1.5]
+
+export function LogoMark({ className = 'h-[30px] w-[30px]' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 40 40" className={className} aria-hidden="true">
+      <ellipse cx="20" cy="21" rx="17" ry="6" fill="none" stroke="#22203a" strokeWidth="2.6" transform="rotate(-18 20 21)" />
+      <circle cx="20" cy="20" r="9" fill="#63b7f0" stroke="#22203a" strokeWidth="2" />
+    </svg>
+  )
+}
 
 export function Logo() {
   return (
-    <Link to="/" className="flex items-center gap-2.5 rounded-xl" aria-label="N4S4 F0R FUN home">
-      <svg viewBox="0 0 40 40" className="h-9 w-9 shrink-0" aria-hidden="true">
-        <defs>
-          <radialGradient id="logo-planet" cx="35%" cy="35%" r="70%">
-            <stop offset="0" stopColor="#9be7ff" />
-            <stop offset="1" stopColor="#6d4dff" />
-          </radialGradient>
-        </defs>
-        <ellipse cx="20" cy="21" rx="17" ry="6" fill="none" stroke="#22d3ee" strokeWidth="2" transform="rotate(-18 20 21)" />
-        <circle cx="20" cy="20" r="9" fill="url(#logo-planet)" />
-        <circle cx="34" cy="15" r="2.5" fill="#a78bfa" />
-      </svg>
-      <span className="font-display text-lg font-bold tracking-wide">
-        N4S4 <span className="text-cyan">F0R</span> FUN
-      </span>
+    <Link
+      to="/"
+      className="sticker c-paper flex shrink-0 items-center gap-2 rounded-full py-1.5 pl-2 pr-4 font-display text-[1.1rem] font-extrabold no-underline"
+      style={{ '--r': '-3deg' } as React.CSSProperties}
+      aria-label="N4S4 F0R FUN home"
+    >
+      <LogoMark />
+      <span className="hidden sm:inline">N4S4 F0R FUN</span>
     </Link>
   )
 }
 
-export default function Navbar() {
-  const [open, setOpen] = useState(false)
+function AstroButton() {
+  const { open } = useAstro()
+  const { pathname } = useLocation()
+  const cls = 'sticker flex shrink-0 items-center gap-1.5 rounded-full py-1 pl-1.5 pr-3.5 font-display no-underline'
+  const style = { '--r': '3deg' } as React.CSSProperties
+  const face = (
+    <>
+      <AstroAvatar className="h-8 w-8" />
+      <span className="hidden sm:inline">Ask Astro</span>
+    </>
+  )
+  // On the Astro page itself there is nothing to open: the sticker just marks where you are.
+  if (pathname === '/ask-astro') {
+    return (
+      <Link to="/ask-astro" aria-current="page" aria-label="Ask Astro" className={`${cls} c-yellow font-extrabold`} style={style}>
+        {face}
+      </Link>
+    )
+  }
   return (
-    <header className="sticky top-0 z-40 border-b border-white/10 bg-space-900/75 backdrop-blur-xl">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6" aria-label="Main">
+    <button type="button" onClick={() => open()} aria-label="Ask Astro" className={`${cls} c-white`} style={style}>
+      {face}
+    </button>
+  )
+}
+
+export default function Navbar() {
+  const [menu, setMenu] = useState(false)
+  const { pathname } = useLocation()
+
+  useEffect(() => {
+    if (!menu) return
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setMenu(false)
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [menu])
+
+  return (
+    <header className={`site-header ${pathname === '/' ? '' : 'banded'}`}>
+      <div className="flex items-center gap-3">
         <Logo />
-
-        <ul className="hidden items-center gap-1 xl:flex">
-          {NAV_ITEMS.map((item) => (
-            <li key={item.to}>
-              <NavLink
-                to={item.to}
-                end={item.to === '/'}
-                title={item.label}
-                className={({ isActive }) =>
-                  `rounded-full px-3 py-2 text-[0.95rem] font-semibold transition ${
-                    item.to === '/ask-astro'
-                      ? 'bg-gradient-to-r from-cyan/20 to-violet/25 text-ink ring-1 ring-cyan/40 hover:ring-cyan'
-                      : isActive
-                        ? 'bg-white/10 text-ink'
-                        : 'text-muted hover:bg-white/5 hover:text-ink'
-                  }`
-                }
-              >
-                {item.short}
-              </NavLink>
-            </li>
-          ))}
-        </ul>
-
-        <button
-          type="button"
-          className="btn btn-ghost min-h-11! px-4! xl:hidden"
-          aria-expanded={open}
-          aria-controls="mobile-menu"
-          onClick={() => setOpen((v) => !v)}
-        >
-          <span className="sr-only">{open ? 'Close menu' : 'Open menu'}</span>
-          <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-            {open ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
-          </svg>
-          <span>Menu</span>
-        </button>
-      </nav>
+        <nav aria-label="Main" className="mx-auto flex items-center">
+          <ul className="hidden flex-wrap justify-center gap-2.5 min-[1180px]:flex">
+            {TABS.map((item, i) => (
+              <li key={item.to}>
+                <NavLink
+                  to={item.to}
+                  end={item.to === '/'}
+                  className="tab sticker"
+                  style={{ '--r': `${TILTS[i % TILTS.length]}deg` } as React.CSSProperties}
+                >
+                  {item.short}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+          <button
+            type="button"
+            className="sticker c-paper btn btn-sm min-[1180px]:hidden"
+            aria-expanded={menu}
+            aria-controls="site-menu"
+            onClick={() => setMenu((v) => !v)}
+            style={{ '--r': '-1deg' } as React.CSSProperties}
+          >
+            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" aria-hidden="true">
+              {menu ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
+            </svg>
+            Menu
+          </button>
+        </nav>
+        <AstroButton />
+      </div>
 
       <AnimatePresence>
-        {open && (
+        {menu && (
           <motion.div
-            id="mobile-menu"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            className="overflow-hidden border-t border-white/10 xl:hidden"
+            id="site-menu"
+            initial={{ opacity: 0, y: -12, rotate: -2 }}
+            animate={{ opacity: 1, y: 0, rotate: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+            className="mx-auto mt-4 max-w-xl"
           >
-            <ul className="mx-auto grid max-w-7xl gap-1 px-4 py-3 sm:grid-cols-2 sm:px-6">
-              {NAV_ITEMS.map((item) => (
-                <li key={item.to}>
-                  <NavLink
-                    to={item.to}
-                    end={item.to === '/'}
-                    onClick={() => setOpen(false)}
-                    className={({ isActive }) =>
-                      `block rounded-2xl px-4 py-3 text-lg font-semibold ${isActive ? 'bg-white/10 text-ink' : 'text-muted hover:bg-white/5 hover:text-ink'}`
-                    }
-                  >
-                    {item.label}
-                  </NavLink>
-                </li>
-              ))}
-            </ul>
+            <Paper innerClassName="p-5">
+              <p className="mb-3 font-display text-lg">Where to next?</p>
+              <ul className="grid grid-cols-2 gap-3">
+                {NAV_ITEMS.map((item, i) => (
+                  <li key={item.to}>
+                    <NavLink
+                      to={item.to}
+                      end={item.to === '/'}
+                      onClick={() => setMenu(false)}
+                      className={({ isActive }) => `sticker btn btn-sm w-full ${isActive ? 'c-yellow font-extrabold' : 'c-white'}`}
+                      style={{ '--r': `${TILTS[i % TILTS.length] / 2}deg` } as React.CSSProperties}
+                    >
+                      {item.label}
+                    </NavLink>
+                  </li>
+                ))}
+              </ul>
+            </Paper>
           </motion.div>
         )}
       </AnimatePresence>

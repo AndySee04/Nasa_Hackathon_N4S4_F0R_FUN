@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
+import Paper from '../components/Paper'
 import Timeline from '../components/Timeline'
 import { KIND_META } from '../data/labels'
 import { artifacts, dateSortKey, ERAS, eraOf } from '../data'
@@ -23,7 +24,7 @@ function FilterGroup<T extends string>({
 }) {
   return (
     <div role="group" aria-label={label}>
-      <p className="mb-2 text-sm font-semibold text-muted">{label}</p>
+      <p className="mb-2 font-display">{label}</p>
       <div className="flex flex-wrap gap-2">
         {[{ value: 'all' as Opt<T>, label: 'All' }, ...options].map((o) => (
           <button
@@ -31,7 +32,7 @@ function FilterGroup<T extends string>({
             type="button"
             aria-pressed={value === o.value}
             onClick={() => onChange(o.value)}
-            className={`chip min-h-10 ${value === o.value ? 'border-cyan bg-cyan/20 text-ink' : 'border-white/15 text-muted hover:text-ink'}`}
+            className="chip sticker c-white"
           >
             {o.label}
           </button>
@@ -62,7 +63,7 @@ export default function MissionTimeline() {
             kind: e.kind,
             label: e.label,
             extra: (
-              <Link to={`/artifact/${a.id}`} className="mt-1 inline-block text-sm font-semibold text-cyan hover:underline">
+              <Link to={`/artifact/${a.id}`} className="link mt-1 inline-block text-sm">
                 {a.name} · {WORLD_LABELS[a.world]} →
               </Link>
             ),
@@ -78,8 +79,8 @@ export default function MissionTimeline() {
         one era or one kind of machine.
       </PageHeader>
 
-      <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[320px_1fr]">
-        <aside className="glass h-fit space-y-5 p-5 lg:sticky lg:top-24">
+      <div className="mx-auto grid max-w-7xl items-start gap-9 px-4 sm:px-6 lg:grid-cols-[330px_1fr]">
+        <Paper as="aside" tone="mint" tilt={-0.8} className="lg:sticky lg:top-28" innerClassName="space-y-5 p-5">
           <FilterGroup label="Destination" value={world} onChange={setWorld} options={(Object.keys(WORLD_LABELS) as World[]).map((w) => ({ value: w, label: WORLD_LABELS[w] }))} />
           <FilterGroup label="Mission era (launch decade)" value={era} onChange={setEra} options={ERAS.map((e) => ({ value: e, label: e }))} />
           <FilterGroup label="Hardware type" value={hardware} onChange={setHardware} options={hardwareTypes.map((h) => ({ value: h, label: HARDWARE_LABELS[h] }))} />
@@ -89,18 +90,20 @@ export default function MissionTimeline() {
             onChange={setKind}
             options={(Object.keys(KIND_META) as TimelineKind[]).map((k) => ({ value: k, label: `${KIND_META[k].icon} ${KIND_META[k].label}` }))}
           />
-        </aside>
+        </Paper>
 
         <section aria-live="polite">
-          <p className="mb-6 text-muted">
-            Showing <strong className="text-ink">{items.length}</strong> events
+          <p className="mb-6 font-display text-dusk">
+            Showing <strong className="label c-yellow font-extrabold">{items.length}</strong> events
           </p>
           {items.length > 0 ? (
-            <div className="glass p-6 sm:p-8">
+            <Paper tilt={0.3} innerClassName="p-6 pl-4 sm:p-8 sm:pl-6">
               <Timeline items={items} />
-            </div>
+            </Paper>
           ) : (
-            <div className="glass p-8 text-center text-muted">No events match these filters. Try choosing &quot;All&quot; for one of them.</div>
+            <Paper tone="yellow" tilt={-1} innerClassName="p-8 text-center font-display text-lg">
+              No events match these filters. Try choosing &quot;All&quot; for one of them.
+            </Paper>
           )}
         </section>
       </div>

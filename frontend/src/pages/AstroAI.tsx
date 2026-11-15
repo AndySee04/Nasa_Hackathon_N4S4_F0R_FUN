@@ -1,8 +1,10 @@
 import AstroAvatar from '../components/AstroAvatar'
 import ChatBot from '../components/ChatBot'
 import PageHeader from '../components/PageHeader'
+import Paper, { type PaperTone } from '../components/Paper'
 import { usePageContext } from '../hooks/usePageContext'
 
+const TONES: PaperTone[] = ['mint', 'yellow', 'pink', 'sky']
 const RULES = [
   ['🛡️', 'Safe for kids', 'Astro sticks to space and science, and never asks for personal information.'],
   ['📚', 'Checks its facts', 'Answers about missions come from this museum\'s verified data, with sources.'],
@@ -19,29 +21,29 @@ export default function AstroAI() {
         from.
       </PageHeader>
 
-      <div className="mx-auto grid max-w-7xl gap-6 px-4 sm:px-6 lg:grid-cols-[1fr_340px]">
-        <section className="glass flex h-[80vh] min-h-[640px] flex-col p-5 sm:p-6" aria-label="Chat with Astro">
+      <div className="mx-auto grid max-w-7xl items-start gap-9 px-4 sm:px-6 lg:grid-cols-[1fr_340px]">
+        <Paper as="section" tilt={-0.3} className="h-[80vh] min-h-[640px]" innerClassName="flex h-full flex-col p-5 sm:p-6" aria-label="Chat with Astro">
           <ChatBot />
-        </section>
+        </Paper>
 
-        <aside className="space-y-4">
-          <div className="glass flex items-center gap-4 p-5">
+        <aside className="space-y-6">
+          <Paper tilt={1} innerClassName="flex items-center gap-4 p-5">
             <AstroAvatar className="h-20 w-20 shrink-0" />
-            <p className="text-muted">
-              <strong className="text-ink">Astro</strong> is an original robot character made for this museum. It is an AI
+            <p>
+              <strong className="font-display">Astro</strong> is an original robot character made for this museum. It is an AI
               helper, not a person.
             </p>
-          </div>
-          {RULES.map(([icon, title, text]) => (
-            <div key={title} className="glass flex gap-3 p-4">
+          </Paper>
+          {RULES.map(([icon, title, text], i) => (
+            <Paper key={title} tone={TONES[i % TONES.length]} tilt={i % 2 ? 1 : -1} innerClassName="flex gap-3 p-4">
               <span className="text-2xl" aria-hidden="true">{icon}</span>
               <div>
-                <h2 className="font-semibold">{title}</h2>
-                <p className="text-sm text-muted">{text}</p>
+                <h2 className="text-lg">{title}</h2>
+                <p className="text-sm">{text}</p>
               </div>
-            </div>
+            </Paper>
           ))}
-          <p className="px-1 text-sm text-muted">
+          <p className="px-1 text-sm text-dusk">
             Grown-ups: chats are not stored by this site. See the About page for how Astro works and its safety rules.
           </p>
         </aside>

@@ -1,205 +1,260 @@
-import { motion } from 'framer-motion'
-import { Suspense, useCallback, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import ArtifactCard from '../components/ArtifactCard'
-import ArtifactPanel from '../components/ArtifactPanel'
-import AstroAvatar from '../components/AstroAvatar'
-import { SceneFallback, SpaceScene } from '../components/LazySpaceScene'
+import { useCallback, useEffect, useId, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
+import Paper from '../components/Paper'
+import { artifactsByWorld } from '../data'
+import { bodyById, type Body } from '../data/planets'
 import { useAstro } from '../hooks/useAstro'
-import { artifactById, artifacts, FEATURED_IDS } from '../data'
+import { useCutEdges } from '../hooks/useCutEdges'
 import { usePageContext } from '../hooks/usePageContext'
-import type { Artifact } from '../types/artifact'
+import { mountCrayonSky, type SkyHandle } from '../lib/crayonSky'
 
-const featured = FEATURED_IDS.map((id) => artifactById(id)).filter((a): a is Artifact => Boolean(a))
+/** Name tags hang off the two worlds where most of our machines are. */
+const TAGS = [
+  { id: 'moon', title: 'The Moon', note: `${artifactsByWorld('moon').length} machines here`, tone: 'yellow', tilt: -2 },
+  { id: 'mars', title: 'Mars', note: `${artifactsByWorld('mars').length} landers and rovers`, tone: 'orange', tilt: 3 },
+] as const
 
-const DISCOVERY_CARDS = [
-  {
-    icon: '🪞',
-    title: 'Mirrors on the Moon',
-    text: 'Apollo astronauts left mirrors on the Moon. Scientists still bounce lasers off them to measure how far away the Moon is.',
-    to: '/artifact/apollo-11-eagle',
-    cta: 'Meet Apollo 11\'s Eagle',
-  },
-  {
-    icon: '🫐',
-    title: 'Blueberries on Mars',
-    text: 'Opportunity found tiny round "blueberries" made of hematite, a mineral that usually forms in water.',
-    to: '/artifact/opportunity',
-    cta: 'Meet Opportunity',
-  },
-  {
-    icon: '📡',
-    title: 'A message that takes a day',
-    text: 'Voyager 1 is so far away that its radio signals take about a whole day to reach Earth.',
-    to: '/science-lab',
-    cta: 'Try the signal timer',
-  },
-  {
-    icon: '🌋',
-    title: 'Volcanoes beyond Earth',
-    text: 'Voyager 1 spotted erupting volcanoes on Jupiter\'s moon Io, the first ever seen beyond Earth.',
-    to: '/timeline',
-    cta: 'Explore the timeline',
-  },
-]
+const clamp = (v: number) => Math.max(0, Math.min(1, v))
+const ease = (t: number) => t * t * (3 - 2 * t)
+/** Space between a followed planet and its card. */
+const GAP = 40
 
 export default function Home() {
   usePageContext('home')
-  const navigate = useNavigate()
   const { open } = useAstro()
-  const [selected, setSelected] = useState<Artifact | null>(null)
-  const close = useCallback(() => setSelected(null), [])
+  const [planet, setPlanet] = useState<Body | null>(null)
 
-  const counts = {
-    total: artifacts.length,
-    operational: artifacts.filter((a) => a.status === 'operational').length,
-    worlds: new Set(artifacts.map((a) => a.world)).size,
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const trackRef = useRef<HTMLDivElement>(null)
+  const bannerRef = useRef<HTMLDivElement>(null)
+  const bottomRef = useRef<HTMLDivElement>(null)
+  const noteRef = useRef<HTMLDivElement>(null)
+  const dimRef = useRef<HTMLDivElement>(null)
+  const stringsRef = useRef<SVGSVGElement>(null)
+  const pathRef = useRef<SVGPathElement>(null)
+  const cardRef = useRef<HTMLElement>(null)
+  const tagRefs = useRef<Record<string, HTMLButtonElement | null>>({})
+  const skyRef = useRef<SkyHandle | null>(null)
+  /** The planet the camera follows. Kept in a ref too, because the drawing loop reads it every frame. */
+  const openId = useRef<string | null>(null)
+
+  const focusPlanet = useCallback((b: Body | null) => {
+    openId.current = b?.id ?? null
+    setPlanet(b)
+  }, [])
+  const closePlanet = useCallback(() => {
+    focusPlanet(null)
+    skyRef.current?.select(null)
+  }, [focusPlanet])
+
+  useEffect(() => {
+    const canvas = canvasRef.current!
+    const narrow = () => window.innerWidth < 700
+    const maxZoom = narrow() ? 1.7 : 2.4
+    const tagIds = TAGS.map((t) => t.id)
+
+    const sky = mountCrayonSky(canvas, {
+      center: narrow() ? [0.5, 0.5] : [0.5, 0.53],
+      fill: narrow() ? 0.95 : 0.47,
+      maxZoom,
+      // Where the followed planet sits, and how big. Wide screens centre the planet and its card as a pair;
+      // phones put the planet near the top with the card underneath.
+      focus: (_b, w, h) => {
+        if (narrow()) return { x: w / 2, y: Math.max(130, h * 0.23), r: Math.min(w * 0.28, h * 0.14) }
+        const r = Math.min(w, h) * 0.24
+        const pair = r * 2 + GAP + (cardRef.current?.offsetWidth || 340)
+        return { x: (w - pair) / 2 + r, y: h * 0.54, r }
+      },
+      onFrame: (pos) => {
+        // Tags hang under their planet on a crayon string.
+        let d = ''
+        for (const id of tagIds) {
+          const t = tagRefs.current[id]
+          const p = pos[id]
+          if (!t || !p || !t.offsetWidth) continue
+          const x = p.x - t.offsetWidth / 2
+          const y = p.y + p.r + 30
+          t.style.transform = `translate(${x}px, ${y}px)`
+          d += `M${p.x} ${p.y + p.r + 2} Q ${p.x + 6} ${p.y + p.r + 16} ${p.x} ${y + 4} `
+        }
+        pathRef.current?.setAttribute('d', d)
+        // The open card rides along beside the followed planet (underneath it on phones).
+        const card = cardRef.current
+        const id = openId.current
+        if (card && id && pos[id]) {
+          const p = pos[id]
+          const w = card.offsetWidth
+          const h = card.offsetHeight
+          let x: number
+          let y: number
+          if (narrow()) {
+            x = (window.innerWidth - w) / 2
+            y = Math.max(80, Math.min(p.y + p.ext + 20, window.innerHeight - h - 16))
+          } else {
+            x = p.x + p.ext + GAP
+            if (x + w > window.innerWidth - 12) x = p.x - p.ext - GAP - w
+            x = Math.max(12, Math.min(x, window.innerWidth - w - 12))
+            y = Math.max(80, Math.min(p.y - h / 2, window.innerHeight - h - 12))
+          }
+          card.style.transform = `translate(${x}px, ${y}px) rotate(1deg)`
+        }
+      },
+      onSelect: (b) => focusPlanet(b),
+    })
+    skyRef.current = sky
+
+    // Scrolling zooms into the planets.
+    const still = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
+    const track = trackRef.current!
+    if (still) track.style.height = '100svh'
+    const onScroll = () => {
+      const len = track.offsetHeight - window.innerHeight
+      const p = still ? 0 : clamp(window.scrollY / Math.max(1, len))
+      sky.setZoom(1 + ease(p) * (maxZoom - 1))
+      // The title and intro lift away early in the zoom.
+      const out = clamp(p / 0.35)
+      if (bannerRef.current) {
+        bannerRef.current.style.opacity = String(1 - out)
+        bannerRef.current.style.transform = `translateY(${-out * 60}px)`
+      }
+      if (bottomRef.current) {
+        bottomRef.current.style.opacity = String(1 - out)
+        bottomRef.current.style.transform = `translateY(${out * 60}px)`
+      }
+      // A note pops in half-way, then fades as the zoom ends.
+      if (noteRef.current) noteRef.current.style.opacity = String(clamp((p - 0.45) / 0.15) * (1 - clamp((p - 0.9) / 0.1)))
+      // After the zoom: dim the sky and hide the tags so the footer is easy to read.
+      const after = clamp((window.scrollY - len) / (window.innerHeight * 0.5))
+      if (after > 0.2 && openId.current) closePlanet()
+      if (dimRef.current) dimRef.current.style.opacity = String(after * 0.7)
+      for (const id of tagIds) {
+        const t = tagRefs.current[id]
+        if (t) t.style.opacity = String(1 - after)
+      }
+      if (stringsRef.current) stringsRef.current.style.opacity = String(1 - after)
+    }
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && openId.current && closePlanet()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    window.addEventListener('keydown', onKey)
+    onScroll()
+
+    return () => {
+      sky.destroy()
+      skyRef.current = null
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [closePlanet, focusPlanet])
+
+  const pickTag = (id: string) => {
+    skyRef.current?.select(id)
+    focusPlanet(bodyById(id) ?? null)
   }
 
   return (
-    <>
-      {/* ---------- Hero ---------- */}
-      <section className="relative overflow-hidden">
-        <div className="mx-auto grid max-w-7xl items-center gap-6 px-4 pb-10 pt-10 sm:px-6 lg:grid-cols-[1.05fr_1fr] lg:pt-16">
-          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="relative z-10">
-            <p className="eyebrow">An interactive digital space museum</p>
-            <h1 className="mt-3 text-5xl font-bold leading-[1.05] sm:text-6xl lg:text-7xl">
-              <span className="text-gradient">N4S4 F0R FUN</span>
-            </h1>
-            <p className="mt-4 font-display text-2xl font-semibold text-ink sm:text-3xl">
-              Explore the Forgotten. Discover the Extraordinary.
-            </p>
-            <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted">
-              Since the 1960s, people have sent machines across the solar system. Some still stand on the Moon and Mars.
-              Others are drifting between the stars, and a few are still talking to Earth. Meet these robotic explorers
-              and discover what they taught us.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link to="/explore" className="btn btn-primary text-lg">
-                Explore Now <span aria-hidden="true">🚀</span>
-              </Link>
-              <button type="button" className="btn btn-ghost" onClick={() => open()}>
-                <AstroAvatar className="h-7 w-7" /> Ask Astro AI
-              </button>
-            </div>
-            <dl className="mt-10 grid max-w-md grid-cols-3 gap-3">
-              {[
-                [counts.total, 'machines'],
-                [counts.worlds, 'destinations'],
-                [counts.operational, 'still working'],
-              ].map(([n, label]) => (
-                <div key={label} className="glass px-3 py-3 text-center">
-                  <dt className="sr-only">{label}</dt>
-                  <dd>
-                    <span className="block font-display text-3xl font-bold text-cyan">{n}</span>
-                    <span className="text-sm text-muted">{label}</span>
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </motion.div>
+    <div className={`home ${planet ? 'focused' : ''}`}>
+      <canvas
+        ref={canvasRef}
+        className="sky-canvas"
+        aria-label="A crayon drawing of the solar system. Drag to spin it, tap a planet to learn about it."
+      />
+      <div ref={dimRef} className="sky-dim" aria-hidden="true" />
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-            className="relative"
-          >
-            <div className="glass relative overflow-hidden p-0">
-              <Suspense fallback={<SceneFallback className="h-[340px] w-full sm:h-[440px] lg:h-[520px]" />}>
-                <SpaceScene hero className="h-[340px] w-full sm:h-[440px] lg:h-[520px]" onSelect={(id) => id && navigate(`/explore?body=${id}`)} />
-              </Suspense>
-              <p className="pointer-events-none absolute bottom-3 left-4 right-4 text-sm text-muted">
-                Drag to spin the solar system · tap a planet to explore it
-              </p>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ---------- Featured spacecraft ---------- */}
-      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6" aria-labelledby="featured-title">
-        <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="eyebrow">Featured explorers</p>
-            <h2 id="featured-title" className="mt-1 text-3xl font-bold sm:text-4xl">
-              One from each frontier
-            </h2>
+      <div ref={trackRef} className="zoom-track relative z-10">
+        <section className="hero" aria-labelledby="home-title">
+          <div ref={bannerRef}>
+            <Paper tilt={-1} innerClassName="flex flex-col items-center gap-1.5 px-5 py-3 sm:flex-row sm:gap-5 sm:px-8 sm:pb-3 sm:pt-3.5">
+              <h1 id="home-title">N4S4 F0R FUN</h1>
+              <span className="max-w-[15em] font-display text-[1.15rem] leading-tight sm:text-left">
+                Explore the forgotten. Discover the extraordinary.
+              </span>
+            </Paper>
           </div>
-          <div className="flex flex-wrap gap-2">
-            <Link to="/moon" className="btn btn-ghost">Moon Archive</Link>
-            <Link to="/mars" className="btn btn-ghost">Mars Archive</Link>
-            <Link to="/deep-space" className="btn btn-ghost">Deep Space</Link>
-          </div>
-        </div>
-        <div className="grid gap-6 md:grid-cols-3">
-          {featured.map((a, i) => (
-            <ArtifactCard key={a.id} artifact={a} onSelect={setSelected} index={i} />
-          ))}
-        </div>
-      </section>
-
-      {/* ---------- Discovery cards ---------- */}
-      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6" aria-labelledby="discover-title">
-        <p className="eyebrow">Did you know?</p>
-        <h2 id="discover-title" className="mt-1 text-3xl font-bold sm:text-4xl">
-          Discoveries made by forgotten machines
-        </h2>
-        <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {DISCOVERY_CARDS.map((c, i) => (
-            <motion.div
-              key={c.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.08 }}
-              className="glass flex flex-col gap-3 p-6"
-            >
-              <span className="text-4xl" aria-hidden="true">{c.icon}</span>
-              <h3 className="text-xl font-bold">{c.title}</h3>
-              <p className="flex-1 text-muted">{c.text}</p>
-              <Link to={c.to} className="font-semibold text-cyan hover:underline">
-                {c.cta} →
-              </Link>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* ---------- Ask Astro AI ---------- */}
-      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6" aria-labelledby="astro-title">
-        <div className="glass relative grid items-center gap-8 overflow-hidden p-8 sm:p-10 md:grid-cols-[auto_1fr]">
-          <div
-            className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-violet/30 blur-3xl"
-            aria-hidden="true"
-          />
-          <motion.div animate={{ y: [0, -8, 0] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}>
-            <AstroAvatar className="h-32 w-32 sm:h-40 sm:w-40" />
-          </motion.div>
-          <div className="relative">
-            <p className="eyebrow">Meet your guide</p>
-            <h2 id="astro-title" className="mt-1 text-3xl font-bold sm:text-4xl">
-              Stuck on a space word? Ask Astro!
-            </h2>
-            <p className="mt-3 max-w-2xl text-lg text-muted">
-              Astro is a friendly AI helper. It explains spacecraft, instruments and science words in simple language,
-              and it shows you where its facts come from.
-            </p>
-            <div className="mt-5 flex flex-wrap gap-2">
-              {['What is a descent stage?', 'Why did Opportunity stop working?', 'What is interstellar space?'].map((q) => (
-                <button key={q} type="button" className="chip border-cyan/40 bg-cyan/10 text-ink hover:bg-cyan/20" onClick={() => open(q)}>
-                  {q}
-                </button>
-              ))}
-            </div>
-            <Link to="/ask-astro" className="btn btn-primary mt-6">
-              Open Astro AI
+          <div ref={bottomRef} className="flex flex-col items-center gap-2">
+            <Link to="/moon" className="sticker c-yellow btn text-[1.1rem]" style={{ '--r': '-1deg' } as React.CSSProperties}>
+              Meet the machines
             </Link>
+            <p className="m-0 font-display text-[0.95rem] text-dusk">or scroll to zoom in</p>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
 
-      <ArtifactPanel artifact={selected} onClose={close} />
-    </>
+      <div ref={noteRef} className="zoom-note" aria-hidden="true">
+        <Paper tone="yellow" innerClassName="px-5 py-3 text-center font-display text-[1.2rem] leading-snug">
+          <b className="font-extrabold">Closer!</b> Most of our machines landed on the Moon and Mars.
+        </Paper>
+      </div>
+
+      <svg ref={stringsRef} className="sky-strings" aria-hidden="true">
+        <path ref={pathRef} fill="none" stroke="#f7f3e8" strokeWidth="2.4" strokeLinecap="round" />
+      </svg>
+      {TAGS.map((t) => (
+        <button
+          key={t.id}
+          ref={(el) => {
+            tagRefs.current[t.id] = el
+          }}
+          type="button"
+          data-id={t.id}
+          className="name-tag paper-glue"
+          onClick={() => pickTag(t.id)}
+        >
+          <Paper as="span" tone={t.tone} tilt={t.tilt} innerAs="span" className="block filter-none">
+            <b className="block font-extrabold">{t.title}</b>
+            {t.note}
+          </Paper>
+        </button>
+      ))}
+
+      <aside
+        ref={cardRef}
+        className={`planet-card paper-glue ${planet ? 'open' : ''}`}
+        aria-live="polite"
+        aria-label={planet ? `About ${planet.name}` : undefined}
+        inert={!planet}
+      >
+        <PlanetCard body={planet} onClose={closePlanet} onAsk={(q) => open(q)} />
+      </aside>
+
+    </div>
+  )
+}
+
+/** The card that pops up beside a planet. Keeps showing the last planet while it fades out. */
+function PlanetCard({ body, onClose, onAsk }: { body: Body | null; onClose: () => void; onAsk: (q: string) => void }) {
+  const [last, setLast] = useState<Body | null>(body)
+  if (body && body !== last) setLast(body)
+  const b = body ?? last
+  const ref = useCutEdges<HTMLDivElement>(useId())
+  return (
+    <div ref={ref} className="paper-cut relative px-6 pb-5 pt-6">
+      <button type="button" onClick={onClose} className="absolute right-3 top-3 h-11 w-11 cursor-pointer font-display text-xl" aria-label="Close">
+        ✕
+      </button>
+      {b && (
+        <>
+          <h2 className="pr-10 text-[1.8rem] leading-none">{b.name}</h2>
+          <p className="mt-2.5">{b.description}</p>
+          <p className="mt-3.5 rounded-md bg-yellow/35 px-3.5 py-3">
+            <b className="font-display">What we left there: </b>
+            {b.hardware}
+          </p>
+          {/* A sticker, not a crayon button: the crayon filter is slow to repaint on a card that moves every frame. */}
+          <p className="mt-4">
+            {b.archive ? (
+              <Link to={b.archive.to} className="sticker c-pink btn">
+                {b.archive.label}
+              </Link>
+            ) : (
+              <button type="button" className="sticker c-pink btn" onClick={() => onAsk(`Tell me a cool fact about ${b.name}.`)}>
+                Ask Astro about {b.name}
+              </button>
+            )}
+          </p>
+        </>
+      )}
+    </div>
   )
 }

@@ -1,7 +1,9 @@
 import { motion } from 'framer-motion'
 import { formatDate } from '../data'
+import { WORLD_COLOR } from '../data/labels'
 import { HARDWARE_LABELS, type Artifact } from '../types/artifact'
 import ArtifactImage from './ArtifactImage'
+import Paper from './Paper'
 import StatusBadge from './StatusBadge'
 
 interface Props {
@@ -10,33 +12,35 @@ interface Props {
   index?: number
 }
 
+/** Cards sit at small, varied angles, like pieces glued on by hand. */
+const TILTS = [-1.2, 0.8, -0.6, 1, -0.9, 0.5]
+
 export default function ArtifactCard({ artifact, onSelect, index = 0 }: Props) {
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 20 }}
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
-      transition={{ duration: 0.45, delay: Math.min(index, 6) * 0.06 }}
-      className="glass group flex flex-col overflow-hidden p-3 transition hover:border-cyan/40 hover:bg-white/[0.09]"
+      transition={{ type: 'spring', damping: 16, stiffness: 140, delay: Math.min(index, 6) * 0.06 }}
+      className="h-full"
     >
-      <ArtifactImage artifact={artifact} />
-      <div className="flex flex-1 flex-col gap-3 p-3">
-        <div className="flex flex-wrap items-center gap-2">
+      <Paper as="article" tilt={TILTS[index % TILTS.length]} className="h-full" innerClassName="flex h-full flex-col p-4 pb-6">
+        <ArtifactImage artifact={artifact} tilt={index % 2 ? -1 : 1} />
+        <h3 className="mt-4 text-[1.6rem]">{artifact.name}</h3>
+        <p className="muted text-sm">
+          {artifact.missionName} · launched {formatDate(artifact.launchDate)}
+        </p>
+        <div className="mt-2 flex flex-wrap items-center gap-2">
           <StatusBadge status={artifact.status} />
-          <span className="chip border-white/15 text-muted">{HARDWARE_LABELS[artifact.hardwareType]}</span>
+          <span className="label c-white border-2 border-dashed border-ink/25">{HARDWARE_LABELS[artifact.hardwareType]}</span>
         </div>
+        <p className="mb-4 mt-3 flex-1">{artifact.tagline}</p>
         <div>
-          <h3 className="text-xl font-bold leading-snug">{artifact.name}</h3>
-          <p className="text-sm text-muted">
-            {artifact.missionName} · launched {formatDate(artifact.launchDate)}
-          </p>
+          <button type="button" className={`cbtn ${WORLD_COLOR[artifact.world]}`} onClick={() => onSelect(artifact)}>
+            Open its story <span className="sr-only">: {artifact.name}</span>
+          </button>
         </div>
-        <p className="flex-1 text-ink/90">{artifact.tagline}</p>
-        <button type="button" className="btn btn-ghost w-full group-hover:border-cyan/50" onClick={() => onSelect(artifact)}>
-          Open its story <span className="sr-only">: {artifact.name}</span>
-          <span aria-hidden="true">→</span>
-        </button>
-      </div>
-    </motion.article>
+      </Paper>
+    </motion.div>
   )
 }

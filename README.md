@@ -10,8 +10,8 @@ An interactive, story-driven digital space museum for the **2026 NASA Space Apps
 
 | Module | Page | What it does |
 |---|---|---|
-| Home | `/` | Hero with a live 3D solar system, featured explorers, discovery cards, Astro AI entry point |
-| A · Solar System Explorer | `/explore` | Rotate/zoom a 3D solar system (Three.js); click a world for facts and links to its archive |
+| Home | `/` | A crayon solar system that fills the screen: scroll to zoom in, tap a planet (or the Moon and Mars name tags) to fly to it and read its card |
+| A · Solar System Explorer | `/explore` | Spin the crayon solar system and tap a world to fly in close; facts and links to its archive |
 | B · Forgotten Space Explorers | `/moon`, `/mars`, `/deep-space` | 18 verified artifact records with status filters and a slide-in information panel |
 | C · Artifact Stories | `/artifact/:id` | Story, mission facts, objectives, instruments, discoveries, timeline, status, "words to know", sources |
 | D · Mission Timeline | `/timeline` | All mission events in date order, filterable by destination, era, hardware type and event type |
@@ -27,7 +27,7 @@ Statuses are always shown with colour **and** an icon **and** a word: *Still wor
 Nasa_Hackathon_N4S4_F0R_FUN/
 ├── frontend/                 React + TypeScript + Vite website
 │   ├── src/
-│   │   ├── components/       Navbar, Footer, SpaceScene (3D), ArtifactCard, ArtifactPanel,
+│   │   ├── components/       Navbar, Footer, Paper, ArtifactCard, ArtifactPanel,
 │   │   │                     Timeline, ChatBot, AstroLauncher, ScienceVisual, …
 │   │   ├── pages/            Home, UniverseExplorer, Moon/Mars/DeepSpaceArchive, ArtifactDetail,
 │   │   │                     MissionTimeline, ScienceLab, AstroAI, About
@@ -116,7 +116,6 @@ Never add a fact you can't source. See `docs/data_sources.md`.
 | react-router-dom | Page routes (`/moon`, `/artifact/:id`, …) |
 | Tailwind CSS v4 | Design tokens and utility styling |
 | Framer Motion | Page, panel and timeline animations |
-| three, @react-three/fiber, @react-three/drei | 3D solar system, orbit controls, star field |
 | FastAPI, Pydantic, Uvicorn | REST API with validated request/response models |
 | httpx | Server-side calls to the AI model provider |
 | python-dotenv | Loads `backend/.env` in development |
