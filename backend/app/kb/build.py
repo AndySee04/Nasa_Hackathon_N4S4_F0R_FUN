@@ -36,7 +36,8 @@ CATEGORIES = {
     "exoplanet", "constellation", "galaxy", "asteroid", "glossary",
 }  # fmt: skip
 REQUIRED_META = ("id", "title", "category", "topic", "source_ids", "last_verified")
-CHUNK_WORDS = 120
+# Big enough to keep a short explainer (and its "because…") in one piece.
+CHUNK_WORDS = 200
 
 # Text in the knowledge base must read as facts, never as orders to the model.
 INSTRUCTION_PATTERNS = re.compile(

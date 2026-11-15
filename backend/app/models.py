@@ -39,8 +39,13 @@ class AstroReply(BaseModel):
     reply: str
     sources: list[Source] = Field(default_factory=list)
     suggestions: list[str] = Field(default_factory=list)
-    mode: Literal["llm", "knowledge"]
+    #: "cache" means the same question was answered recently and nothing new was computed.
+    mode: Literal["llm", "knowledge", "cache"]
     safety_note: str | None = None
+    #: Which part of the knowledge base answered (contract-game-ai.md §4). "blocked" when safety refused.
+    topic: Literal["solar_system", "missions", "deep_space", "general", "blocked"] | None = None
+    #: "sourced": from NASA-sourced facts; "general_knowledge": from the glossary; "unsure": no reliable facts.
+    confidence: Literal["sourced", "general_knowledge", "unsure"] | None = None
 
 
 class SuggestedQuestions(BaseModel):

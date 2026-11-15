@@ -74,9 +74,9 @@ File `backend/app/data/knowledge.db`, built by `python -m app.kb.build` from fil
 |---|---|---|
 | `records` | Structured mission and artifact facts (dates, agency, status, coordinates) | `artifacts.json` (shared with the game) |
 | `documents` | Curated short explainers, 150–400 words each, written from NASA pages | `kb/docs/*.md` with front-matter |
-| `chunks` | Documents split into ~120-word chunks + BM25 index (SQLite FTS5) | built |
+| `chunks` | Documents split into ~200-word chunks (a short explainer stays whole) + BM25 index (SQLite FTS5) | built |
 | `sources` | Every allowed URL, its title, publisher and `last_verified` | `kb/sources.json` + artifact sources |
-| `cache` | Normalised question + context hash → answer JSON, with expiry | runtime |
+| `cache` | Reserved for a file-backed deployment. v1 caches answers in memory (`services/cache.py`): normalised question + page artifact + AI mode, 7-day expiry, 500 entries | runtime |
 
 Document front-matter (from the original prompt, extended):
 
@@ -153,7 +153,7 @@ Already on `main` (`app/services/safety.py`): personal information, self-harm, p
 | Retrieved context sent to the LLM | ≤ 4 chunks, ≤ 2,000 tokens |
 | Output | ≤ 400 tokens |
 | p95 latency | < 4 s with LLM, < 300 ms from cache or knowledge mode |
-| Cache | exact key = normalised question + topic + artifactId; 7-day expiry; never cache blocked or personal messages |
+| Cache | exact key = normalised question + artifactId + AI mode; 7-day expiry; 500 entries; never cache blocked messages or follow-ups that depend on the conversation |
 | Limits | 20 requests per minute per IP (exists); global daily LLM call cap (new, env `LLM_DAILY_CAP`) |
 
 ## 9. Files to create or change
@@ -201,7 +201,7 @@ Run in knowledge mode in CI (free and deterministic). Run in LLM mode manually b
 |---|---|---|
 | A1 ✅ | Knowledge base | `knowledge.db` builds from curated docs + sources; FTS retrieval tests pass |
 | A2 ✅ | Intent + Manager | Routing tests: "Why is Mars red?" → solar_system only; depth and max-modules enforced |
-| A3 | Response + cache | One LLM call max; knowledge-mode answers; cache hits return in < 300 ms |
+| A3 ✅ | Response + cache | One LLM call max; knowledge-mode answers; cache hits return in < 300 ms |
 | A4 | Suggestions | Topic graph + de-dup; contract fields `suggestions`, `topic`, `confidence` |
 | A5 | Visual | `images` field with real NASA photos and credit |
 | A6 | Safety + eval | Extra safety rules; all ~40 eval cases pass in knowledge mode |

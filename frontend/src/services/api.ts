@@ -22,9 +22,14 @@ export interface AstroReply {
   reply: string
   sources: AstroSource[]
   suggestions: string[]
-  mode: AiMode
+  /** 'cache' means the same question was answered recently. */
+  mode: AiMode | 'cache'
   /** Set when the safety filter changed or refused the request. */
   safety_note?: string | null
+  /** Which part of the knowledge base answered (docs/specs/contract-game-ai.md). */
+  topic?: 'solar_system' | 'missions' | 'deep_space' | 'general' | 'blocked' | null
+  /** 'unsure' means Astro had no reliable NASA-sourced facts and said so. */
+  confidence?: 'sourced' | 'general_knowledge' | 'unsure' | null
 }
 
 export interface ChatTurn {
