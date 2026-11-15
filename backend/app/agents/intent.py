@@ -38,6 +38,13 @@ MISSION_WORDS = {
 }  # fmt: skip
 # Words in artifact names that say nothing about which machine is meant.
 GENERIC = {
+    # Ordinary words inside long official names (e.g. "Lunar Crater Observation and Sensing Satellite").
+    "crater",
+    "observation",
+    "sensing",
+    "satellite",
+    "exploration",
+    "explorer",
     "the",
     "of",
     "and",

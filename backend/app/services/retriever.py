@@ -122,6 +122,12 @@ class Retriever:
         sources = [self._sources[s] for s in json.loads(source_ids) if s in self._sources]
         return Hit(doc_id, kind, title, topic, category, body, 0.0, verified, sources, name_matches=1)
 
+    def document_body(self, doc_id: str) -> str | None:
+        """The whole text of one document."""
+        with self._lock:
+            row = self.conn.execute("SELECT body FROM documents WHERE id = ?", (doc_id,)).fetchone()
+        return row[0] if row else None
+
     def image_query(self, doc_id: str) -> str | None:
         """The NASA Image Library search phrase for a document, if it has one."""
         with self._lock:

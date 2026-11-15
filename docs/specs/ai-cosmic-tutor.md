@@ -187,7 +187,7 @@ No new paid services. New Python dependencies: **none required** (SQLite FTS5 sh
 
 ## 10. Evaluation set (run in CI)
 
-`backend/tests/eval/questions.yaml`, about 40 cases. Each has: question, context, expected topic, must-contain facts or sources, must-not-contain items. Categories:
+`backend/tests/eval/questions.json`, about 40 cases. Each has: question, context, expected topic, must-contain facts or sources, must-not-contain items. Categories:
 
 - 15 Moon campaign facts ("Did Surveyor 3 meet astronauts?" → must mention Apollo 12, Nov 1969, cite the Surveyor 3 source)
 - 8 Solar System ("Why is Mars red?" → topic `solar_system`; the missions module is NOT called)
@@ -206,7 +206,7 @@ Run in knowledge mode in CI (free and deterministic). Run in LLM mode manually b
 | A3 ✅ | Response + cache | One LLM call max; knowledge-mode answers; cache hits return in < 300 ms |
 | A4 ✅ | Suggestions | Topic graph + de-dup; contract fields `suggestions`, `topic`, `confidence` |
 | A5 ✅ | Visual | `images` field with real NASA photos and credit |
-| A6 | Safety + eval | Extra safety rules; all ~40 eval cases pass in knowledge mode |
+| A6 ✅ | Safety + eval | Extra safety rules; all ~40 eval cases pass in knowledge mode |
 
 ## 12. Known limits
 

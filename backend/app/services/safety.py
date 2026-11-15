@@ -22,8 +22,17 @@ PII_PATTERNS = [
 SELF_HARM = re.compile(r"\b(kill myself|hurt myself|suicide|self[- ]?harm|want to die|end my life)\b", re.I)
 
 UNSAFE_TOPICS = re.compile(
-    r"\b(bomb|explosive|weapon|gun|shoot (someone|people)|kill (someone|people|him|her)|drugs?|porn|sex|naked|nude|"
-    r"hack (into|someone)|steal)\b",
+    r"\b(bomb|weapon|gun|shoot (someone|people)|kill (someone|people|him|her)|drugs?|porn|sex|nude|"
+    r"hack (into|someone)|steal|(make|build|making|building) (an? )?explosives?)\b"
+    # "naked" only when it isn't the astronomy phrase "naked eye".
+    r"|\bnaked\b(?! eye)",
+    re.I,
+)
+
+# Questions about how Astro works inside. Answered kindly, without revealing anything.
+SECRET_REQUEST = re.compile(
+    r"\b(system prompt|your (prompt|instructions|rules you were given|hidden rules)|api[ -]?keys?|secret keys?|access tokens?|"
+    r"env(ironment)? (file|variables?)|\.env\b|backend code|source code|server code|show me your code)",
     re.I,
 )
 
@@ -67,6 +76,17 @@ def check_message(text: str) -> SafetyResult:
                 note="Message not processed because it may contain personal information.",
             )
 
+    if SECRET_REQUEST.search(text):
+        return SafetyResult(
+            allowed=False,
+            reply=(
+                "I'm here to help you explore space! I can't share private system instructions, but I can explain "
+                "how my space-learning features work: I answer from facts checked against NASA sources, and I say "
+                "when I'm not sure. What would you like to explore?"
+            ),
+            note="Astro keeps its private settings private.",
+        )
+
     if INJECTION.search(text):
         return SafetyResult(
             allowed=False,
@@ -93,6 +113,19 @@ _URL = re.compile(r"https?://[^\s)\]>\"']+")
 def _allowed_url(url: str) -> bool:
     host = (urlparse(url).hostname or "").lower()
     return any(host == d or host.endswith("." + d) for d in ALLOWED_LINK_DOMAINS)
+
+
+def echoes_instructions(reply: str, instructions: str, window: int = 8) -> bool:
+    """True if the reply repeats any run of `window` words from Astro's own instructions."""
+    words = re.findall(r"[a-z0-9']+", instructions.lower())
+    grams = {" ".join(words[i : i + window]) for i in range(len(words) - window + 1)}
+    reply_words = re.findall(r"[a-z0-9']+", reply.lower())
+    return any(" ".join(reply_words[i : i + window]) in grams for i in range(len(reply_words) - window + 1))
+
+
+def strip_unregistered_links(text: str, is_allowed) -> str:
+    """Removes any link that isn't in the knowledge base's source registry."""
+    return _URL.sub(lambda m: m.group(0) if is_allowed(m.group(0).rstrip(".,;:!?")) else "[link removed]", text)
 
 
 def sanitize_reply(text: str, max_chars: int = 1200) -> str:

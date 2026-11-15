@@ -29,7 +29,7 @@ from app.services.cache import AnswerCache, answer_cache
 from app.services.images import search_nasa_images
 from app.services.knowledge_service import KnowledgeBase
 from app.services.retriever import Hit
-from app.services.safety import check_message, sanitize_reply
+from app.services.safety import check_message, echoes_instructions, sanitize_reply, strip_unregistered_links
 
 log = logging.getLogger("astro")
 
@@ -197,6 +197,9 @@ class AstroService:
             if self.settings.ai_mode == "llm":
                 try:
                     text, follow_ups = await self._ask_llm(message, history, evidence, context)
+                    text = strip_unregistered_links(text, self.manager.retriever.is_allowed_url)
+                    if echoes_instructions(text, SYSTEM_PROMPT):
+                        raise ValueError("model reply repeated its instructions")
                     reply = AstroReply(
                         reply=sanitize_reply(text), sources=_sources(evidence), suggestions=follow_ups[:3], mode="llm"
                     )
@@ -250,7 +253,7 @@ class AstroService:
     # ---------- knowledge mode ----------
     def _knowledge_answer(self, message: str, evidence: list[Hit], named: list[str], context: PageContext) -> AstroReply:
         """Builds an answer from the best evidence without any AI model."""
-        top = evidence[0]
+        top = _best_for_knowledge_answer(message, evidence)
         if top.kind == "glossary":
             g = self.kb.glossary_entry(message) or self.kb.glossary_entry(top.title)
             if g:
@@ -274,8 +277,17 @@ class AstroService:
         # Curated explainers and NASA fact-sheet numbers are already written for children.
         title = top.title.split(":")[0] if top.kind == "factsheet" else top.title
         intro = f"Here are NASA's numbers for {title}:" if top.kind == "factsheet" else title
+        text = top.text
+        if top.kind == "doc":
+            # Answer with the paragraph of the explainer that fits the question best.
+            body = self.manager.retriever.document_body(top.doc_id) or top.text
+            paragraphs = [p.strip() for p in body.split("\n\n") if p.strip()]
+            best = _best_paragraph(paragraphs, message)
+            i = paragraphs.index(best)
+            # A short opening line rarely answers anything on its own, so add the next paragraph.
+            text = best if len(best.split()) >= 40 or i + 1 >= len(paragraphs) else f"{best}\n\n{paragraphs[i + 1]}"
         return AstroReply(
-            reply=f"{intro}\n\n{top.text}",
+            reply=f"{intro}\n\n{text}",
             sources=_sources([top]),
             suggestions=self.suggested_questions(context.page, named[0] if named else context.artifactId)[:3],
             mode="knowledge",
@@ -326,8 +338,60 @@ def _artifact_answer(a: dict, message: str) -> str:
     elif any(w in q for w in ("instrument", "tool", "camera", "measure", "power", "electricity")):
         body = "Its instruments:\n• " + "\n• ".join(f"{i['name']}: {i['purpose']}" for i in a["instruments"])
     else:
-        body = f"{a['story'][0]}\n\n{a['tagline']}"
+        body = f"{_best_paragraph(a['story'], message)}\n\n{a['tagline']}"
     return f"{a['name']} ({a['missionName']})\n\n{body}\n\nFun fact: {a['funFact']}"
+
+
+#: Questions about sizes, distances and other numbers are best answered from NASA's fact sheets.
+NUMBER_QUESTION = re.compile(
+    r"\b(how (big|large|small|far|hot|cold|heavy|long|many)|size|distance|temperature|gravity|weigh|diameter)\b", re.I
+)
+#: "What is a crater?" wants the glossary; "Why are there so many craters?" wants an explanation.
+DEFINITION_QUESTION = re.compile(r"^\s*(what('s| is| are| does)|define|meaning of)\b", re.I)
+
+
+def _best_for_knowledge_answer(message: str, evidence: list[Hit]) -> Hit:
+    """Picks which piece of evidence to answer from when no AI model is used."""
+    named = [h for h in evidence if h.name_matches > 0]
+    if NUMBER_QUESTION.search(message):
+        sheet = next((h for h in named if h.kind == "factsheet"), None)
+        if sheet:
+            return sheet
+    top = evidence[0]
+    if top.kind == "glossary" and not DEFINITION_QUESTION.search(message):
+        explainer = next((h for h in named if h.kind in ("doc", "factsheet")), None)
+        if explainer:
+            return explainer
+    return top
+
+
+#: Words that describe the request ("show me", "tell me about") rather than the topic.
+REQUEST_WORDS = {
+    "show",
+    "tell",
+    "what",
+    "does",
+    "about",
+    "picture",
+    "pictures",
+    "photo",
+    "photos",
+    "image",
+    "look",
+    "like",
+    "more",
+    "please",
+    "explain",
+}
+
+
+def _best_paragraph(paragraphs: list[str], message: str) -> str:
+    """The story paragraph that shares the most words with the question (the first one on a tie)."""
+    words = {w for w in re.findall(r"[a-z0-9]+", message.lower()) if len(w) > 3} - REQUEST_WORDS
+    if not words:
+        return paragraphs[0]
+    scores = [len(words & set(re.findall(r"[a-z0-9]+", p.lower()))) for p in paragraphs]
+    return paragraphs[scores.index(max(scores))]
 
 
 def _is_follow_up(message: str) -> bool:
