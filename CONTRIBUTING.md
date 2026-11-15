@@ -28,6 +28,13 @@ When both are green and all review comments are resolved, use **Squash and merge
 
 ## Branch names
 
+Two team branches run in parallel (see `docs/specs/README.md`):
+
+- `game` · the Moon campaign. Work on `game/<feature>` branches and open pull requests into `game`.
+- `ai` · Cosmic AI. Work on `ai/<feature>` branches and open pull requests into `ai`.
+
+Other work branches from `main`:
+
 - `feature/…` new pages or features
 - `fix/…` bug fixes
 - `content/…` artifact data, stories, glossary
