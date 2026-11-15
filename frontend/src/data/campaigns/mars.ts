@@ -11,8 +11,13 @@ import type { MarsCampaign } from '../../types/campaign'
 export const MARS_CAMPAIGN: MarsCampaign = {
   id: 'mars',
   title: 'Mars Explorer',
-  briefing:
-    'Mission Control here! Long ago, Mars had rivers and lakes. Today it is a cold, dusty desert, and the clues to its watery past are hidden in its rocks. Real machines found those clues. Now dust and sand cover them, so grab your simulator drill! Dig down through the dust, sand and bedrock, collect the clues, and uncover each machine. Then plan its drive, just like real rover drivers on Earth. Careful: Mars is harder than the Moon!',
+  briefing: 'Mission Control here! Real machines on Mars found clues that it once had rivers and lakes. Now dust and sand cover them.',
+  briefingSteps: [
+    'Pick an X on Mars to dig there.',
+    'Dig through dust, sand and bedrock to collect clues and uncover the machine.',
+    'Plan its drive, just like real rover drivers on Earth.',
+  ],
+  briefingTip: 'Careful: Mars is harder than the Moon!',
   badge: {
     id: 'mars-explorer',
     name: 'Mars Explorer',

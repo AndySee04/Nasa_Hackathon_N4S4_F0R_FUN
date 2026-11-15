@@ -9,8 +9,8 @@ import type { Campaign } from '../../types/campaign'
 export const MOON_CAMPAIGN: Campaign = {
   id: 'moon',
   title: 'Moon Explorer',
-  briefing:
-    'Mission Control here! Our scanners have picked up old machines left on the Moon by real space missions. Fly your rocket claw over the Moon, catch each one, and find out what it did and where it is today.',
+  briefing: 'Mission Control here! Our scanners found old machines left on the Moon by real space missions.',
+  briefingSteps: ['Tap an orange signal ring on the Moon.', 'Catch the machine with your rocket claw.', 'Find out what it did and where it is today.'],
   artifacts: [
     {
       artifactId: 'apollo-11-eagle',
@@ -86,12 +86,7 @@ export const MOON_CAMPAIGN: Campaign = {
         },
         {
           question: "Why did NASA crash Antares's empty top half into the Moon?",
-          options: [
-            'It was an accident',
-            'To make a new crater for fun',
-            'To get rid of rubbish',
-            'To make a test moonquake for the seismometers',
-          ],
+          options: ['It was an accident', 'To make a new crater for fun', 'To get rid of rubbish', 'To make a test moonquake for the seismometers'],
           answer: 3,
           explain: 'A crash of known size and timing helps scientists understand what the inside of the Moon is like.',
         },

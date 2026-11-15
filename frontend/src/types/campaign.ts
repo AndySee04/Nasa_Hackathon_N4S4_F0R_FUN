@@ -15,8 +15,12 @@ export type CampaignId = 'moon' | 'mars'
 export interface Campaign {
   id: CampaignId
   title: string
-  /** The opening story, read by the mission guide. */
+  /** The opening line, read by the mission guide. */
   briefing: string
+  /** What to do, one short step per line. */
+  briefingSteps: string[]
+  /** One extra line after the steps. */
+  briefingTip?: string
   /** Order is the suggested play order. All are needed for the badge. */
   artifacts: CampaignArtifact[]
   /** Extra levels for more stars; not needed for the badge. */
@@ -90,6 +94,8 @@ export interface MarsCampaign {
   id: 'mars'
   title: string
   briefing: string
+  briefingSteps: string[]
+  briefingTip?: string
   artifacts: MarsLevel[]
   bonusArtifacts: MarsLevel[]
   badge: BadgeDef
