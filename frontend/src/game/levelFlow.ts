@@ -1,5 +1,4 @@
-import type { Campaign } from '../types/campaign'
-import type { Progress } from './progress'
+import type { CampaignLike, Progress } from './progress'
 
 /** The steps of one level, in order. `ready: false` steps are shown as "coming soon" and skipped. */
 export const LEVEL_STEPS = [
@@ -21,10 +20,27 @@ export function nextStep(step: LevelStep): LevelStep {
 }
 
 /** The next core signal the child hasn't caught yet (then the bonus), or null when all are found. */
-export function nextSignal(progress: Progress, campaign: Campaign, currentId: string): string | null {
+export function nextSignal(progress: Progress, campaign: CampaignLike, currentId: string): string | null {
   const saved = progress.campaigns[campaign.id]?.artifacts ?? {}
   const order = [...campaign.artifacts, ...campaign.bonusArtifacts].map((a) => a.artifactId)
   const start = order.indexOf(currentId)
   const rotated = [...order.slice(start + 1), ...order.slice(0, Math.max(start, 0))]
   return rotated.find((id) => (saved[id]?.stars ?? 0) === 0) ?? null
+}
+
+/** The Mars level steps: dig → mission card → drive → real story → quiz → done. */
+export const MARS_STEPS = [
+  { id: 'dig', label: 'Dig' },
+  { id: 'discovery', label: 'Mission card' },
+  { id: 'drive', label: 'Drive' },
+  { id: 'science', label: 'Real story' },
+  { id: 'quiz', label: 'Quiz' },
+  { id: 'complete', label: 'Done' },
+] as const
+
+export type MarsStep = (typeof MARS_STEPS)[number]['id']
+
+export function nextMarsStep(step: MarsStep): MarsStep {
+  const i = MARS_STEPS.findIndex((s) => s.id === step)
+  return MARS_STEPS[i + 1]?.id ?? 'complete'
 }

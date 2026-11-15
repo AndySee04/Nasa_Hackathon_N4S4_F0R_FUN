@@ -3,8 +3,17 @@ import { QUIZ_PASS } from '../../game/scoring'
 import type { QuizQuestion } from '../../types/campaign'
 import Paper from '../Paper'
 
-/** Stage 6: three questions, one at a time, with a kind explanation after every answer. */
-export default function QuizPanel({ questions, onDone }: { questions: QuizQuestion[]; onDone: (correct: number) => void }) {
+/** Stage 6: a few questions, one at a time, with a kind explanation after every answer. */
+export default function QuizPanel({
+  questions,
+  onDone,
+  pass = QUIZ_PASS,
+}: {
+  questions: QuizQuestion[]
+  onDone: (correct: number) => void
+  /** Right answers needed for the quiz star. */
+  pass?: number
+}) {
   const [index, setIndex] = useState(0)
   const [picked, setPicked] = useState<number | null>(null)
   const [score, setScore] = useState(0)
@@ -28,14 +37,14 @@ export default function QuizPanel({ questions, onDone }: { questions: QuizQuesti
   }
 
   if (finished) {
-    const passed = score >= QUIZ_PASS
+    const passed = score >= pass
     return (
       <Paper tone="yellow" tilt={0.5} innerClassName="p-6 sm:p-8">
         <h2 className="text-3xl">
           You got {score} out of {questions.length}! {passed ? '🌟' : '💪'}
         </h2>
         <p className="mt-2 text-lg">
-          {passed ? 'Quiz star earned!' : `Get ${QUIZ_PASS} right to earn the quiz star. You can play this signal again any time.`}
+          {passed ? 'Quiz star earned!' : `Get ${pass} right to earn the quiz star. You can play again any time.`}
         </p>
         <button type="button" className="cbtn c-mint mt-5" onClick={() => onDone(score)}>
           See my stars →

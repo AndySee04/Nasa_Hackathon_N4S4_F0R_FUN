@@ -8,7 +8,15 @@ import Paper from '../Paper'
 import StatusBadge from '../StatusBadge'
 
 /** Stage 3: the scanner prints a mission card. Every fact comes from the artifact's NASA-sourced record. */
-export default function MissionCard({ artifact, onNext }: { artifact: Artifact; onNext: () => void }) {
+export default function MissionCard({
+  artifact,
+  onNext,
+  nextLabel = 'Start the repair mission 🔧',
+}: {
+  artifact: Artifact
+  onNext: () => void
+  nextLabel?: string
+}) {
   const still = useReducedMotion()
   const reveal = (i: number) =>
     still ? {} : { initial: { opacity: 0, y: 14 }, animate: { opacity: 1, y: 0 }, transition: { delay: 0.15 + i * 0.12 } }
@@ -74,7 +82,7 @@ export default function MissionCard({ artifact, onNext }: { artifact: Artifact; 
       <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
         <Sources artifact={artifact} />
         <button type="button" className="cbtn c-yellow" onClick={onNext}>
-          Start the repair mission 🔧
+          {nextLabel}
         </button>
       </div>
     </Paper>

@@ -2,8 +2,17 @@
  * Saved game progress. Lives only in this browser's localStorage: no account,
  * no name, nothing sent to a server. The certificate nickname is never saved.
  */
-import type { Campaign } from '../types/campaign'
-import { bestOf, starsFor, type LevelResult, type Stars } from './scoring'
+import { bestOf, quizPassFor, starsFor, type LevelResult, type Stars } from './scoring'
+
+/** The parts of a campaign that progress needs. Moon and Mars both fit. */
+export interface CampaignLike {
+  id: string
+  artifacts: { artifactId: string }[]
+  bonusArtifacts: { artifactId: string }[]
+  badge: { id: string }
+  /** Stars needed on every core level for the badge. Moon: 1 (just find them). Mars: 3 (full stars). */
+  badgeNeedsStars?: number
+}
 
 export const STORAGE_KEY = 'n4s4.progress.v1'
 
@@ -41,7 +50,7 @@ function cleanResult(v: unknown): LevelResult | null {
   if (!isObject(v)) return null
   const quiz = Number(v.quizCorrect)
   if (!Number.isFinite(quiz)) return null
-  return { caught: v.caught === true, repaired: v.repaired === true, quizCorrect: Math.min(3, Math.max(0, Math.floor(quiz))) }
+  return { caught: v.caught === true, repaired: v.repaired === true, quizCorrect: Math.min(10, Math.max(0, Math.floor(quiz))) }
 }
 
 /**
@@ -74,7 +83,7 @@ export function parseProgress(raw: string | null): Progress {
           const best = cleanResult(a.best)
           if (!best) continue
           const plays = Math.max(1, Math.floor(Number(a.plays) || 1))
-          artifacts[aid] = { best, stars: starsFor(best), plays }
+          artifacts[aid] = { best, stars: starsFor(best, quizPassFor(cid)), plays }
         }
       }
       const badges = Array.isArray(c.badges) ? c.badges.filter((b): b is string => typeof b === 'string') : []
@@ -131,27 +140,28 @@ export function recordResult(p: Progress, campaignId: string, artifactId: string
       ...p.campaigns,
       [campaignId]: {
         ...campaign,
-        artifacts: { ...campaign.artifacts, [artifactId]: { best, stars: starsFor(best), plays: (prev?.plays ?? 0) + 1 } },
+        artifacts: { ...campaign.artifacts, [artifactId]: { best, stars: starsFor(best, quizPassFor(campaignId)), plays: (prev?.plays ?? 0) + 1 } },
       },
     },
   }
 }
 
-export function campaignStars(p: Progress, c: Campaign): { earned: number; max: number; maxWithBonus: number } {
+export function campaignStars(p: Progress, c: CampaignLike): { earned: number; max: number; maxWithBonus: number } {
   const saved = p.campaigns[c.id]?.artifacts ?? {}
   const all = [...c.artifacts, ...c.bonusArtifacts]
   const earned = all.reduce((sum, a) => sum + (saved[a.artifactId]?.stars ?? 0), 0)
   return { earned, max: c.artifacts.length * 3, maxWithBonus: all.length * 3 }
 }
 
-/** The badge needs every core artifact caught (at least one star each). */
-export function isCampaignComplete(p: Progress, c: Campaign): boolean {
+/** The badge needs every core artifact found (Moon) or fully starred (Mars). */
+export function isCampaignComplete(p: Progress, c: CampaignLike): boolean {
   const saved = p.campaigns[c.id]?.artifacts ?? {}
-  return c.artifacts.every((a) => (saved[a.artifactId]?.stars ?? 0) >= 1)
+  const need = c.badgeNeedsStars ?? 1
+  return c.artifacts.every((a) => (saved[a.artifactId]?.stars ?? 0) >= need)
 }
 
 /** Adds the campaign badge if it has been earned. Returns the same object if nothing changed. */
-export function awardBadge(p: Progress, c: Campaign): Progress {
+export function awardBadge(p: Progress, c: CampaignLike): Progress {
   const campaign = p.campaigns[c.id]
   if (!campaign || campaign.badges.includes(c.badge.id) || !isCampaignComplete(p, c)) return p
   return { ...p, campaigns: { ...p.campaigns, [c.id]: { ...campaign, badges: [...campaign.badges, c.badge.id] } } }

@@ -45,6 +45,14 @@ export function HardwareIllustration({ type, className = 'h-24 w-24' }: { type: 
           <rect x="8" y="46" width="10" height="12" /><rect x="82" y="46" width="10" height="12" />
         </g>
       )}
+      {type === 'helicopter' && (
+        <g>
+          <path d="M18 30h64M50 30v14" />
+          <path d="M24 38h52" />
+          <rect x="38" y="44" width="24" height="18" rx="5" />
+          <path d="M40 62l-10 20M60 62l10 20M44 62l-4 20M56 62l4 20" />
+        </g>
+      )}
       {type === 'impactor' && (
         <g {...stroke}>
           <path d="M30 20l26 26" />

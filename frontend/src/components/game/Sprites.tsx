@@ -46,6 +46,18 @@ export function MachineSprite({ kind, className = '' }: { kind: CatcherSprite; c
       </svg>
     )
   }
+  if (kind === 'helicopter') {
+    // Ingenuity: two stacked rotors, a small box body and four thin legs.
+    return (
+      <svg viewBox="0 0 100 80" className={className} aria-hidden="true">
+        <path d="M12 10h76M18 20h64" stroke="#22203a" strokeWidth="4" strokeLinecap="round" />
+        <path d="M50 8v26" stroke="#22203a" strokeWidth="3.5" />
+        <rect x="58" y="2" width="16" height="6" fill="#63b7f0" stroke="#22203a" strokeWidth="2" />
+        <rect x="36" y="34" width="28" height="20" rx="4" fill="#f7f3e8" stroke="#22203a" strokeWidth="3" />
+        <path d="M38 54l-10 20M62 54l10 20M44 54l-4 20M56 54l4 20" stroke="#22203a" strokeWidth="3" strokeLinecap="round" />
+      </svg>
+    )
+  }
   if (kind === 'robot-lander') {
     return (
       <svg viewBox="0 0 100 80" className={className} aria-hidden="true">

@@ -6,6 +6,7 @@ const PAGES = [
   { path: '/moon', heading: 'Moon Archive' },
   { path: '/moon/campaign', heading: 'Moon Explorer Mission' },
   { path: '/mars', heading: 'Mars Archive' },
+  { path: '/mars/campaign', heading: 'Mars Explorer Mission' },
   { path: '/deep-space', heading: 'Deep Space Archive' },
   { path: '/artifact/opportunity', heading: 'Opportunity rover' },
   { path: '/timeline', heading: 'River of Stars' },

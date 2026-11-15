@@ -10,7 +10,7 @@ export type StageId = 'landing' | 'catch' | 'discovery' | 'repair' | 'science' |
 
 export const STAGES: StageId[] = ['landing', 'catch', 'discovery', 'repair', 'science', 'quiz', 'complete']
 
-export type CampaignId = 'moon'
+export type CampaignId = 'moon' | 'mars'
 
 export interface Campaign {
   id: CampaignId
@@ -24,7 +24,7 @@ export interface Campaign {
   badge: BadgeDef
 }
 
-export type CatcherSprite = 'lander' | 'lander-rover' | 'rover' | 'robot-lander'
+export type CatcherSprite = 'lander' | 'lander-rover' | 'rover' | 'robot-lander' | 'helicopter'
 
 export interface CampaignArtifact {
   /** Must match an id in artifacts.json. */
@@ -63,4 +63,36 @@ export interface BadgeDef {
   id: string
   name: string
   description: string
+}
+
+// ---------- Mars campaign ----------
+
+/** A science clue hidden in the Mars Dig. Each is a true discovery from the machine's NASA record. */
+export interface DigClue {
+  icon: string
+  label: string
+  fact: string
+}
+
+export interface MarsLevel {
+  artifactId: string
+  sprite: CatcherSprite
+  /** Stage 2: pretend dig. Three clues hidden in the ground. */
+  clues: [DigClue, DigClue, DigClue]
+  /** Stage 4: plan a drive, arm move or flight. */
+  drive: import('../game/drive').DriveLevel
+  science: { headline: string; points: string[] }
+  /** Stage 6: four questions; three right earns the star. */
+  quiz: QuizQuestion[]
+}
+
+export interface MarsCampaign {
+  id: 'mars'
+  title: string
+  briefing: string
+  artifacts: MarsLevel[]
+  bonusArtifacts: MarsLevel[]
+  badge: BadgeDef
+  /** Full stars on every core level are needed for the Mars badge. */
+  badgeNeedsStars: number
 }

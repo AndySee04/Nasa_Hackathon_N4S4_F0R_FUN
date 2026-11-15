@@ -811,8 +811,13 @@
       {
         "title": "NASA NSSDCA: Viking 1 Lander",
         "url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1975-075C"
+      },
+      {
+        "title": "NASA Science: Viking 1",
+        "url": "https://science.nasa.gov/mission/viking-1/"
       }
-    ]
+    ],
+    "lastVerified": "2026-11-15"
   },
   {
     "id": "mars-pathfinder",
@@ -927,7 +932,7 @@
     ],
     "discoveries": [
       "Became the first wheeled vehicle to explore another planet.",
-      "Found that some rocks were richer in silica than scientists expected, hinting that Mars's history was more complicated than thought.",
+      "Rounded pebbles and cobbles at the landing site suggested they were shaped by running water, long ago when Mars was warmer.",
       "Showed that a rover could partly drive itself, which helped every later Mars rover."
     ],
     "timeline": [
@@ -963,8 +968,13 @@
       {
         "title": "NASA NSSDCA: Mars Pathfinder",
         "url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1996-068A"
+      },
+      {
+        "title": "NASA Science: Mars Pathfinder",
+        "url": "https://science.nasa.gov/mission/mars-pathfinder/"
       }
-    ]
+    ],
+    "lastVerified": "2026-11-15"
   },
   {
     "id": "spirit",
@@ -1064,8 +1074,25 @@
       {
         "title": "NASA NSSDCA: Mars Exploration Rover A (Spirit)",
         "url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2003-027A"
+      },
+      {
+        "title": "NASA Science: Mars Exploration Rovers Spirit and Opportunity",
+        "url": "https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/"
+      },
+      {
+        "title": "NASA Science: Spirit and Opportunity science highlights",
+        "url": "https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/science-highlights/"
+      },
+      {
+        "title": "NASA JPL: NASA Trapped Mars Rover Finds Evidence of Subsurface Water",
+        "url": "https://www.jpl.nasa.gov/news/nasa-trapped-mars-rover-finds-evidence-of-subsurface-water/"
+      },
+      {
+        "title": "NASA JPL: Mars Rover Investigates Signs of Steamy Martian Past",
+        "url": "https://www.jpl.nasa.gov/news/mars-rover-investigates-signs-of-steamy-martian-past/"
       }
-    ]
+    ],
+    "lastVerified": "2026-11-15"
   },
   {
     "id": "opportunity",
@@ -1160,8 +1187,21 @@
       {
         "title": "NASA NSSDCA: Mars Exploration Rover B (Opportunity)",
         "url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2003-032A"
+      },
+      {
+        "title": "NASA Science: Mars Exploration Rovers Spirit and Opportunity",
+        "url": "https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/"
+      },
+      {
+        "title": "NASA Science: Spirit and Opportunity science highlights",
+        "url": "https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/science-highlights/"
+      },
+      {
+        "title": "NASA JPL: NASA Mars Rover Finds Mineral Vein Deposited by Water",
+        "url": "https://www.jpl.nasa.gov/news/nasa-mars-rover-finds-mineral-vein-deposited-by-water/"
       }
-    ]
+    ],
+    "lastVerified": "2026-11-15"
   },
   {
     "id": "phoenix",
@@ -1247,8 +1287,17 @@
       {
         "title": "NASA NSSDCA: Phoenix",
         "url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2007-034A"
+      },
+      {
+        "title": "NASA Science: Mars Phoenix",
+        "url": "https://science.nasa.gov/mission/mars-phoenix/"
+      },
+      {
+        "title": "NASA: Phoenix Mars Lander Finishes Successful Work on Red Planet",
+        "url": "https://www.nasa.gov/mission_pages/phoenix/news/phoenix-20081110.html"
       }
-    ]
+    ],
+    "lastVerified": "2026-11-15"
   },
   {
     "id": "insight",
@@ -1339,8 +1388,113 @@
       {
         "title": "NASA NSSDCA: InSight",
         "url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2018-042A"
+      },
+      {
+        "title": "NASA: NASA Retires InSight Mars Lander Mission After Years of Science",
+        "url": "https://www.nasa.gov/missions/insight/nasa-retires-insight-mars-lander-mission-after-years-of-science/"
+      },
+      {
+        "title": "NASA JPL Education: How InSight Revealed the Heart of Mars",
+        "url": "https://www.jpl.nasa.gov/edu/resources/teachable-moment/how-insight-revealed-the-heart-of-mars/"
       }
-    ]
+    ],
+    "lastVerified": "2026-11-15"
+  },
+  {
+    "id": "ingenuity",
+    "name": "Ingenuity Mars Helicopter",
+    "missionName": "Mars 2020",
+    "agency": "NASA",
+    "world": "mars",
+    "hardwareType": "helicopter",
+    "status": "inactive",
+    "statusNote": "Its rotor blades were damaged when it landed after its 72nd flight on 18 January 2024, so it can no longer fly. It stays at its final airfield, nicknamed Valinor Hills, in Jezero Crater.",
+    "launchDate": "2020-07-30",
+    "arrivalDate": "2021-02-18",
+    "endDate": "2024-01-25",
+    "location": {
+      "description": "Valinor Hills, Jezero Crater (the map pin shows the nearby landing site, Octavia E. Butler Landing)",
+      "lat": 18.44,
+      "lon": 77.45
+    },
+    "tagline": "The first aircraft to fly on another planet.",
+    "story": [
+      "Ingenuity is a small helicopter that rode to Mars tucked under the belly of the Perseverance rover. It landed in Jezero Crater on 18 February 2021.",
+      "Flying on Mars is hard because the air is so thin. On 19 April 2021, Ingenuity lifted off and made the first powered, controlled flight on another planet, just like the Wright brothers did on Earth.",
+      "It was only meant to make up to five test flights in 30 days. Instead it flew 72 times in almost three years, scouting the way for Perseverance, until a rough landing on a smooth sand ripple broke its rotor blades."
+    ],
+    "objectives": [
+      "Prove that powered, controlled flight is possible on Mars",
+      "Scout ahead for the Perseverance rover's scientists and drivers",
+      "Test how a helicopter copes with Martian dust, wind and cold"
+    ],
+    "instruments": [
+      {
+        "name": "Rotor blades",
+        "purpose": "Two sets of blades spin in opposite directions very fast, so they can grip Mars's thin air."
+      },
+      {
+        "name": "Navigation camera",
+        "purpose": "A downward-looking camera tracked the ground to work out how the helicopter was moving."
+      },
+      {
+        "name": "Colour camera",
+        "purpose": "Took pictures of the landscape from the air to help plan the rover's routes."
+      }
+    ],
+    "discoveries": [
+      "Proved that powered, controlled flight is possible on another planet.",
+      "Flew 72 times, about 17 km in total, for more than two hours of flight time.",
+      "Its photos helped the Perseverance team pick safe routes and interesting places to explore."
+    ],
+    "timeline": [
+      {
+        "date": "2020-07-30",
+        "label": "Launches with the Perseverance rover",
+        "kind": "launch"
+      },
+      {
+        "date": "2021-02-18",
+        "label": "Lands in Jezero Crater under Perseverance",
+        "kind": "arrival"
+      },
+      {
+        "date": "2021-04-19",
+        "label": "First powered, controlled flight on another planet",
+        "kind": "discovery"
+      },
+      {
+        "date": "2024-01-18",
+        "label": "Flight 72: a rough landing damages its rotor blades",
+        "kind": "operations"
+      },
+      {
+        "date": "2024-01-25",
+        "label": "NASA announces the end of Ingenuity's mission",
+        "kind": "end"
+      }
+    ],
+    "funFact": "Ingenuity carried a tiny piece of fabric from the Wright brothers' first aeroplane.",
+    "imageQuery": "Ingenuity Mars helicopter",
+    "sources": [
+      {
+        "title": "NASA: After Three Years on Mars, NASA's Ingenuity Helicopter Mission Ends",
+        "url": "https://www.nasa.gov/news-release/after-three-years-on-mars-nasas-ingenuity-helicopter-mission-ends/"
+      },
+      {
+        "title": "NASA: NASA Performs First Aircraft Accident Investigation on Another World",
+        "url": "https://www.nasa.gov/missions/mars-2020-perseverance/ingenuity-helicopter/nasa-performs-first-aircraft-accident-investigation-on-another-world/"
+      },
+      {
+        "title": "NASA Science: Farewell to Our Flying Friend",
+        "url": "https://science.nasa.gov/blog/farewell-to-our-flying-friend-and-closing-in-on-the-crater-rim/"
+      },
+      {
+        "title": "NASA GISS Mars24: Mars landers (landing coordinates)",
+        "url": "https://www.giss.nasa.gov/tools/mars24/help/landers.html"
+      }
+    ],
+    "lastVerified": "2026-11-15"
   },
   {
     "id": "voyager-1",
