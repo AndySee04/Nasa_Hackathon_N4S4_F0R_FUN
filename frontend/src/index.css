@@ -1,26 +1,38 @@
 @import "tailwindcss";
 
+/*
+ * Crayon space: the look from design proposal 8b ("Name Tags + Zoom").
+ * A crayon drawing of space on dark construction paper.
+ *  - Paper for words: light, scissor-cut pieces glued on (see components/Paper.tsx).
+ *  - Stickers for things you press: white-edged, slightly tilted, they squash when pressed.
+ *  - Crayon for big actions: waxy, wobbly buttons.
+ */
+
 /* ---------- Design tokens ---------- */
 @theme {
-  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Nunito", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Sniglet", ui-rounded, system-ui, sans-serif;
+  --font-sans: "Andika", system-ui, sans-serif;
 
-  --color-space-950: #050816;
-  --color-space-900: #070b1f;
-  --color-space-800: #0d1433;
-  --color-space-700: #151e4a;
-  --color-space-600: #24306b;
-  --color-ink: #e8ecff;
-  --color-muted: #a9b2d6;
-  --color-cyan: #22d3ee;
-  --color-violet: #a78bfa;
-  --color-amber: #fbbf24;
+  --color-night: #1b1f45;       /* dark construction paper */
+  --color-night-deep: #14173a;
+  --color-paper: #f6eedb;       /* drawing paper, for reading */
+  --color-ink: #22203a;         /* text on paper */
+  --color-ink-soft: #57536e;    /* quieter text on paper */
+  --color-chalk: #f7f3e8;       /* text on the night sky */
+  --color-dusk: #c9c6e0;        /* quieter text on the night sky */
+  --color-sticker: #fffdf6;     /* sticker paper */
+  --color-yellow: #f9c846;
+  --color-pink: #f28ab2;
+  --color-mint: #6fd3a8;
+  --color-sky: #63b7f0;
+  --color-orange: #f48a4a;
+  --color-lilac: #b9a6ff;
 
-  --color-status-operational: #34d399;
-  --color-status-inactive: #94a3b8;
-  --color-status-decommissioned: #a78bfa;
-  --color-status-lost: #fb923c;
-  --color-status-unknown: #64748b;
+  --color-status-operational: #6fd3a8;
+  --color-status-inactive: #e3d5ae;
+  --color-status-decommissioned: #b9a6ff;
+  --color-status-lost: #f48a4a;
+  --color-status-unknown: #cfcbe0;
 }
 
 /* ---------- Base ---------- */
@@ -34,92 +46,272 @@ html {
 }
 
 body {
-  @apply bg-space-900 text-ink font-sans antialiased;
+  margin: 0;
   min-height: 100vh;
-  background-image:
-    radial-gradient(1200px 600px at 85% -10%, rgba(124, 58, 237, 0.22), transparent 60%),
-    radial-gradient(900px 500px at -10% 20%, rgba(34, 211, 238, 0.12), transparent 60%),
-    radial-gradient(800px 600px at 50% 120%, rgba(59, 130, 246, 0.14), transparent 60%);
-  background-attachment: fixed;
+  background-color: var(--color-night);
+  color: var(--color-chalk);
+  font-family: var(--font-sans);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3, h4 { @apply font-display tracking-tight; }
-
-:focus-visible {
-  outline: 3px solid var(--color-cyan);
-  outline-offset: 3px;
-  border-radius: 8px;
+/* Doodled stars on every page (the home page draws its own on the canvas). */
+.crayon-stars {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='380' height='380'%3E%3Cg fill='%23f7f3e8'%3E%3Crect x='24' y='38' width='2.2' height='1.8' opacity='.7'/%3E%3Crect x='90' y='12' width='1.6' height='1.4' opacity='.45'/%3E%3Crect x='150' y='70' width='2.4' height='2' opacity='.6'/%3E%3Crect x='210' y='24' width='1.4' height='1.3' opacity='.4'/%3E%3Crect x='300' y='52' width='2' height='1.8' opacity='.65'/%3E%3Crect x='350' y='118' width='1.5' height='1.4' opacity='.45'/%3E%3Crect x='60' y='150' width='1.8' height='1.6' opacity='.55'/%3E%3Crect x='190' y='160' width='1.4' height='1.2' opacity='.35'/%3E%3Crect x='250' y='210' width='2.3' height='2' opacity='.7'/%3E%3Crect x='20' y='260' width='1.5' height='1.4' opacity='.4'/%3E%3Crect x='120' y='300' width='2.1' height='1.8' opacity='.6'/%3E%3Crect x='330' y='280' width='1.6' height='1.5' opacity='.5'/%3E%3Crect x='280' y='350' width='1.3' height='1.2' opacity='.35'/%3E%3Crect x='170' y='360' width='1.8' height='1.6' opacity='.55'/%3E%3Crect x='80' y='220' width='1.2' height='1.2' opacity='.3'/%3E%3C/g%3E%3Cg stroke='%23f7f3e8' stroke-width='1.6' stroke-linecap='round' opacity='.85' fill='none'%3E%3Cpath d='M101 110.5h16M109.3 102v16'/%3E%3Cpath d='M296 152h12M302.2 146v12.4'/%3E%3C/g%3E%3Cpath d='M210 286.4h18M219.4 277v18.6' stroke='%23ffd447' stroke-width='1.8' stroke-linecap='round' fill='none'/%3E%3C/svg%3E");
 }
 
-::selection { background: rgba(167, 139, 250, 0.45); }
-
-/* ---------- Reusable components ---------- */
-@layer components {
-  .glass {
-    @apply rounded-3xl border border-white/10 bg-white/[0.06] backdrop-blur-md;
-    box-shadow: 0 10px 40px -12px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  }
-  .glass-strong {
-    @apply rounded-3xl border border-white/15 bg-space-800/80 backdrop-blur-xl;
-    box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.7);
-  }
-  .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 font-display text-base font-semibold transition
-      min-h-12 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50;
-  }
-  .btn-primary {
-    @apply text-space-950;
-    background: linear-gradient(135deg, #22d3ee, #a78bfa);
-    box-shadow: 0 8px 30px -8px rgba(34, 211, 238, 0.6);
-  }
-  .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
-  .btn-ghost {
-    @apply border border-white/20 bg-white/5 text-ink hover:bg-white/10;
-  }
-  .chip {
-    @apply inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-sm font-semibold;
-  }
-  .eyebrow {
-    @apply font-display text-sm font-semibold uppercase tracking-[0.18em] text-cyan;
-  }
-  .text-gradient {
-    background: linear-gradient(120deg, #e8ecff 10%, #22d3ee 45%, #a78bfa 85%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-}
-
-/* ---------- Starfield (pure CSS, cheap to render) ---------- */
-.starfield {
+/* Paper grain over everything, so flat colours feel like real paper. */
+body::after {
+  content: '';
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 0;
-  background-image:
-    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.8), transparent 60%),
-    radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,0.6), transparent 60%),
-    radial-gradient(1.5px 1.5px at 55% 35%, rgba(255,255,255,0.9), transparent 60%),
-    radial-gradient(1px 1px at 75% 15%, rgba(255,255,255,0.7), transparent 60%),
-    radial-gradient(1px 1px at 85% 60%, rgba(255,255,255,0.6), transparent 60%),
-    radial-gradient(1.5px 1.5px at 20% 85%, rgba(167,139,250,0.9), transparent 60%),
-    radial-gradient(1px 1px at 65% 90%, rgba(34,211,238,0.8), transparent 60%),
-    radial-gradient(1px 1px at 92% 85%, rgba(255,255,255,0.7), transparent 60%),
-    radial-gradient(1px 1px at 45% 55%, rgba(255,255,255,0.5), transparent 60%),
-    radial-gradient(1px 1px at 5% 50%, rgba(255,255,255,0.6), transparent 60%);
-  background-size: 420px 420px;
-  animation: twinkle 8s ease-in-out infinite alternate;
+  z-index: 100;
+  opacity: 0.28;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
-@keyframes twinkle {
-  from { opacity: 0.55; }
-  to { opacity: 1; }
+
+@layer base {
+  h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 800; line-height: 1.1; }
+
+  :focus-visible {
+    outline: 3px dashed var(--color-yellow);
+    outline-offset: 4px;
+    border-radius: 6px;
+  }
+  /* Yellow disappears on light paper, so use ink there. */
+  .paper-cut :focus-visible { outline-color: var(--color-ink); }
+
+  ::selection { background: rgba(249, 200, 70, 0.55); color: var(--color-ink); }
 }
+
+@layer components {
+  /* ---------- Paper ---------- */
+  /* .paper-glue casts the shadow; .paper-cut inside it gets scissor-cut edges (clip-path, set by Paper.tsx). */
+  .paper-glue { filter: drop-shadow(0 6px 0 rgba(0, 0, 0, 0.25)) drop-shadow(0 14px 18px rgba(0, 0, 0, 0.35)); }
+  .paper-cut { background: var(--paper, var(--color-paper)); color: var(--color-ink); }
+
+  /* ---------- Stickers: things you press ---------- */
+  .sticker {
+    background: var(--c, var(--color-sticker));
+    color: var(--color-ink);
+    border: 5px solid var(--color-sticker);
+    box-shadow: 0 3px 0 rgba(0, 0, 0, 0.12), 0 10px 18px -6px rgba(0, 0, 0, 0.55);
+    transform: rotate(var(--r, 0deg));
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+  }
+  /* On paper the dark shadow looks heavy, so stickers sit flatter there. */
+  .paper-cut .sticker { box-shadow: 0 2px 0 rgba(34, 32, 58, 0.18), 0 6px 12px -6px rgba(34, 32, 58, 0.45); border-color: #fff; }
+  :is(a, button).sticker:not(:disabled):hover {
+    transform: rotate(var(--r, 0deg)) translateY(-2px) scale(1.04);
+    box-shadow: 0 5px 0 rgba(0, 0, 0, 0.12), 0 16px 22px -8px rgba(0, 0, 0, 0.6);
+  }
+  :is(a, button).sticker:not(:disabled):active {
+    transform: rotate(var(--r, 0deg)) scale(0.97);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.12), 0 4px 8px -4px rgba(0, 0, 0, 0.5);
+  }
+  .sticker:disabled { opacity: 0.55; cursor: not-allowed; }
+
+  /* A pill-shaped sticker button. Colour it with --c (or the c-* helpers below). */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 52px;
+    padding: 0 24px;
+    border-radius: 999px;
+    font: 800 1.05rem/1.15 var(--font-display);
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .btn-sm { min-height: 44px; padding: 0 16px; font-size: 0.95rem; font-weight: 400; }
+
+  /* Small sticker for filters, choices and tags you can tap. The chosen one turns yellow. */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 42px;
+    padding: 2px 14px;
+    border-radius: 999px;
+    border-width: 4px;
+    font: 400 0.95rem/1.2 var(--font-display);
+    text-align: left;
+    cursor: pointer;
+  }
+  .chip[aria-pressed='true'], .chip[aria-selected='true'] { --c: var(--color-yellow); font-weight: 800; }
+
+  /* ---------- Crayon button: coloured in with wax ---------- */
+  /* Uses the #crayon SVG filter from App.tsx. Keep it off things that move every frame (the filter is slow to repaint). */
+  .cbtn {
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 52px;
+    padding: 0 26px;
+    border: 0;
+    background: none;
+    color: var(--color-ink);
+    font: 800 1.05rem/1.15 var(--font-display);
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .cbtn::before, .cbtn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: 26px 34px 24px 32px / 32px 24px 34px 26px;
+    filter: url(#crayon);
+    transition: transform 0.2s;
+  }
+  .cbtn::before { background: repeating-linear-gradient(-28deg, rgba(255, 255, 255, 0.22) 0 2px, transparent 2px 7px), var(--c, var(--color-yellow)); }
+  .cbtn::after { inset: -1px; border: 3px solid rgba(34, 32, 58, 0.85); border-radius: 30px 24px 34px 26px / 24px 34px 26px 32px; }
+  .cbtn:hover::before { transform: rotate(-2deg) scale(1.03); }
+  .cbtn:active::before { transform: scale(0.97); }
+  .cbtn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+  /* Colour helpers for stickers, crayon buttons and labels. */
+  .c-yellow { --c: var(--color-yellow); }
+  .c-pink { --c: var(--color-pink); }
+  .c-mint { --c: var(--color-mint); }
+  .c-sky { --c: var(--color-sky); }
+  .c-orange { --c: var(--color-orange); }
+  .c-lilac { --c: var(--color-lilac); }
+  .c-paper { --c: var(--color-paper); }
+  .c-white { --c: var(--color-sticker); }
+
+  /* ---------- Small paper bits ---------- */
+  /* Washi tape: little labels above titles. */
+  .tape {
+    display: inline-block;
+    padding: 3px 14px 2px;
+    background:
+      repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.18) 0 6px, transparent 6px 12px),
+      color-mix(in srgb, var(--c, var(--color-yellow)) 85%, transparent);
+    color: var(--color-ink);
+    font: 400 0.95rem/1.3 var(--font-display);
+    transform: rotate(var(--r, -2deg));
+    clip-path: polygon(0 8%, 3% 0, 97% 4%, 100% 0, 99% 92%, 100% 100%, 2% 96%, 0 100%);
+  }
+  /* A coloured strip behind a few words, like "On the Moon since 1969". */
+  .label {
+    display: inline-block;
+    padding: 1px 10px;
+    background: var(--c, var(--color-yellow));
+    color: var(--color-ink);
+    font: 400 0.95rem/1.4 var(--font-display);
+  }
+  /* Photos are printed and glued on with a white border. */
+  .polaroid {
+    border: 6px solid #fff;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+    transform: rotate(var(--r, 1deg));
+  }
+  /* A wobbly crayon line under headings on paper. */
+  .scribble {
+    padding-bottom: 8px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='10' viewBox='0 0 120 10'%3E%3Cpath d='M2 6c10-4 18 3 28 0s18-4 28 0 18 3 28 0 18-4 30 0' fill='none' stroke='%23f9c846' stroke-width='4' stroke-linecap='round' opacity='.9'/%3E%3C/svg%3E") left bottom / 120px 10px no-repeat;
+  }
+  /* A soft box inside a paper piece. */
+  .inset {
+    border-radius: 6px;
+    background: rgba(34, 32, 58, 0.06);
+    border: 2px dashed rgba(34, 32, 58, 0.18);
+  }
+  .muted { color: var(--color-ink-soft); }
+
+  /* Text links: crayon underline. */
+  .link {
+    color: inherit;
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-color: var(--link-line, var(--color-orange));
+    text-decoration-thickness: 3px;
+    text-underline-offset: 3px;
+  }
+  .link:hover { text-decoration-color: var(--color-yellow); }
+}
+
+/* ---------- Header ---------- */
+.site-header { position: fixed; z-index: 40; inset: 0 0 auto; padding: 14px 16px 18px; pointer-events: none; }
+.site-header > * { pointer-events: auto; }
+/* Off the home page, a band of night sky keeps the stickers readable over scrolling content. */
+.site-header.banded { background: linear-gradient(to bottom, var(--color-night) 72%, transparent); }
+.tab { display: block; padding: 6px 15px; border-radius: 999px; font: 400 1rem/1.3 var(--font-display); text-decoration: none; white-space: nowrap; --c: var(--color-paper); }
+.tab[aria-current='page'] { --c: var(--color-yellow); position: relative; font-weight: 800; padding: 8px 18px; }
+.tab[aria-current='page']::after {
+  content: '\2605';
+  position: absolute;
+  top: -14px;
+  right: -10px;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-yellow);
+  border: 3px solid var(--color-sticker);
+  color: var(--color-ink);
+  font-size: 0.8rem;
+  box-shadow: 0 4px 8px -2px rgba(0, 0, 0, 0.5);
+}
+
+/* ---------- Home: scroll to zoom into the solar system ---------- */
+.sky-canvas { position: fixed; inset: 0; width: 100%; height: 100%; touch-action: pan-y; cursor: grab; }
+.sky-dim { position: fixed; inset: 0; pointer-events: none; background: var(--color-night); opacity: 0; }
+/* Extra scroll length while the hero stays put and the planets zoom in. */
+.zoom-track { height: 260vh; pointer-events: none; }
+.hero { position: sticky; top: 0; height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 96px 20px 28px; text-align: center; pointer-events: none; }
+.hero > * { pointer-events: auto; will-change: opacity, transform; }
+.hero h1 { margin: 0; font-size: clamp(2.2rem, 4.6vw, 3.6rem); line-height: 1; white-space: nowrap; }
+.zoom-note { position: fixed; z-index: 13; left: 50%; bottom: 40px; width: min(560px, 88vw); opacity: 0; pointer-events: none; transform: translateX(-50%) rotate(-1.5deg); }
+.sky-strings { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 11; pointer-events: none; }
+.name-tag { position: fixed; left: 0; top: 0; z-index: 12; border: 0; background: none; padding: 0; cursor: pointer; will-change: transform; }
+.name-tag .paper-cut { display: block; padding: 6px 12px 5px; font: 400 0.95rem/1.15 var(--font-display); text-align: center; white-space: nowrap; transition: transform 0.2s; }
+.name-tag:hover .paper-cut { transform: rotate(-4deg) scale(1.05); }
+/* The planet card rides along beside the planet the camera follows. */
+.planet-card { position: fixed; z-index: 25; left: 0; top: 0; width: min(340px, calc(100vw - 24px)); opacity: 0; pointer-events: none; transition: opacity 0.2s; will-change: transform, opacity; }
+.planet-card.open { opacity: 1; pointer-events: auto; transition: opacity 0.35s 0.75s; }
+.planet-card > .paper-cut { transform: scale(0.9) rotate(-3deg); transition: transform 0.2s; }
+.planet-card.open > .paper-cut { transform: none; transition: transform 0.5s 0.75s cubic-bezier(0.2, 1.4, 0.4, 1); }
+/* While zoomed in on a planet, everything else clears away. */
+.hero, .zoom-note, .name-tag, .sky-strings { transition: opacity 0.4s; }
+.home.focused .hero, .home.focused .zoom-note, .home.focused .name-tag, .home.focused .sky-strings { opacity: 0 !important; pointer-events: none; }
+.home.focused .hero > * { pointer-events: none; }
+
+@media (max-width: 640px) {
+  .hero { padding: 84px 12px 28px; }
+  .name-tag[data-id='mars'] .paper-cut { font-size: 0.85rem; }
+}
+
+/* ---------- Loading ---------- */
+.crayon-spin {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 6px dashed var(--color-yellow);
+  animation: spin 2.4s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
+    transition-delay: 0s !important;
     scroll-behavior: auto !important;
   }
 }

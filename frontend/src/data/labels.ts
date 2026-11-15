@@ -1,4 +1,7 @@
-import type { ArtifactStatus, TimelineKind } from '../types/artifact'
+import type { ArtifactStatus, TimelineKind, World } from '../types/artifact'
+
+/** Crayon colour for each world (a c-* class from index.css), used on buttons and labels. */
+export const WORLD_COLOR: Record<World, string> = { moon: 'c-yellow', mars: 'c-orange', 'deep-space': 'c-mint' }
 
 /** Plain-language explanations of each status, shown next to the badges. */
 export const STATUS_HELP: Record<ArtifactStatus, string> = {
@@ -9,13 +12,13 @@ export const STATUS_HELP: Record<ArtifactStatus, string> = {
   unknown: 'We do not have reliable information about its current state.',
 }
 
-/** Icon, label and colour for each kind of timeline event. */
+/** Icon, label and crayon colour (a c-* class) for each kind of timeline event. */
 export const KIND_META: Record<TimelineKind, { icon: string; label: string; color: string }> = {
-  launch: { icon: '🚀', label: 'Launch', color: 'bg-cyan' },
-  journey: { icon: '🛰️', label: 'Journey', color: 'bg-sky-400' },
-  arrival: { icon: '📍', label: 'Arrival', color: 'bg-violet' },
-  operations: { icon: '🔧', label: 'Science operations', color: 'bg-indigo-400' },
-  discovery: { icon: '💡', label: 'Discovery', color: 'bg-amber' },
-  end: { icon: '🌙', label: 'Mission end', color: 'bg-status-lost' },
-  status: { icon: '📡', label: 'Status update', color: 'bg-status-inactive' },
+  launch: { icon: '🚀', label: 'Launch', color: 'c-sky' },
+  journey: { icon: '🛰️', label: 'Journey', color: 'c-lilac' },
+  arrival: { icon: '📍', label: 'Arrival', color: 'c-pink' },
+  operations: { icon: '🔧', label: 'Science operations', color: 'c-mint' },
+  discovery: { icon: '💡', label: 'Discovery', color: 'c-yellow' },
+  end: { icon: '🌙', label: 'Mission end', color: 'c-orange' },
+  status: { icon: '📡', label: 'Status update', color: 'c-paper' },
 }
