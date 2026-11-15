@@ -12,6 +12,8 @@ const PAGES = [
   { path: '/science-lab', heading: 'Science Lab' },
   { path: '/ask-astro', heading: 'Ask Astro AI' },
   { path: '/about', heading: 'About N4S4 F0R FUN' },
+  // Which heading depends on whether Supabase is configured in the local .env.
+  { path: '/account', heading: /Accounts are switched off|Sign in|Welcome aboard/ },
 ]
 
 // Network failures are expected in tests (no backend, no internet for NASA images).

@@ -6,7 +6,9 @@ import Footer from './components/Footer'
 import LoadingScreen from './components/LoadingScreen'
 import Navbar from './components/Navbar'
 import { AstroProvider } from './context/AstroProvider'
+import { AuthProvider } from './context/AuthProvider'
 import About from './pages/About'
+import Account from './pages/Account'
 import ArtifactDetail from './pages/ArtifactDetail'
 import AstroAI from './pages/AstroAI'
 import DeepSpaceArchive from './pages/DeepSpaceArchive'
@@ -84,6 +86,7 @@ function Shell() {
                 <Route path="/science-lab" element={<ScienceLab />} />
                 <Route path="/ask-astro" element={<AstroAI />} />
                 <Route path="/about" element={<About />} />
+                <Route path="/account" element={<Account />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
@@ -99,9 +102,11 @@ function Shell() {
 export default function App() {
   return (
     <BrowserRouter>
-      <AstroProvider>
-        <Shell />
-      </AstroProvider>
+      <AuthProvider>
+        <AstroProvider>
+          <Shell />
+        </AstroProvider>
+      </AuthProvider>
     </BrowserRouter>
   )
 }
