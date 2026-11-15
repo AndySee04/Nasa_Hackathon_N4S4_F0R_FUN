@@ -62,13 +62,13 @@ cd backend
 python -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -r requirements-dev.txt   # runtime + test/lint tools
-cp .env.example .env               # optional: add ANTHROPIC_API_KEY
+cp .env.example .env               # optional: add ANTHROPIC_API_KEY or OPENROUTER_API_KEY
 uvicorn app.main:app --reload --port 8000
 ```
 
 API docs: http://localhost:8000/docs
 
-**No API key?** Astro still works in **knowledge mode**: it answers from the museum's verified records and glossary, and says honestly when it doesn't know. Add `ANTHROPIC_API_KEY` to `backend/.env` to switch on **AI model mode**. The key stays on the server and is never sent to the browser.
+**No API key?** Astro still works in **knowledge mode**: it answers from the museum's verified records and glossary, and says honestly when it doesn't know. Add `ANTHROPIC_API_KEY`, or `OPENROUTER_API_KEY` to use [OpenRouter](https://openrouter.ai) (choose the model with `OPENROUTER_MODEL`), to `backend/.env` to switch on **AI model mode**. The key stays on the server and is never sent to the browser.
 
 ### 2. Frontend
 
@@ -120,7 +120,7 @@ Never add a fact you can't source. See `docs/data_sources.md`.
 ## Deploy
 
 - **Frontend → Vercel:** import the repo, set **Root Directory** to `frontend`, add the env var `VITE_API_URL=https://<your-backend-url>` (plus `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` for sign-in). `vercel.json` handles page routing.
-- **Backend → any Python host** (for example Render or Railway): root `backend`, build `pip install -r requirements.txt`, start `uvicorn app.main:app --host 0.0.0.0 --port $PORT`. Set `ALLOWED_ORIGINS` to your Vercel URL and, optionally, `ANTHROPIC_API_KEY`.
+- **Backend → any Python host** (for example Render or Railway): root `backend`, build `pip install -r requirements.txt`, start `uvicorn app.main:app --host 0.0.0.0 --port $PORT`. Set `ALLOWED_ORIGINS` to your Vercel URL and, optionally, `ANTHROPIC_API_KEY` or `OPENROUTER_API_KEY` (+ `OPENROUTER_MODEL`). Then set `VITE_API_URL` on Vercel to the backend URL and redeploy the frontend.
 
 ## Libraries and why they're here
 

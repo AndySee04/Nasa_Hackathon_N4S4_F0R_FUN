@@ -26,7 +26,8 @@ NAMED_REPLIES = {"SECRET_REPLY": safety.SECRET_REPLY, "ABOUT_ASTRO_REPLY": ai_se
 
 @pytest.fixture(scope="module")
 def astro() -> AstroService:
-    settings = Settings(anthropic_api_key=None, nasa_images=False)
+    # Built before the per-test fixtures run, so say "no AI key" explicitly rather than rely on the environment.
+    settings = Settings(anthropic_api_key=None, openrouter_api_key=None, nasa_images=False)
     return AstroService(settings, get_knowledge_base(), cache=AnswerCache(), budget=DailyBudget())
 
 

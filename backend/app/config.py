@@ -1,6 +1,6 @@
 """Runtime settings, read from environment variables (or a local .env file).
 
-Secrets such as ANTHROPIC_API_KEY must only ever live in the server environment,
+Secrets such as ANTHROPIC_API_KEY or OPENROUTER_API_KEY must only ever live in the server environment,
 never in frontend code or in Git.
 """
 
@@ -27,6 +27,10 @@ def _origins() -> list[str]:
 class Settings:
     anthropic_api_key: str | None = field(default_factory=lambda: os.getenv("ANTHROPIC_API_KEY") or None)
     astro_model: str = field(default_factory=lambda: os.getenv("ASTRO_MODEL", "claude-haiku-5-5"))
+    #: OpenRouter: one key for many AI models (https://openrouter.ai). Used when no Anthropic key is set.
+    openrouter_api_key: str | None = field(default_factory=lambda: os.getenv("OPENROUTER_API_KEY") or None)
+    #: An OpenRouter model id, e.g. "anthropic/claude-haiku-5.5" or a free one ending in ":free".
+    openrouter_model: str = field(default_factory=lambda: os.getenv("OPENROUTER_MODEL", "anthropic/claude-haiku-5.5"))
     allowed_origins: list[str] = field(default_factory=_origins)
     rate_limit_per_minute: int = field(default_factory=lambda: int(os.getenv("RATE_LIMIT_PER_MINUTE", "20")))
     llm_timeout_seconds: float = field(default_factory=lambda: float(os.getenv("LLM_TIMEOUT_SECONDS", "20")))
@@ -37,9 +41,18 @@ class Settings:
     data_dir: Path = Path(__file__).resolve().parent / "data"
 
     @property
+    def llm_provider(self) -> str | None:
+        """Which AI service answers: 'anthropic' if its key is set, else 'openrouter' if that key is set, else None."""
+        if self.anthropic_api_key:
+            return "anthropic"
+        if self.openrouter_api_key:
+            return "openrouter"
+        return None
+
+    @property
     def ai_mode(self) -> str:
         """'llm' when an AI model key is configured, otherwise the offline 'knowledge' mode."""
-        return "llm" if self.anthropic_api_key else "knowledge"
+        return "llm" if self.llm_provider else "knowledge"
 
 
 def get_settings() -> Settings:
